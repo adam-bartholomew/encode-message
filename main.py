@@ -211,8 +211,13 @@ def validate_word(word: str) -> bool:
     #word = word.replace("'", "%27")
     url = f"https://wordsapiv1.p.rapidapi.com/words/{word}/syllables"
 
+    with open('credentials.txt', 'r') as f:
+        for line in f:
+            if line.startswith('"X-RapidAPI-Key":'):
+                api_key = (line.split(":")[1].split('"')[1])
+
     headers = {
-        "X-RapidAPI-Key": "",
+        "X-RapidAPI-Key": api_key,
         "X-RapidAPI-Host": "wordsapiv1.p.rapidapi.com"
     }
 
