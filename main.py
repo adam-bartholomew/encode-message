@@ -212,7 +212,7 @@ def validate_word(word: str) -> bool:
     url = f"https://wordsapiv1.p.rapidapi.com/words/{word}/syllables"
 
     headers = {
-        "X-RapidAPI-Key": "qsHTvEZaMhmshdcGHVuzuAZl6H4Up1huScNjsnsMtGClXuK2EE",
+        "X-RapidAPI-Key": "",
         "X-RapidAPI-Host": "wordsapiv1.p.rapidapi.com"
     }
 
