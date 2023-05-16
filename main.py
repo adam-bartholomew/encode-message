@@ -30,7 +30,6 @@ def get_word_syllables(word: str) -> int:
         result = list(filter(lambda x : x['word'] == word, results))[0]
     else: # get the word with the highest score.
         result = max(results, key=lambda x:x['score'])
-        #result = list(filter(lambda x : x['score'] == 100, results))[0]
     #print(f"Selected: {result} {type(result)}") #LOGGING
     if result:
         return result['numSyllables']
@@ -243,16 +242,4 @@ if __name__ == '__main__':
     print("Calling __main__")
     offset = 0 # Default: 0
     words_api_counter = 0
-    #decode() # Completed
     encode() # Completed
-    #clean_dictionary()
-    #df = pd.read_csv('phoneticDictionary_orig.csv')
-    #s = 5
-    #dataframe_2syl = df.query("`syl` == @s")
-    #dataframe_final = dataframe_2syl[~dataframe_2syl["word"].str.contains('.', regex=False)]
-    #print(type(dataframe_final))
-    #print(dataframe_final)
-    #print(len(dataframe_final))
-
-    # There are some weird things in the data set that could cause problems that we need to get rid of.
-    # - the same word being in there twice with different number of syllables.
