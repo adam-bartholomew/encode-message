@@ -15,10 +15,10 @@ from num2words import num2words
 
 # Retrieves the word from the Datamuse API to get the number of syllables.
 def get_word_syllables(word: str) -> int:
-    """Gets the syllable count in a word.
+    """Gets the syllable count of a word.
 
     :param word: The word to get the syllables for.
-    :return: an integer for the amount of syllables.
+    :return: integer for the amount of syllables.
     """
 
     #print(f"Word: {word}") #LOGGING
@@ -79,7 +79,6 @@ def format_api_sentence(sentence: str, option: int) -> str:
                 new_sentence = new_sentence.replace(word, num2words(word))
         return new_sentence.lower()
     elif option == 2: # ENCODE
-        print('format_api_sentence encode')
         new_sentence = sentence.translate(str.maketrans('', '', string.punctuation)) # remove all punctuation.
         for word in new_sentence.split(" "):
             if word.isnumeric(): # change numeric values into the english words.
@@ -118,9 +117,10 @@ def encode():
 
     :return:
     """
-    print('eNcOdiNG...')
+    print("ENCODING...")
     syllables = list()
-    return_message = str()
+    encoded_message = str()
+    words = list()
     input_message = "I'm dumb 2"
 
     # Format the message
@@ -130,41 +130,46 @@ def encode():
     with open('codex.txt') as f:
         codex_lines = f.readlines()
         codex_list = [l.strip("\n") for l in codex_lines]
-    print(codex_list)
+    #print(codex_list)
 
     # Get the syllables needed for each line of the encoded message.
     for c in formatted_message:
         if c == " ":
             continue
-        print(codex_list.index(c))
+        #print(codex_list.index(c))
         syllables.append(codex_list.index(c) + (1 + offset))
-        print(syllables)
+        #print(syllables)
 
-    #1. get a word < or = to the syllable count for a line.
+    #1. get words for the syllable count of a line.
     for num in syllables:
         num = int(num)
-        word = get_word_for_syllables(num)
-        print(word)
-    #2. after we have that word, check to see how many syllables are remaining and get another word.
+        word = get_words_for_syllables(num)
+        words.append(word)
+        #print(word)
+        #print(words)
+
+    #2. build the message.
+    for line in words:
+        encoded_message = encoded_message + "\n" + line
+    print(encoded_message)
 
 # //TODO: Need to rethink/redo this part. Maybe use a word list, grab a random word and check it's syllables on the datamuse api.
-def get_word_for_syllables(syllables: int) -> str:
-    df = pd.read_csv('phoneticDictionary.csv')
+def get_words_for_syllables(total_syllables: int) -> str:
+    df = pd.read_csv('phoneticDictionary_cleaned_20230515.csv')
     syllables_used = 0
-    word = ""
-    while syllables > syllables_used:
-        print(f"Total syllables: {syllables}")
+    words = ""
+    while syllables_used < total_syllables:
+        print(f"\nTotal syllables: {total_syllables}")
         print(f"Syllables used: {syllables_used}")
-        #df_matching_syllables = df.query("`syl` >= @syllables_used")
-        df_matching_syllables = df.loc[df['syl'] >= syllables_used]
-        print(df_matching_syllables)
+        df_matching_syllables = df.loc[df['syl'] <= (total_syllables - syllables_used)]
+        #print(df_matching_syllables)
         row = df_matching_syllables.sample()
-        print(f"row: {row}")
-        print(row['syl'].values[0])
-        word += row['word'].values[0]
+        print(f"Row selected:\n{row}")
+        #print(row['syl'].values[0])
+        words += row['word'].values[0] + " "
         syllables_used += row['syl'].values[0]
-        print(row['word'].values[0])
-    return word
+        #print(row['word'].values[0])
+    return words.rstrip(" ")
 
 
 def clean_dictionary():
@@ -208,7 +213,7 @@ def validate_word(word: str) -> bool:
     :param word: The word to check
     :return: bool: True if the word is valid
     """
-    #word = word.replace("'", "%27")
+
     url = f"https://wordsapiv1.p.rapidapi.com/words/{word}/syllables"
 
     with open('credentials.txt', 'r') as f:
@@ -238,9 +243,8 @@ if __name__ == '__main__':
     print("Calling __main__")
     offset = 0 # Default: 0
     words_api_counter = 0
-    #decode()
-    #encode()
-    #get_word_for_syllables(2)
+    #decode() # Completed
+    encode() # Completed
     #clean_dictionary()
     #df = pd.read_csv('phoneticDictionary_orig.csv')
     #s = 5
