@@ -152,19 +152,34 @@ def encode():
         encoded_message = encoded_message + "\n" + line
     print(encoded_message)
 
-# //TODO: Need to rethink/redo this part. Maybe use a word list, grab a random word and check it's syllables on the datamuse api.
+
 def get_words_for_syllables(total_syllables: int) -> str:
+    """Gets a word or words for a provided number of syllables.
+
+    :param total_syllables: The number of syllables needed to be fulfilled.
+    :return: str - A space separated string of words.
+    """
+
+    # Use pandas to read the list of words to find a word to use.
     df = pd.read_csv('phoneticDictionary_cleaned_20230515.csv')
     syllables_used = 0
     words = ""
+
+    # While we still have syllables to use, get another word.
     while syllables_used < total_syllables:
         print(f"\nTotal syllables: {total_syllables}")
         print(f"Syllables used: {syllables_used}")
+
+        # Create a dataframe for words with a syllable count compatible with the number of syllables left.
         df_matching_syllables = df.loc[df['syl'] <= (total_syllables - syllables_used)]
         #print(df_matching_syllables)
+
+        # Get a random sample of rows from the dataframe.
         row = df_matching_syllables.sample()
         print(f"Row selected:\n{row}")
         #print(row['syl'].values[0])
+
+        # Add the word to the return string.
         words += row['word'].values[0] + " "
         syllables_used += row['syl'].values[0]
         #print(row['word'].values[0])
@@ -189,9 +204,13 @@ def clean_dictionary():
 
         writer.writerow(['id', 'word', 'phon', 'syl', 'start', 'end'])
         for row in reader:
-            word = row['word']
-            if word in seen or word.startswith("'") or "." in word: # If the word is a duplicate, starts with "'", or contains "." skip it.
+            word = row['word'] # Get the word for the row
+
+            # If the word is a duplicate, starts with "'", or contains "." skip it.
+            if word in seen or word.startswith("'") or "." in word:
                 continue
+
+            # Write the row to the new file & add it to the list of seen words.
             writer.writerow([
                 row['id'],
                 row['word'],
@@ -204,7 +223,7 @@ def clean_dictionary():
 
 
 def validate_word(word: str) -> bool:
-    """Checks to ensure the word chosen is valid.
+    """Checks to ensure the word chosen is a valid word.
 
     Makes a request to the WordsAPI to see if the provided word returns a valid result.
     We are only allowed 2,500 requests per day for free.
