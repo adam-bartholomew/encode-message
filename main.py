@@ -13,6 +13,8 @@ from num2words import num2words
 # https://www.onelook.com/thesaurus/?s=&f_ns=6&sortby=le0&sorttopn=1000
 # https://www.howmanysyllables.com
 
+offset = 0 # Default: 0
+
 # Retrieves the word from the Datamuse API to get the number of syllables.
 def get_word_syllables(word: str) -> int:
     """Gets the syllable count of a word.
@@ -85,16 +87,18 @@ def format_api_sentence(sentence: str, option: int) -> str:
         return new_sentence.upper()
 
 # Decodes a message.
-def decode():
+def decode(input_message: str) -> str:
     """Decodes a message according to the codex on the system.
 
-    :return:
+    :param input_message: The message we want to decode.
+    :return: a str of the decoded message.
     """
 
     return_message = str()
-    input_message = "haven't done it\n" \
-               "singularity\n" \
-                "forty-five"
+    if not input_message or len(input_message) < 1:
+        input_message = "haven't done it\n" \
+                        "singularity\n" \
+                        "forty-five"
 
     syllables = get_sentence_syllables(input_message)
 
@@ -108,19 +112,23 @@ def decode():
         return_message += codex_list[num - (1 + offset)]
     #print(codex_list[sentence_syllables - 1])
     print(f"Decoded Message:\n  {return_message}")
+    return input_message
 
 
 # Encodes a message
-def encode():
+def encode(input_message: str) -> str:
     """Encodes a message according the codex on the system.
 
-    :return:
+    :param input_message: The message we want to encode.
+    :return: a str of the encoded message.
     """
     print("ENCODING...")
     syllables = list()
     encoded_message = str()
     words = list()
-    input_message = "I'm dumb 2"
+
+    if not input_message or len(input_message) < 1:
+       input_message = "test message"
 
     # Format the message
     formatted_message = format_api_sentence(input_message, 2)
@@ -151,6 +159,7 @@ def encode():
     for line in words:
         encoded_message = encoded_message + "\n" + line
     print(encoded_message)
+    return encoded_message
 
 
 def get_words_for_syllables(total_syllables: int) -> str:
@@ -176,7 +185,7 @@ def get_words_for_syllables(total_syllables: int) -> str:
 
         # Get a random sample of rows from the dataframe.
         row = df_matching_syllables.sample()
-        print(f"Row selected:\n{row}")
+        #print(f"Row selected:\n{row}")
         #print(row['syl'].values[0])
 
         # Add the word to the return string.
@@ -261,4 +270,4 @@ if __name__ == '__main__':
     print("Calling __main__")
     offset = 0 # Default: 0
     words_api_counter = 0
-    encode() # Completed
+    #encode() # Completed
