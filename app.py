@@ -23,7 +23,7 @@ def encode():
     template = 'index.html'
     if request.method == 'POST':
         if request.form.get('encodeSubmit') == 'Submit':
-            msg = request.form.get('message')
+            msg = request.form.get('inputMessage')
             if msg:
                 encoded_msg = msg + "\n-----------------------" + main.encode(msg)
                 return render_template(template, encoded_message=encoded_msg)
@@ -35,7 +35,19 @@ def encode():
 
 @app.route('/decode', methods=('GET', 'POST'))
 def decode():
+    template = 'decode.html'
+    if request.method == 'POST':
+        if request.form.get('decodeSubmit') == 'Submit':
+            msg = request.form.get('inputMessage')
+            print(f"message:\n{msg}")
+            if msg:
+                decoded_msg = msg + "\n-----------------------\n" + main.decode(msg)
+                return render_template(template, decoded_message=decoded_msg)
+        if request.form.get('decodeClear') == 'Clear':
+            return render_template(template)
+
     return render_template('decode.html')
+
 
 @app.route('/about')
 def about():

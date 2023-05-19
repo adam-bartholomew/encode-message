@@ -40,24 +40,25 @@ def get_word_syllables(word: str) -> int:
 
 
 # Get the sentence's syllables
-def get_sentence_syllables(sentences: str) -> list:
+def get_sentence_syllables(sentences: str, format_option: int) -> list:
     """Gets the syllable count in a phrase, sentence, or group of lines.
 
     :param sentences: The phrase, sentence, or group of lines to get the syllables for.
+    :param format_option: Whether we are encoding or decoding a string - to be passed into the format_api_sentence call.
     :return: a list of syllables per line/sentence.
     """
 
     syllables = list()
-    print(f"Passed in the following:\n----\n{sentences}\n----")
-    formatted_sentences = format_api_sentence(sentences, 1)
+    #print(f"Passed in the following:\n----\n{sentences}\n----")
+    formatted_sentences = format_api_sentence(sentences, format_option)
     #print(formatted_sentences, type(formatted_sentences)) #LOGGING
     sentences = formatted_sentences.split("\n")
     for sentence in sentences:
         sentence_syllables = 0  # Initialize the sentence syllable counter
-        #print(f"Sending the following sentence to Datamuse: \"{s}\"") #LOGGING
+        #print(f"Sending the following sentence to Datamuse: \"{sentence}\"") #LOGGING
         for word in sentence.split():
             sentence_syllables += get_word_syllables(word)
-        print(f"The sentence \"{sentence}\" has a total of {sentence_syllables} syllables.")
+        #print(f"The sentence \"{sentence}\" has a total of {sentence_syllables} syllables.")
         syllables.append(sentence_syllables)
         #print(syllables)
     return syllables
@@ -73,7 +74,7 @@ def format_api_sentence(sentence: str, option: int) -> str:
     """
 
     if option == 1: # DECODE
-        decode_punctuation = string.punctuation.replace("'", "").replace("-", "") # required to not remove '' and - from the sentence.
+        decode_punctuation = string.punctuation.replace("'", "").replace("-", "") # required to not remove ' and - from the sentence.
         new_sentence = sentence.translate(str.maketrans('', '', decode_punctuation)) # remove any punctuation defined in decode_punctuation.
         for word in new_sentence.split(" "):
             if word.isnumeric(): # change numeric values into the english words.
@@ -94,25 +95,32 @@ def decode(input_message: str) -> str:
     :return: a str of the decoded message.
     """
 
-    return_message = str()
+    decoded_message = str()
+    syllables_list = []
     if not input_message or len(input_message) < 1:
         input_message = "haven't done it\n" \
                         "singularity\n" \
                         "forty-five"
 
-    syllables = get_sentence_syllables(input_message)
+    for sentence in input_message.split("\n"):
+        sentence = sentence.rstrip("\r")
+        #print(f"sentence: {sentence}")
+        syllables_list.append(get_syllables_for_sentence(sentence))
+
+    #print(f"syllables_list: {syllables_list}")
 
     # Get the corresponding letters according to the codex
-    with open('codex.txt') as f:
+    with open('codex.txt', encoding="utf8") as f:
         codex_lines = f.readlines()
         codex_list = [l.strip("\n") for l in codex_lines]
     #print(f"Codex List: {codex_list}") #LOGGING
-    for num in syllables:
-        #print(f"{i} syllables = {codex_list[num - (1 + offset)]}") #LOGGING
-        return_message += codex_list[num - (1 + offset)]
-    #print(codex_list[sentence_syllables - 1])
-    print(f"Decoded Message:\n  {return_message}")
-    return input_message
+    for num in syllables_list:
+        #print(f"{num} syllables = {codex_list[num - (1 + offset)]}") #LOGGING
+        decoded_message += codex_list[num - (1 + offset)]
+        #print(codex_list[num - 1])
+    #print(f"Decoded Message:\n  {decoded_message}")
+    #print(type(decoded_message))
+    return decoded_message
 
 
 # Encodes a message
@@ -158,7 +166,7 @@ def encode(input_message: str) -> str:
     #2. build the message.
     for line in words:
         encoded_message = encoded_message + "\n" + line
-    print(encoded_message)
+    #print(encoded_message)
     return encoded_message
 
 
@@ -195,6 +203,26 @@ def get_words_for_syllables(total_syllables: int) -> str:
     return words.rstrip(" ")
 
 
+def get_syllables_for_sentence(sentence: str) -> int:
+    """Gets the syllable count for a sentence.
+
+    :param sentence: The sentence to get the syllables for.
+    :return: int - The amount of syllables in the sentence.
+    """
+
+    df = pd.read_csv('phoneticDictionary_cleaned_20230515.csv')
+    words = sentence.split(' ')
+    syllables = 0
+
+    #print(words)
+    for word in words:
+        df_matching_word = df.loc[df['word'] == word]
+        syllables += df_matching_word['syl'].values[0]
+        #print(syllables, type(syllables), len(df_matching_word['syl']), df_matching_word['syl'].values[0])
+
+    return syllables
+
+
 def clean_dictionary():
     """Cleans the data in phoneticDictionary.csv and puts it into new_clean.csv
 
@@ -203,7 +231,7 @@ def clean_dictionary():
 
     :return:
     """
-    print('clean the dictionary')
+    print('cleaning the dictionary.')
     new_filename = f"phoneticDictionary_cleaned_{datetime.datetime.now().strftime('%Y%m%d')}.csv"
     print(new_filename)
     with open('phoneticDictionary.csv', 'r', encoding='utf8') as in_file, open(new_filename, 'w', encoding='utf8', newline='') as out_file:
@@ -243,7 +271,7 @@ def validate_word(word: str) -> bool:
 
     url = f"https://wordsapiv1.p.rapidapi.com/words/{word}/syllables"
 
-    with open('credentials.txt', 'r') as f:
+    with open('credentials.txt', 'r', encoding="utf8") as f:
         for line in f:
             if line.startswith('"X-RapidAPI-Key":'):
                 api_key = (line.split(":")[1].split('"')[1])

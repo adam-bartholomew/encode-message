@@ -1,6 +1,24 @@
 {% extends 'base.html' %}
+{% set active_page = "decode" %}
 
 {% block content %}
-<p>decode</p>
+    <h1>{% block title %} Decode a Message {% endblock %}</h1>
 
+    <form method="post">
+        <div class="mb-3">
+            <!--<label for="inputMessage" class="form-label">Message</label>-->
+            <textarea id="inputMessage" type="text" maxlength="1000" name="inputMessage" placeholder="Please enter your encoded message here." class="form-control">{{ request.form['inputMessage'] }}</textarea>
+        </div>
+        <div class="mb-3">
+            <button name="decodeSubmit" id="decodeSubmit" value="Submit" type="submit" class="btn btn-outline-primary">Submit</button>
+            <button name="decodeClear" id="decodeClear" value="Clear" type="submit" class="btn btn-outline-danger">Clear</button>
+        </div>
+        <hr class="mt-1 mb-3"/>
+        <div class="mb-3">
+        <textarea id="decodedMessage" name="decodedMessage" rows="10" cols="140" readonly="readonly" placeholder="Decrypted message displayed here." class="form-control">{{ decoded_message }}</textarea>
+    </div>
+    </form>
+    <script>
+        document.getElementById('inputMessage').value = ""
+    </script>
 {% endblock %}

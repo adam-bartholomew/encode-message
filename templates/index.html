@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
+{% set active_page = "index" %}
 
 {% block content %}
     <h1>{% block title %} Encode a Message {% endblock %}</h1>
+
     <form method="post">
         <div class="mb-3">
-            <!--<label for="message" class="form-label">Message</label>-->
-            <input id="message" type="text" maxlength="500" name="message" placeholder="Please enter your message here." class="form-control" value="{{ request.form['message'] }}"/>
+            <!--<label for="inputMessage" class="form-label">Message</label>-->
+            <input id="inputMessage" type="text" maxlength="500" name="inputMessage" placeholder="Please enter your message here." class="form-control" value="{{ request.form['inputMessage'] }}"/>
         </div>
         <div class="mb-3">
             <button name="encodeSubmit" id="encodeSubmit" value="Submit" type="submit" class="btn btn-outline-primary">Submit</button>
@@ -17,6 +19,6 @@
     </div>
     </form>
     <script>
-        document.getElementById('message').value = ""
+        document.getElementById('inputMessage').value = ""
     </script>
 {% endblock %}
