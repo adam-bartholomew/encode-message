@@ -5,6 +5,7 @@ import requests
 import datetime as datetime
 from datamuse import Datamuse
 from num2words import num2words
+import logging
 # https://api.datamuse.com/words?sl=i%27ll
 # https://wordsapiv1.p.rapidapi.com/words/aberration/syllables | This costs money after 2500 requests
 # https://github.com/gmarmstrong/python-datamuse/
@@ -14,6 +15,9 @@ from num2words import num2words
 # https://www.howmanysyllables.com
 
 offset = 0 # Default: 0
+log_filename = "./logs/encode-message_" + datetime.datetime.now().strftime("%Y%m%d") + ".log"
+logging.basicConfig(filename=log_filename, format="%(asctime)s.%(msecs)03d |:| %(levelname)s |:| %(message)s", level=logging.INFO, datefmt="%m/%d/%Y %H:%M:%S")
+log = logging.getLogger()
 
 # Retrieves the word from the Datamuse API to get the number of syllables.
 def get_word_syllables(word: str) -> int:
@@ -23,16 +27,15 @@ def get_word_syllables(word: str) -> int:
     :return: integer for the amount of syllables.
     """
 
-    #print(f"Word: {word}") #LOGGING
+    log.info(f"Word: {word}")
     api = Datamuse()
     results = api.words(sl=word)
-    #print(f"API returned results: {results}") #LOGGING
-    #print(f"Type: {type(results)}") #LOGGING
+    log.info(f"API returned results: {results}")
     if list(filter(lambda x : x['word'] == word, results)): # Check to see if the word itself is in the list.
         result = list(filter(lambda x : x['word'] == word, results))[0]
     else: # get the word with the highest score.
         result = max(results, key=lambda x:x['score'])
-    #print(f"Selected: {result} {type(result)}") #LOGGING
+    log.info(f"Selected: {result} {type(result)}")
     if result:
         return result['numSyllables']
     else:
@@ -49,18 +52,17 @@ def get_sentence_syllables(sentences: str, format_option: int) -> list:
     """
 
     syllables = list()
-    #print(f"Passed in the following:\n----\n{sentences}\n----")
+    log.info(f"get_sentence_syllables - Passed in the following:\n----\n{sentences}\n----")
     formatted_sentences = format_api_sentence(sentences, format_option)
-    #print(formatted_sentences, type(formatted_sentences)) #LOGGING
+    log.info(formatted_sentences, type(formatted_sentences))
     sentences = formatted_sentences.split("\n")
     for sentence in sentences:
         sentence_syllables = 0  # Initialize the sentence syllable counter
-        #print(f"Sending the following sentence to Datamuse: \"{sentence}\"") #LOGGING
+        log.debug(f"Sending the following sentence to Datamuse: \"{sentence}\"")
         for word in sentence.split():
             sentence_syllables += get_word_syllables(word)
-        #print(f"The sentence \"{sentence}\" has a total of {sentence_syllables} syllables.")
+        log.info(f"The sentence \"{sentence}\" has a total of {sentence_syllables} syllables.")
         syllables.append(sentence_syllables)
-        #print(syllables)
     return syllables
 
 
@@ -72,6 +74,8 @@ def format_api_sentence(sentence: str, option: int) -> str:
     :param option: Whether we are encoding(2) or decoding(1) a message.
     :return: a string of the formatted sentence.
     """
+
+    log.debug("format_api_sentence.")
 
     if option == 1: # DECODE
         decode_punctuation = string.punctuation.replace("'", "").replace("-", "") # required to not remove ' and - from the sentence.
@@ -95,6 +99,7 @@ def decode(input_message: str) -> str:
     :return: a str of the decoded message.
     """
 
+    log.info("DECODING...")
     decoded_message = str()
     syllables_list = []
     if not input_message or len(input_message) < 1:
@@ -104,22 +109,17 @@ def decode(input_message: str) -> str:
 
     for sentence in input_message.split("\n"):
         sentence = sentence.rstrip("\r")
-        #print(f"sentence: {sentence}")
         syllables_list.append(get_syllables_for_sentence(sentence))
-
-    #print(f"syllables_list: {syllables_list}")
 
     # Get the corresponding letters according to the codex
     with open('codex.txt', encoding="utf8") as f:
         codex_lines = f.readlines()
         codex_list = [l.strip("\n") for l in codex_lines]
-    #print(f"Codex List: {codex_list}") #LOGGING
+    log.debug(f"decode - Codex List: {codex_list}") #LOGGING
     for num in syllables_list:
-        #print(f"{num} syllables = {codex_list[num - (1 + offset)]}") #LOGGING
+        log.debug(f"{num} syllables = {codex_list[num - (1 + offset)]}") #LOGGING
         decoded_message += codex_list[num - (1 + offset)]
-        #print(codex_list[num - 1])
-    #print(f"Decoded Message:\n  {decoded_message}")
-    #print(type(decoded_message))
+    log.info("Returning decoded message.")
     return decoded_message
 
 
@@ -130,7 +130,7 @@ def encode(input_message: str) -> str:
     :param input_message: The message we want to encode.
     :return: a str of the encoded message.
     """
-    print("ENCODING...")
+    log.info("ENCODING...")
     syllables = list()
     encoded_message = str()
     words = list()
@@ -145,28 +145,24 @@ def encode(input_message: str) -> str:
     with open('codex.txt') as f:
         codex_lines = f.readlines()
         codex_list = [l.strip("\n") for l in codex_lines]
-    #print(codex_list)
+    log.info(f"encode - Got the Codex: {codex_list}")
 
     # Get the syllables needed for each line of the encoded message.
     for c in formatted_message:
         if c == " ":
             continue
-        #print(codex_list.index(c))
         syllables.append(codex_list.index(c) + (1 + offset))
-        #print(syllables)
 
     #1. get words for the syllable count of a line.
     for num in syllables:
         num = int(num)
         word = get_words_for_syllables(num)
         words.append(word)
-        #print(word)
-        #print(words)
 
     #2. build the message.
     for line in words:
         encoded_message = encoded_message + "\n" + line
-    #print(encoded_message)
+    log.info("encode - Returning encoded message.")
     return encoded_message
 
 
@@ -184,22 +180,19 @@ def get_words_for_syllables(total_syllables: int) -> str:
 
     # While we still have syllables to use, get another word.
     while syllables_used < total_syllables:
-        print(f"\nTotal syllables: {total_syllables}")
-        print(f"Syllables used: {syllables_used}")
+        log.info(f"Total syllables: {total_syllables}")
+        log.info(f"Syllables used: {syllables_used}")
 
         # Create a dataframe for words with a syllable count compatible with the number of syllables left.
         df_matching_syllables = df.loc[df['syl'] <= (total_syllables - syllables_used)]
-        #print(df_matching_syllables)
 
         # Get a random sample of rows from the dataframe.
         row = df_matching_syllables.sample()
-        #print(f"Row selected:\n{row}")
-        #print(row['syl'].values[0])
 
         # Add the word to the return string.
         words += row['word'].values[0] + " "
         syllables_used += row['syl'].values[0]
-        #print(row['word'].values[0])
+    log.info(f"get_words_for_syllables - got words: {words}")
     return words.rstrip(" ")
 
 
@@ -214,11 +207,9 @@ def get_syllables_for_sentence(sentence: str) -> int:
     words = sentence.split(' ')
     syllables = 0
 
-    #print(words)
     for word in words:
         df_matching_word = df.loc[df['word'] == word]
         syllables += df_matching_word['syl'].values[0]
-        #print(syllables, type(syllables), len(df_matching_word['syl']), df_matching_word['syl'].values[0])
 
     return syllables
 
@@ -231,9 +222,9 @@ def clean_dictionary():
 
     :return:
     """
-    print('cleaning the dictionary.')
+    log.info('cleaning the dictionary.')
     new_filename = f"datasets/phoneticDictionary_cleaned_{datetime.datetime.now().strftime('%Y%m%d')}.csv"
-    print(new_filename)
+    log.info(f"Cleaned Dictionary Name: {new_filename}")
     with open('datasets/phoneticDictionary.csv', 'r', encoding='utf8') as in_file, open(new_filename, 'w', encoding='utf8', newline='') as out_file:
         seen = set()
         reader = csv.DictReader(in_file)
@@ -285,17 +276,17 @@ def validate_word(word: str) -> bool:
     global words_api_counter
     words_api_counter += 1
 
-    print(response.json(), response.status_code)
+    log.debug(f"Response/Status: {response.json()}, {response.status_code}")
     if response.status_code != 200:
-        print('bad resp')
+        log.info('bad resp')
         return False
     else:
-        print('good resp')
+        log.info('good resp')
         return True
 
 
 if __name__ == '__main__':
-    print("Calling __main__")
+    log.info("Calling __main__")
     offset = 0 # Default: 0
     words_api_counter = 0
     #encode() # Completed
