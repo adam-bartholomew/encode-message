@@ -178,7 +178,7 @@ def get_words_for_syllables(total_syllables: int) -> str:
     """
 
     # Use pandas to read the list of words to find a word to use.
-    df = pd.read_csv('phoneticDictionary_cleaned_20230515.csv')
+    df = pd.read_csv('datasets/phoneticDictionary_cleaned_20230515.csv')
     syllables_used = 0
     words = ""
 
@@ -210,7 +210,7 @@ def get_syllables_for_sentence(sentence: str) -> int:
     :return: int - The amount of syllables in the sentence.
     """
 
-    df = pd.read_csv('phoneticDictionary_cleaned_20230515.csv')
+    df = pd.read_csv('datasets/phoneticDictionary_cleaned_20230515.csv')
     words = sentence.split(' ')
     syllables = 0
 
@@ -224,7 +224,7 @@ def get_syllables_for_sentence(sentence: str) -> int:
 
 
 def clean_dictionary():
-    """Cleans the data in phoneticDictionary.csv and puts it into new_clean.csv
+    """Cleans the data in datasets/phoneticDictionary.csv and puts it into new_clean.csv
 
     This will remove words that start with an apostrophe, contain a period, or are contained in the list twice.
     Provides a clean dataset to use named "phoneticDictionary_cleaned_{date}.csv
@@ -232,9 +232,9 @@ def clean_dictionary():
     :return:
     """
     print('cleaning the dictionary.')
-    new_filename = f"phoneticDictionary_cleaned_{datetime.datetime.now().strftime('%Y%m%d')}.csv"
+    new_filename = f"datasets/phoneticDictionary_cleaned_{datetime.datetime.now().strftime('%Y%m%d')}.csv"
     print(new_filename)
-    with open('phoneticDictionary.csv', 'r', encoding='utf8') as in_file, open(new_filename, 'w', encoding='utf8', newline='') as out_file:
+    with open('datasets/phoneticDictionary.csv', 'r', encoding='utf8') as in_file, open(new_filename, 'w', encoding='utf8', newline='') as out_file:
         seen = set()
         reader = csv.DictReader(in_file)
         writer = csv.writer(out_file)

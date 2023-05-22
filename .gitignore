@@ -1,0 +1,12 @@
+## Ignore compiled Python
+__pycache__/
+*.pyc
+
+## Ignore configuration files
+credentials.txt
+
+## Ignore IntelliJ specific files
+.idea
+
+## Ignore log files
+/logs
