@@ -5,17 +5,20 @@ Please see the initial design document for in-depth design details: __Message_Co
 Syllable dataset downloaded from [Kaggle](https://www.kaggle.com/datasets/schwartstack/english-phonetic-and-syllable-count-dictionary?resource=download)
 
 ### File Overview:
-- __main.py__ - Contains the encryption and decryption functionality used by the flask app.
-- __app.py__ - The Flask application controller.
-- __\static__ - Follows Flask standards.
-- __\templates__ - Follows Flask standards.
-- __\datasets__ - Contains the datasets of words with their syllable counts.
-- __codex.txt__ - Where the letter - syllable translation scheme is kept. The line number that each letter is on equals the number of syllables that letter corresponds to.
-- __credentials.txt__ - Not here, but any api or application keys should be put in this file accordingly:
+__main.py__ - Contains the encryption and decryption functionality used by the flask app.
 
+__app.py__ - The Flask application controller.
 
-    credentials.txt
-    --------------------------------------------------
+__\static__ - Follows Flask standards.
+
+__\templates__ - Follows Flask standards.
+
+__\datasets__ - Contains the datasets of words with their syllable counts.
+
+__codex.txt__ - Where the letter - syllable translation scheme is kept. The line number that each letter is on equals the number of syllables that letter corresponds to.
+
+__credentials.txt__ - Not here, but any api or application keys should be put in this file accordingly:
+
     words api headers:
     "X-RapidAPI-Key": "your-api-key",
     "X-RapidAPI-Host": "wordsapiv1.p.rapidapi.com"
