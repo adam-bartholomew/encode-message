@@ -2,6 +2,7 @@
 ###### Created by [Adam Bartholomew](https://www.linkedin.com/in/adam-bartholomew/) using [Python](https://www.python.org/) and [Flask](https://flask.palletsprojects.com/en/2.3.x/)
 
 Please see the initial design document for in-depth design details: __Message_Coding_Initial_Design.odt__
+
 Syllable dataset downloaded from [Kaggle](https://www.kaggle.com/datasets/schwartstack/english-phonetic-and-syllable-count-dictionary?resource=download)
 
 ### File Overview:
