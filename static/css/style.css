@@ -6,4 +6,7 @@
         transform: translateX(-50%);
         text-align: center;
     }
+.div-title-center {
+    text-align: center;
+    }
 }

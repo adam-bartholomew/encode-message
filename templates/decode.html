@@ -7,7 +7,7 @@
     <form method="post">
         <div class="mb-3">
             <!--<label for="inputMessage" class="form-label">Message</label>-->
-            <textarea id="inputMessage" type="text" maxlength="1000" name="inputMessage" placeholder="Please enter your encoded message here." class="form-control">{{ request.form['inputMessage'] }}</textarea>
+            <textarea id="inputMessage" maxlength="1000" name="inputMessage" placeholder="Please enter your encoded message here." class="form-control">{{ request.form['inputMessage'] }}</textarea>
         </div>
         <div class="mb-3">
             <button name="decodeSubmit" id="decodeSubmit" value="Submit" type="submit" class="btn btn-outline-primary">Submit</button>

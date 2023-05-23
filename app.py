@@ -20,9 +20,15 @@ def add_header(response):
     return response
 
 
-@app.route('/', methods=('GET', 'POST'))
-def encode():
+@app.route('/')
+def index():
     template = 'index.html'
+    return render_template(template)
+
+
+@app.route('/encode', methods=('GET', 'POST'))
+def encode():
+    template = 'encode.html'
     if request.method == 'POST':
         if request.form.get('encodeSubmit') == 'Submit':
             msg = request.form.get('inputMessage')

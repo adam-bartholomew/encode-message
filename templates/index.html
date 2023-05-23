@@ -2,23 +2,10 @@
 {% set active_page = "index" %}
 
 {% block content %}
-    <h1>{% block title %} Encode a Message {% endblock %}</h1>
-
-    <form method="post">
-        <div class="mb-3">
-            <!--<label for="inputMessage" class="form-label">Message</label>-->
-            <input id="inputMessage" type="text" maxlength="500" name="inputMessage" placeholder="Please enter your message here." class="form-control" value="{{ request.form['inputMessage'] }}"/>
-        </div>
-        <div class="mb-3">
-            <button name="encodeSubmit" id="encodeSubmit" value="Submit" type="submit" class="btn btn-outline-primary">Submit</button>
-            <button name="encodeClear" id="encodeClear" value="Clear" type="submit" class="btn btn-outline-danger">Clear</button>
-        </div>
-        <hr class="mt-1 mb-3"/>
-        <div class="mb-3">
-        <textarea id="encodedMessage" name="encodedMessage" rows="10" cols="140" readonly="readonly" placeholder="Encrypted message displayed here." class="form-control">{{ encoded_message }}</textarea>
+<div class="row">
+    <div class="col-md-8 offset-md-2 div-title-center">
+        <h1>{% block title %} Welcome! {% endblock %}</h1>
+        <h5>Please use the links in the navigation bar at the top of the page to select a destination.</h5>
     </div>
-    </form>
-    <script>
-        document.getElementById('inputMessage').value = ""
-    </script>
+</div>
 {% endblock %}
