@@ -11,12 +11,14 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = flask_app_key
 app.debug = True
 
+
 # cache definition @app.after_request def add_header(response): Add headers to both force latest IE rendering engine or Chrome Frame, and also to cache the rendered page for 10 minutes.
 @app.after_request
 def add_header(response):
     response.headers["X-UA-Compatible"] = "IE=Edge,chrome=1"
     response.headers["Cache-Control"] = "public, max-age=0"
     return response
+
 
 @app.route('/', methods=('GET', 'POST'))
 def encode():

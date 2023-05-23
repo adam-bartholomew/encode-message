@@ -14,10 +14,11 @@ import logging
 # https://www.onelook.com/thesaurus/?s=&f_ns=6&sortby=le0&sorttopn=1000
 # https://www.howmanysyllables.com
 
-offset = 0 # Default: 0
+offset = 0  # Default: 0
 log_filename = "./logs/encode-message_" + datetime.datetime.now().strftime("%Y%m%d") + ".log"
 logging.basicConfig(filename=log_filename, format="%(asctime)s.%(msecs)03d |:| %(levelname)s |:| %(message)s", level=logging.INFO, datefmt="%m/%d/%Y %H:%M:%S")
 log = logging.getLogger()
+
 
 # Retrieves the word from the Datamuse API to get the number of syllables.
 def get_word_syllables(word: str) -> int:
@@ -31,10 +32,10 @@ def get_word_syllables(word: str) -> int:
     api = Datamuse()
     results = api.words(sl=word)
     log.info(f"API returned results: {results}")
-    if list(filter(lambda x : x['word'] == word, results)): # Check to see if the word itself is in the list.
-        result = list(filter(lambda x : x['word'] == word, results))[0]
-    else: # get the word with the highest score.
-        result = max(results, key=lambda x:x['score'])
+    if list(filter(lambda x: x['word'] == word, results)):  # Check to see if the word itself is in the list.
+        result = list(filter(lambda x: x['word'] == word, results))[0]
+    else:  # get the word with the highest score.
+        result = max(results, key=lambda x: x['score'])
     log.info(f"Selected: {result} {type(result)}")
     if result:
         return result['numSyllables']
@@ -77,19 +78,20 @@ def format_api_sentence(sentence: str, option: int) -> str:
 
     log.debug("format_api_sentence.")
 
-    if option == 1: # DECODE
-        decode_punctuation = string.punctuation.replace("'", "").replace("-", "") # required to not remove ' and - from the sentence.
-        new_sentence = sentence.translate(str.maketrans('', '', decode_punctuation)) # remove any punctuation defined in decode_punctuation.
+    if option == 1:  # DECODE
+        decode_punctuation = string.punctuation.replace("'", "").replace("-", "")  # required to not remove ' and - from the sentence.
+        new_sentence = sentence.translate(str.maketrans('', '', decode_punctuation))  # remove any punctuation defined in decode_punctuation.
         for word in new_sentence.split(" "):
-            if word.isnumeric(): # change numeric values into the english words.
+            if word.isnumeric():  # change numeric values into the english words.
                 new_sentence = new_sentence.replace(word, num2words(word))
         return new_sentence.lower()
-    elif option == 2: # ENCODE
-        new_sentence = sentence.translate(str.maketrans('', '', string.punctuation)) # remove all punctuation.
+    elif option == 2:  # ENCODE
+        new_sentence = sentence.translate(str.maketrans('', '', string.punctuation))  # remove all punctuation.
         for word in new_sentence.split(" "):
-            if word.isnumeric(): # change numeric values into the english words.
+            if word.isnumeric():  # change numeric values into the english words.
                 new_sentence = new_sentence.replace(word, num2words(word))
         return new_sentence.upper()
+
 
 # Decodes a message.
 def decode(input_message: str) -> str:
@@ -114,10 +116,10 @@ def decode(input_message: str) -> str:
     # Get the corresponding letters according to the codex
     with open('codex.txt', encoding="utf8") as f:
         codex_lines = f.readlines()
-        codex_list = [l.strip("\n") for l in codex_lines]
-    log.debug(f"decode - Codex List: {codex_list}") #LOGGING
+        codex_list = [line.strip("\n") for line in codex_lines]
+    log.debug(f"decode - Codex List: {codex_list}")  # LOGGING
     for num in syllables_list:
-        log.debug(f"{num} syllables = {codex_list[num - (1 + offset)]}") #LOGGING
+        log.debug(f"{num} syllables = {codex_list[num - (1 + offset)]}")  # LOGGING
         decoded_message += codex_list[num - (1 + offset)]
     log.info("Returning decoded message.")
     return decoded_message
@@ -136,7 +138,7 @@ def encode(input_message: str) -> str:
     words = list()
 
     if not input_message or len(input_message) < 1:
-       input_message = "test message"
+        input_message = "test message"
 
     # Format the message
     formatted_message = format_api_sentence(input_message, 2)
@@ -144,7 +146,7 @@ def encode(input_message: str) -> str:
     # Get the corresponding letters according to the codex.
     with open('codex.txt') as f:
         codex_lines = f.readlines()
-        codex_list = [l.strip("\n") for l in codex_lines]
+        codex_list = [line.strip("\n") for line in codex_lines]
     log.info(f"encode - Got the Codex: {codex_list}")
 
     # Get the syllables needed for each line of the encoded message.
@@ -153,13 +155,13 @@ def encode(input_message: str) -> str:
             continue
         syllables.append(codex_list.index(c) + (1 + offset))
 
-    #1. get words for the syllable count of a line.
+    # 1. get words for the syllable count of a line.
     for num in syllables:
         num = int(num)
         word = get_words_for_syllables(num)
         words.append(word)
 
-    #2. build the message.
+    # 2. build the message.
     for line in words:
         encoded_message = encoded_message + "\n" + line
     log.info("encode - Returning encoded message.")
@@ -232,7 +234,7 @@ def clean_dictionary():
 
         writer.writerow(['id', 'word', 'phon', 'syl', 'start', 'end'])
         for row in reader:
-            word = row['word'] # Get the word for the row
+            word = row['word']  # Get the word for the row
 
             # If the word is a duplicate, starts with "'", or contains "." skip it.
             if word in seen or word.startswith("'") or "." in word:
@@ -287,6 +289,6 @@ def validate_word(word: str) -> bool:
 
 if __name__ == '__main__':
     log.info("Calling __main__")
-    offset = 0 # Default: 0
+    offset = 0  # Default: 0
     words_api_counter = 0
-    #encode() # Completed
+    #encode()  # Completed
