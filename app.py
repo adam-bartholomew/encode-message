@@ -28,33 +28,40 @@ def index():
 
 @app.route('/encode', methods=('GET', 'POST'))
 def encode():
-    template = 'encode.html'
+    page_name = "encode"
+    page_template = f"{page_name}.html"
+
     if request.method == 'POST':
         if request.form.get('encodeSubmit') == 'Submit':
             msg = request.form.get('inputMessage')
             if msg:
                 main.log.info(f"submitting encode form with message: {msg}")
                 encoded_msg = msg + "\n-----------------------" + main.encode(msg)
-                return render_template(template, encoded_message=encoded_msg)
+                return render_template(page_template, encoded_message=encoded_msg)
+            else:
+                flash("Please enter a message to encode.")
         if request.form.get('encodeClear') == 'Clear':
             main.log.info("Clearing encode form.")
-            return render_template(template)
-    return render_template(template)
+            return redirect(url_for(page_name))
+    return render_template(page_template)
 
 
 @app.route('/decode', methods=('GET', 'POST'))
 def decode():
-    template = 'decode.html'
+    page_name = "decode"
+    page_template = f"{page_name}.html"
     if request.method == 'POST':
         if request.form.get('decodeSubmit') == 'Submit':
             msg = request.form.get('inputMessage')
             if msg:
                 main.log.info(f"Submitting decode form with msg: {msg}")
                 decoded_msg = msg + "\n-----------------------\n" + main.decode(msg)
-                return render_template(template, decoded_message=decoded_msg)
+                return render_template(page_template, decoded_message=decoded_msg)
+            else:
+                flash("Please enter a message to decode.")
         if request.form.get('decodeClear') == 'Clear':
             main.log.info("Clearing decode form.")
-            return render_template(template)
+            return redirect(url_for(page_name))
 
     return render_template('decode.html')
 
