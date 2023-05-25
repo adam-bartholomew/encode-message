@@ -18,16 +18,30 @@ __\datasets__ - Contains the datasets of words with their syllable counts.
 
 __codex.txt__ - Where the letter - syllable translation scheme is kept. The line number that each letter is on equals the number of syllables that letter corresponds to.
 
-__credentials.txt__ - Not here, but any api or application keys should be put in this file accordingly:
+__credentials.txt__ - Please keep this file locally only, but any api keys should be put in this file:
 
     words api headers:
     "X-RapidAPI-Key": "your-api-key",
     "X-RapidAPI-Host": "wordsapiv1.p.rapidapi.com"
-
-    "flask_key": "your-flask-key"
 
 ### Encoding:
 - Take an english sentence or phrase and turn it into something that does not make sense.
 
 ### Decoding:
 - Take a message that has been encrypted using this same program and decrypt it into it's original meaning.
+
+## Running:
+Make sure that the FLASK_KEY environment variable is set on your machine or in the projects **activate.bat** file if using virtual environment.
+
+    ...
+    @set FLASK_KEY="secret-flask-key"
+    ...
+
+Prior to starting up please execute the following 2 commands:
+    
+    $ export FLASK_APP=app
+    $ export FLASK_ENV=development
+
+To run app in development:
+
+    flask --app app run --debug

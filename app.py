@@ -1,14 +1,10 @@
 from flask import Flask, render_template, request, url_for, flash, redirect, current_app
 from werkzeug.exceptions import abort
-import main as main
-
-with open('credentials.txt', 'r') as f:
-    for line in f:
-        if line.startswith('"flask_key":'):
-            flask_app_key = (line.split(":")[1].split('"')[1])
+import messaging as messaging
+import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = flask_app_key
+app.secret_key = os.environ.get('FLASK_KEY')  # FLASK_KEY stored as system environment variable.
 app.debug = True
 
 
@@ -35,13 +31,13 @@ def encode():
         if request.form.get('encodeSubmit') == 'Submit':
             msg = request.form.get('inputMessage')
             if msg:
-                main.log.info(f"submitting encode form with message: {msg}")
-                encoded_msg = msg + "\n-----------------------" + main.encode(msg)
+                messaging.log.info(f"submitting encode form with message: {msg}")
+                encoded_msg = msg + "\n-----------------------" + messaging.encode(msg)
                 return render_template(page_template, encoded_message=encoded_msg)
             else:
                 flash("Please enter a message to encode.")
         if request.form.get('encodeClear') == 'Clear':
-            main.log.info("Clearing encode form.")
+            messaging.log.info("Clearing encode form.")
             return redirect(url_for(page_name))
     return render_template(page_template)
 
@@ -54,13 +50,13 @@ def decode():
         if request.form.get('decodeSubmit') == 'Submit':
             msg = request.form.get('inputMessage')
             if msg:
-                main.log.info(f"Submitting decode form with msg: {msg}")
-                decoded_msg = msg + "\n-----------------------\n" + main.decode(msg)
+                messaging.log.info(f"Submitting decode form with msg: {msg}")
+                decoded_msg = msg + "\n-----------------------\n" + messaging.decode(msg)
                 return render_template(page_template, decoded_message=decoded_msg)
             else:
                 flash("Please enter a message to decode.")
         if request.form.get('decodeClear') == 'Clear':
-            main.log.info("Clearing decode form.")
+            messaging.log.info("Clearing decode form.")
             return redirect(url_for(page_name))
 
     return render_template('decode.html')

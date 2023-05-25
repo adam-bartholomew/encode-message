@@ -24,8 +24,8 @@ log = logging.getLogger()
 def get_word_syllables(word: str) -> int:
     """Gets the syllable count of a word.
 
-    :param word: The word to get the syllables for.
-    :return: integer for the amount of syllables.
+    :param (str) word: The word to get the syllables for.
+    :return (int): The amount of syllables.
     """
 
     log.info(f"Word: {word}")
@@ -47,9 +47,9 @@ def get_word_syllables(word: str) -> int:
 def get_sentence_syllables(sentences: str, format_option: int) -> list:
     """Gets the syllable count in a phrase, sentence, or group of lines.
 
-    :param sentences: The phrase, sentence, or group of lines to get the syllables for.
-    :param format_option: Whether we are encoding or decoding a string - to be passed into the format_api_sentence call.
-    :return: a list of syllables per line/sentence.
+    :param (str) sentences: The phrase, sentence, or group of lines to get the syllables for.
+    :param (int) format_option: Whether we are encoding or decoding a string - to be passed into the format_api_sentence call.
+    :return (list): Number of syllables per line/sentence.
     """
 
     syllables = list()
@@ -71,9 +71,9 @@ def get_sentence_syllables(sentences: str, format_option: int) -> list:
 def format_api_sentence(sentence: str, option: int) -> str:
     """Formats a sentence to be sent to the Datamuse API.
 
-    :param sentence: The sentence we need to format.
-    :param option: Whether we are encoding(2) or decoding(1) a message.
-    :return: a string of the formatted sentence.
+    :param (str) sentence: The sentence we need to format.
+    :param (int) option: Whether we are encoding (2) or decoding (1) a message.
+    :return (str): The formatted sentence.
     """
 
     log.debug("format_api_sentence.")
@@ -97,8 +97,8 @@ def format_api_sentence(sentence: str, option: int) -> str:
 def decode(input_message: str) -> str:
     """Decodes a message according to the codex on the system.
 
-    :param input_message: The message we want to decode.
-    :return: a str of the decoded message.
+    :param (str) input_message: The message we want to decode.
+    :return (str): The decoded message.
     """
 
     log.info("DECODING...")
@@ -129,8 +129,8 @@ def decode(input_message: str) -> str:
 def encode(input_message: str) -> str:
     """Encodes a message according the codex on the system.
 
-    :param input_message: The message we want to encode.
-    :return: a str of the encoded message.
+    :param (str) input_message: The message we want to encode.
+    :return (str): The encoded message.
     """
     log.info("ENCODING...")
     syllables = list()
@@ -171,8 +171,8 @@ def encode(input_message: str) -> str:
 def get_words_for_syllables(total_syllables: int) -> str:
     """Gets a word or words for a provided number of syllables.
 
-    :param total_syllables: The number of syllables needed to be fulfilled.
-    :return: str - A space separated string of words.
+    :param (int) total_syllables: The number of syllables needed to be fulfilled.
+    :return (str): A space separated string of words.
     """
 
     # Use pandas to read the list of words to find a word to use.
@@ -201,8 +201,8 @@ def get_words_for_syllables(total_syllables: int) -> str:
 def get_syllables_for_sentence(sentence: str) -> int:
     """Gets the syllable count for a sentence.
 
-    :param sentence: The sentence to get the syllables for.
-    :return: int - The amount of syllables in the sentence.
+    :param (str) sentence: The sentence to get the syllables for.
+    :return (int): The amount of syllables in the sentence.
     """
 
     df = pd.read_csv('datasets/phoneticDictionary_cleaned_20230515.csv')
@@ -252,14 +252,15 @@ def clean_dictionary():
             seen.add(word)
 
 
+# Legacy function. Not currently in use.
 def validate_word(word: str) -> bool:
     """Checks to ensure the word chosen is a valid word.
 
     Makes a request to the WordsAPI to see if the provided word returns a valid result.
     We are only allowed 2,500 requests per day for free.
 
-    :param word: The word to check
-    :return: bool: True if the word is valid
+    :param (str) word: The word to check
+    :return (bool): True if the word is valid
     """
 
     url = f"https://wordsapiv1.p.rapidapi.com/words/{word}/syllables"
