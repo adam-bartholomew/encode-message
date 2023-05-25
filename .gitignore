@@ -10,3 +10,4 @@ credentials.txt
 
 ## Ignore log files
 /logs
+.vercel
