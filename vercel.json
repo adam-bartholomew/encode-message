@@ -4,16 +4,16 @@
       {
           "src": "app.py",
           "use": "@vercel/python"
+      },
+      {
+        "src": "/static/(.*)",
+        "dest": "@vercel/static"
       }
   ],
   "routes": [
       {
           "src": "(.*)",
           "dest": "app.py"
-      },
-      {
-        "src": "/static/(.*)",
-        "dest": "/static/$1"
       }
   ]
 }
