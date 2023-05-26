@@ -28,7 +28,7 @@ def get_word_syllables(word: str) -> int:
     :return (int): The amount of syllables.
     """
 
-    log.info(f"Word: {word}")
+    log.info(f"get_word_syllables: {word}")
     api = Datamuse()
     results = api.words(sl=word)
     log.info(f"API returned results: {results}")
@@ -76,7 +76,7 @@ def format_api_sentence(sentence: str, option: int) -> str:
     :return (str): The formatted sentence.
     """
 
-    log.debug("format_api_sentence.")
+    log.info(f"format_api_sentence - {option}: 1 = Decode, 2 = Encode")
 
     if option == 1:  # DECODE
         decode_punctuation = string.punctuation.replace("'", "").replace("-", "")  # required to not remove ' and - from the sentence.
@@ -111,16 +111,22 @@ def decode(input_message: str) -> str:
 
     for sentence in input_message.split("\n"):
         sentence = sentence.rstrip("\r")
-        syllables_list.append(get_syllables_for_sentence(sentence))
+        try:
+            syllables_list.append(get_syllables_for_sentence(sentence))
+        except IndexError:
+            decoded_message = "Message could not be decrypted."
 
     # Get the corresponding letters according to the codex
     with open('codex.txt', encoding="utf8") as f:
         codex_lines = f.readlines()
         codex_list = [line.strip("\n") for line in codex_lines]
-    log.debug(f"decode - Codex List: {codex_list}")  # LOGGING
+    log.debug(f"decode - Codex List: {codex_list}")
+    if None in syllables_list:
+        return "Message could not be decrypted."
     for num in syllables_list:
-        log.debug(f"{num} syllables = {codex_list[num - (1 + offset)]}")  # LOGGING
-        decoded_message += codex_list[num - (1 + offset)]
+        corrected_num = (num - offset) % 26
+        log.debug(f"{num} syllables = {codex_list[corrected_num]}")
+        decoded_message += codex_list[corrected_num]
     log.info("Returning decoded message.")
     return decoded_message
 
@@ -153,7 +159,7 @@ def encode(input_message: str) -> str:
     for c in formatted_message:
         if c == " ":
             continue
-        syllables.append(codex_list.index(c) + (1 + offset))
+        syllables.append((codex_list.index(c) + offset) % 26)
 
     # 1. get words for the syllable count of a line.
     for num in syllables:
@@ -175,6 +181,7 @@ def get_words_for_syllables(total_syllables: int) -> str:
     :return (str): A space separated string of words.
     """
 
+    log.info(f"get_words_for_syllables: {total_syllables}")
     # Use pandas to read the list of words to find a word to use.
     df = pd.read_csv('datasets/phoneticDictionary_cleaned_20230515.csv')
     syllables_used = 0
@@ -182,8 +189,7 @@ def get_words_for_syllables(total_syllables: int) -> str:
 
     # While we still have syllables to use, get another word.
     while syllables_used < total_syllables:
-        log.info(f"Total syllables: {total_syllables}")
-        log.info(f"Syllables used: {syllables_used}")
+        log.info(f"Syllables used so far: {syllables_used}")
 
         # Create a dataframe for words with a syllable count compatible with the number of syllables left.
         df_matching_syllables = df.loc[df['syl'] <= (total_syllables - syllables_used)]
@@ -198,19 +204,22 @@ def get_words_for_syllables(total_syllables: int) -> str:
     return words.rstrip(" ")
 
 
-def get_syllables_for_sentence(sentence: str) -> int:
+def get_syllables_for_sentence(sentence: str) -> int | None:
     """Gets the syllable count for a sentence.
 
     :param (str) sentence: The sentence to get the syllables for.
     :return (int): The amount of syllables in the sentence.
     """
 
+    log.info(f"get_syllables_for_sentence: \"{sentence}\" ")
     df = pd.read_csv('datasets/phoneticDictionary_cleaned_20230515.csv')
-    words = sentence.split(' ')
+    words = sentence.lower().split(' ')
     syllables = 0
 
     for word in words:
         df_matching_word = df.loc[df['word'] == word]
+        if df_matching_word.empty:
+            return None
         syllables += df_matching_word['syl'].values[0]
 
     return syllables
@@ -292,4 +301,4 @@ if __name__ == '__main__':
     log.info("Calling __main__")
     offset = 0  # Default: 0
     words_api_counter = 0
-    #encode()  # Completed
+
