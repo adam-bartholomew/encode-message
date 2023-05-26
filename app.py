@@ -30,8 +30,10 @@ def encode():
     if request.method == 'POST':
         if request.form.get('encodeSubmit') == 'Submit':
             msg = request.form.get('inputMessage')
+            offset = int(request.form.get('encodeOffset')) if request.form.get('encodeOffset').isnumeric() else 0
             if msg:
-                messaging.log.info(f"submitting encode form with message: {msg}")
+                messaging.log.info(f"Submitting encode form with msg: {msg}, offset: {offset}")
+                messaging.offset = offset
                 encoded_msg = msg + "\n-----------------------" + messaging.encode(msg)
                 return render_template(page_template, encoded_message=encoded_msg)
             else:
@@ -49,8 +51,10 @@ def decode():
     if request.method == 'POST':
         if request.form.get('decodeSubmit') == 'Submit':
             msg = request.form.get('inputMessage')
+            offset = int(request.form.get('decodeOffset')) if request.form.get('decodeOffset').isnumeric() else 0
             if msg:
-                messaging.log.info(f"Submitting decode form with msg: {msg}")
+                messaging.log.info(f"Submitting decode form with msg: {msg}, offset: {offset}")
+                messaging.offset = offset
                 decoded_msg = msg + "\n-----------------------\n" + messaging.decode(msg)
                 return render_template(page_template, decoded_message=decoded_msg)
             else:
