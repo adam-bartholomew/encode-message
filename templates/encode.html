@@ -21,9 +21,17 @@
     <textarea id="encodedMessage" name="encodedMessage" rows="10" cols="140" readonly="readonly" placeholder="Encrypted message displayed here." class="form-control">{{ encoded_message }}</textarea>
 </div>
 </form>
-<script src="{{ url_for('static', filename='js/encode.js') }}"></script>
+<!--<script src="{{ url_for('static', filename='js/encode.js') }}"></script>-->
 <!-- Done this way so the input is cleared after submitting -->
 <script>
-    document.getElementById('inputMessage').value = ""
+    function clearEncodeForm() {
+        document.getElementById('inputMessage').value = "";
+        document.getElementById('encodeOffset').value = "";
+        document.getElementById('encodedMessage').value = "";
+    }
+
+    function clearEncodeInput() {
+        document.getElementById('inputMessage').value = "";
+    }
 </script>
 {% endblock %}
