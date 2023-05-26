@@ -6,7 +6,7 @@ Please see the initial design document for in-depth design details: __Message_Co
 Syllable dataset downloaded from [Kaggle](https://www.kaggle.com/datasets/schwartstack/english-phonetic-and-syllable-count-dictionary?resource=download)
 
 ### File Overview:
-__main.py__ - Contains the encryption and decryption functionality used by the flask app.
+__messaging.py__ - Contains the encryption and decryption functionality used by the flask app.
 
 __app.py__ - The Flask application controller.
 
@@ -23,6 +23,8 @@ __credentials.txt__ - Please keep this file locally only, but any api keys shoul
     words api headers:
     "X-RapidAPI-Key": "your-api-key",
     "X-RapidAPI-Host": "wordsapiv1.p.rapidapi.com"
+
+__requirements.txt__ & __vercel.json__ - Vercel config properties for hosting.
 
 ### Encoding:
 - Take an english sentence or phrase and turn it into something that does not make sense.
