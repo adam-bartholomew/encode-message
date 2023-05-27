@@ -204,7 +204,7 @@ def get_words_for_syllables(total_syllables: int) -> str:
     return words.rstrip(" ")
 
 
-def get_syllables_for_sentence(sentence: str) -> int | None:
+def get_syllables_for_sentence(str):
     """Gets the syllable count for a sentence.
 
     :param (str) sentence: The sentence to get the syllables for.
