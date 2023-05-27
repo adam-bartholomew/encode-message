@@ -21,17 +21,9 @@
         <textarea id="decodedMessage" name="decodedMessage" rows="10" cols="140" readonly="readonly" placeholder="Decrypted message displayed here." class="form-control">{{ decoded_message }}</textarea>
     </div>
 </form>
-<!--<script src="{{ url_for('static', filename='js/decode.js') }}"></script>-->
+<script src="{{ url_for('static', filename='js/decode.js') }}"></script>
 <!-- Done this way so the input is cleared after submitting -->
 <script>
-    function clearDecodeForm() {
-        document.getElementById('inputMessage').value = "";
-        document.getElementById('decodeOffset').value = "";
-        document.getElementById('decodedMessage').value = "";
-    }
-
-    function clearDecodeInput() {
-        document.getElementById('inputMessage').value = "";
-    }
+    document.getElementById('inputMessage').value = "";
 </script>
 {% endblock %}

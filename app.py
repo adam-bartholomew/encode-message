@@ -6,6 +6,7 @@ import os
 app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_KEY')  # FLASK_KEY stored as system environment variable.
 app.debug = True
+return_spacer = "-----------------------"
 
 
 # cache definition @app.after_request def add_header(response): Add headers to both force latest IE rendering engine or Chrome Frame, and also to cache the rendered page for 10 minutes.
@@ -34,7 +35,7 @@ def encode():
             if msg:
                 messaging.log.info(f"Submitting encode form with msg: {msg}, offset: {offset}")
                 messaging.offset = offset
-                encoded_msg = msg + "\n-----------------------" + messaging.encode(msg)
+                encoded_msg = f"Offset: {offset}\nInput Message: {msg}\nEncrypted Message:\n{return_spacer}{messaging.encode(msg)}"
                 return render_template(page_template, encoded_message=encoded_msg)
             else:
                 flash("Please enter a message to encode.")
@@ -55,7 +56,7 @@ def decode():
             if msg:
                 messaging.log.info(f"Submitting decode form with msg: {msg}, offset: {offset}")
                 messaging.offset = offset
-                decoded_msg = msg + "\n-----------------------\n" + messaging.decode(msg)
+                decoded_msg = f"Offset: {offset}\nEncrypted Message:\n{return_spacer}\n{msg}\n{return_spacer}\nDecrypted Message:\n{return_spacer}\n{messaging.decode(msg)}"
                 return render_template(page_template, decoded_message=decoded_msg)
             else:
                 flash("Please enter a message to decode.")

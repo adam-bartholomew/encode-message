@@ -125,7 +125,7 @@ def decode(input_message: str) -> str:
     if None in syllables_list:
         return "Message could not be decrypted."
     for num in syllables_list:
-        corrected_num = (num - offset) % 26
+        corrected_num = (num - 1 - offset) % 26
         log.debug(f"{num} syllables = {codex_list[corrected_num]}")
         decoded_message += codex_list[corrected_num]
     log.info("Returning decoded message.")
@@ -160,7 +160,7 @@ def encode(input_message: str) -> str:
     for c in formatted_message:
         if c == " ":
             continue
-        syllables.append((codex_list.index(c) + offset) % 26)
+        syllables.append((codex_list.index(c) + 1 + offset) % 26)
 
     # 1. get words for the syllable count of a line.
     for num in syllables:
