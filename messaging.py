@@ -5,6 +5,7 @@ import requests
 import datetime as datetime
 from datamuse import Datamuse
 from num2words import num2words
+from typing import Union
 import logging
 # https://api.datamuse.com/words?sl=i%27ll
 # https://wordsapiv1.p.rapidapi.com/words/aberration/syllables | This costs money after 2500 requests
@@ -204,7 +205,7 @@ def get_words_for_syllables(total_syllables: int) -> str:
     return words.rstrip(" ")
 
 
-def get_syllables_for_sentence(sentence: str) -> Any:
+def get_syllables_for_sentence(sentence: str) -> Union[int, None]:
     """Gets the syllable count for a sentence.
 
     :param (str) sentence: The sentence to get the syllables for.
