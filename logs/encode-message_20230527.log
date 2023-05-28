@@ -1,0 +1,771 @@
+05/27/2023 09:31:06.780 |:| INFO |:| [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+05/27/2023 09:31:06.780 |:| INFO |:| [33mPress CTRL+C to quit[0m
+05/27/2023 09:31:06.782 |:| INFO |:|  * Restarting with stat
+05/27/2023 09:31:07.449 |:| WARNING |:|  * Debugger is active!
+05/27/2023 09:31:07.454 |:| INFO |:|  * Debugger PIN: 125-543-471
+05/27/2023 09:31:21.086 |:| INFO |:| 127.0.0.1 - - [27/May/2023 09:31:21] "GET / HTTP/1.1" 200 -
+05/27/2023 09:31:21.154 |:| INFO |:| 127.0.0.1 - - [27/May/2023 09:31:21] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 09:31:22.787 |:| INFO |:| 127.0.0.1 - - [27/May/2023 09:31:22] "GET /decode HTTP/1.1" 200 -
+05/27/2023 09:31:22.835 |:| INFO |:| 127.0.0.1 - - [27/May/2023 09:31:22] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 09:31:24.089 |:| INFO |:| 127.0.0.1 - - [27/May/2023 09:31:24] "GET /encode HTTP/1.1" 200 -
+05/27/2023 09:31:24.117 |:| INFO |:| 127.0.0.1 - - [27/May/2023 09:31:24] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:22:14.951 |:| INFO |:| [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+05/27/2023 10:22:14.952 |:| INFO |:| [33mPress CTRL+C to quit[0m
+05/27/2023 10:22:14.953 |:| INFO |:|  * Restarting with stat
+05/27/2023 10:22:15.655 |:| WARNING |:|  * Debugger is active!
+05/27/2023 10:22:15.659 |:| INFO |:|  * Debugger PIN: 125-543-471
+05/27/2023 10:22:26.718 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:22:26] "GET / HTTP/1.1" 200 -
+05/27/2023 10:22:26.799 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:22:26] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:22:30.231 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:22:30] "GET /encode HTTP/1.1" 200 -
+05/27/2023 10:22:30.266 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:22:30] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:22:33.680 |:| INFO |:| Submitting encode form with msg: adam, offset: 0
+05/27/2023 10:22:33.680 |:| INFO |:| ENCODING...
+05/27/2023 10:22:33.680 |:| INFO |:| format_api_sentence - 2: 1 = Decode, 2 = Encode
+05/27/2023 10:22:33.681 |:| INFO |:| encode - Got the Codex: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+05/27/2023 10:22:33.682 |:| INFO |:| get_words_for_syllables: 0
+05/27/2023 10:22:33.868 |:| INFO |:| get_words_for_syllables - got words: 
+05/27/2023 10:22:33.872 |:| INFO |:| get_words_for_syllables: 3
+05/27/2023 10:22:34.021 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:22:34.028 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:22:34.032 |:| INFO |:| get_words_for_syllables - got words: hywell lotts 
+05/27/2023 10:22:34.037 |:| INFO |:| get_words_for_syllables: 0
+05/27/2023 10:22:34.182 |:| INFO |:| get_words_for_syllables - got words: 
+05/27/2023 10:22:34.186 |:| INFO |:| get_words_for_syllables: 12
+05/27/2023 10:22:34.344 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:22:34.353 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:22:34.364 |:| INFO |:| Syllables used so far: 3
+05/27/2023 10:22:34.374 |:| INFO |:| Syllables used so far: 5
+05/27/2023 10:22:34.383 |:| INFO |:| Syllables used so far: 8
+05/27/2023 10:22:34.395 |:| INFO |:| Syllables used so far: 10
+05/27/2023 10:22:34.403 |:| INFO |:| get_words_for_syllables - got words: dennard struts matthias hardesty marcille zeiger 
+05/27/2023 10:22:34.408 |:| INFO |:| encode - Returning encoded message.
+05/27/2023 10:22:34.409 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:22:34] "POST /encode HTTP/1.1" 200 -
+05/27/2023 10:22:34.431 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:22:34] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:26:33.826 |:| INFO |:|  * Detected change in 'C:\\Users\\adamb\\PycharmProjects\\encode-message\\messaging.py', reloading
+05/27/2023 10:26:33.910 |:| INFO |:|  * Restarting with stat
+05/27/2023 10:26:34.669 |:| WARNING |:|  * Debugger is active!
+05/27/2023 10:26:34.674 |:| INFO |:|  * Debugger PIN: 125-543-471
+05/27/2023 10:26:46.337 |:| INFO |:| Submitting encode form with msg: adam, offset: 0
+05/27/2023 10:26:46.337 |:| INFO |:| ENCODING...
+05/27/2023 10:26:46.337 |:| INFO |:| format_api_sentence - 2: 1 = Decode, 2 = Encode
+05/27/2023 10:26:46.337 |:| INFO |:| encode - Got the Codex: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+05/27/2023 10:26:46.337 |:| INFO |:| get_words_for_syllables: 1
+05/27/2023 10:26:46.496 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:26:46.499 |:| INFO |:| get_words_for_syllables - got words: quilmes 
+05/27/2023 10:26:46.503 |:| INFO |:| get_words_for_syllables: 4
+05/27/2023 10:26:46.658 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:26:46.666 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:26:46.674 |:| INFO |:| get_words_for_syllables - got words: renfrow edlin 
+05/27/2023 10:26:46.679 |:| INFO |:| get_words_for_syllables: 1
+05/27/2023 10:26:46.827 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:26:46.830 |:| INFO |:| get_words_for_syllables - got words: smooth 
+05/27/2023 10:26:46.833 |:| INFO |:| get_words_for_syllables: 13
+05/27/2023 10:26:46.986 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:26:46.995 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:26:47.005 |:| INFO |:| Syllables used so far: 5
+05/27/2023 10:26:47.017 |:| INFO |:| Syllables used so far: 7
+05/27/2023 10:26:47.027 |:| INFO |:| Syllables used so far: 10
+05/27/2023 10:26:47.036 |:| INFO |:| Syllables used so far: 12
+05/27/2023 10:26:47.041 |:| INFO |:| get_words_for_syllables - got words: armey vanderwal johnsrud underuse horter scooped 
+05/27/2023 10:26:47.045 |:| INFO |:| encode - Returning encoded message.
+05/27/2023 10:26:47.056 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:26:47] "POST /encode HTTP/1.1" 200 -
+05/27/2023 10:26:47.140 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:26:47] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:26:50.235 |:| INFO |:| Submitting encode form with msg: adam, offset: 0
+05/27/2023 10:26:50.235 |:| INFO |:| ENCODING...
+05/27/2023 10:26:50.235 |:| INFO |:| format_api_sentence - 2: 1 = Decode, 2 = Encode
+05/27/2023 10:26:50.235 |:| INFO |:| encode - Got the Codex: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+05/27/2023 10:26:50.235 |:| INFO |:| get_words_for_syllables: 1
+05/27/2023 10:26:50.444 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:26:50.447 |:| INFO |:| get_words_for_syllables - got words: doub 
+05/27/2023 10:26:50.451 |:| INFO |:| get_words_for_syllables: 4
+05/27/2023 10:26:50.675 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:26:50.684 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:26:50.694 |:| INFO |:| Syllables used so far: 3
+05/27/2023 10:26:50.699 |:| INFO |:| get_words_for_syllables - got words: legging tolle burrow 
+05/27/2023 10:26:50.704 |:| INFO |:| get_words_for_syllables: 1
+05/27/2023 10:26:50.889 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:26:50.895 |:| INFO |:| get_words_for_syllables - got words: thawed 
+05/27/2023 10:26:50.902 |:| INFO |:| get_words_for_syllables: 13
+05/27/2023 10:26:51.150 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:26:51.158 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:26:51.168 |:| INFO |:| Syllables used so far: 4
+05/27/2023 10:26:51.178 |:| INFO |:| Syllables used so far: 5
+05/27/2023 10:26:51.189 |:| INFO |:| Syllables used so far: 8
+05/27/2023 10:26:51.202 |:| INFO |:| Syllables used so far: 10
+05/27/2023 10:26:51.212 |:| INFO |:| Syllables used so far: 12
+05/27/2023 10:26:51.216 |:| INFO |:| get_words_for_syllables - got words: brydie ogden's hilde fourthquarter cleaner girouard hwan's 
+05/27/2023 10:26:51.220 |:| INFO |:| encode - Returning encoded message.
+05/27/2023 10:26:51.221 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:26:51] "POST /encode HTTP/1.1" 200 -
+05/27/2023 10:26:51.246 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:26:51] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:27:01.404 |:| INFO |:| Submitting encode form with msg: adam, offset: 0
+05/27/2023 10:27:01.405 |:| INFO |:| ENCODING...
+05/27/2023 10:27:01.405 |:| INFO |:| format_api_sentence - 2: 1 = Decode, 2 = Encode
+05/27/2023 10:27:01.405 |:| INFO |:| encode - Got the Codex: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+05/27/2023 10:27:01.405 |:| INFO |:| get_words_for_syllables: 1
+05/27/2023 10:27:01.649 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:27:01.654 |:| INFO |:| get_words_for_syllables - got words: no 
+05/27/2023 10:27:01.661 |:| INFO |:| get_words_for_syllables: 4
+05/27/2023 10:27:01.851 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:27:01.861 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:27:01.870 |:| INFO |:| Syllables used so far: 3
+05/27/2023 10:27:01.874 |:| INFO |:| get_words_for_syllables - got words: chukchi ryave klenke 
+05/27/2023 10:27:01.878 |:| INFO |:| get_words_for_syllables: 1
+05/27/2023 10:27:02.056 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:27:02.059 |:| INFO |:| get_words_for_syllables - got words: glod 
+05/27/2023 10:27:02.063 |:| INFO |:| get_words_for_syllables: 13
+05/27/2023 10:27:02.227 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:27:02.235 |:| INFO |:| Syllables used so far: 3
+05/27/2023 10:27:02.246 |:| INFO |:| Syllables used so far: 5
+05/27/2023 10:27:02.256 |:| INFO |:| Syllables used so far: 7
+05/27/2023 10:27:02.274 |:| INFO |:| Syllables used so far: 9
+05/27/2023 10:27:02.284 |:| INFO |:| Syllables used so far: 11
+05/27/2023 10:27:02.293 |:| INFO |:| get_words_for_syllables - got words: eisenhowers earthling shedrick nicklow moulder fogle 
+05/27/2023 10:27:02.298 |:| INFO |:| encode - Returning encoded message.
+05/27/2023 10:27:02.299 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:27:02] "POST /encode HTTP/1.1" 200 -
+05/27/2023 10:27:02.344 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:27:02] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:27:04.998 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:27:04] "GET /decode HTTP/1.1" 200 -
+05/27/2023 10:27:05.036 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:27:05] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:27:08.375 |:| INFO |:| Submitting decode form with msg: doub
+legging tolle burrow
+thawed
+brydie ogden's hilde fourthquarter cleaner girouard hwan's, offset: 0
+05/27/2023 10:27:08.375 |:| INFO |:| DECODING...
+05/27/2023 10:27:08.375 |:| INFO |:| get_syllables_for_sentence: "doub" 
+05/27/2023 10:27:08.576 |:| INFO |:| get_syllables_for_sentence: "legging tolle burrow" 
+05/27/2023 10:27:08.761 |:| INFO |:| get_syllables_for_sentence: "thawed" 
+05/27/2023 10:27:08.911 |:| INFO |:| get_syllables_for_sentence: "brydie ogden's hilde fourthquarter cleaner girouard hwan's" 
+05/27/2023 10:27:09.092 |:| INFO |:| Returning decoded message.
+05/27/2023 10:27:09.093 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:27:09] "POST /decode HTTP/1.1" 200 -
+05/27/2023 10:27:09.156 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:27:09] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:27:29.266 |:| INFO |:|  * Detected change in 'C:\\Users\\adamb\\PycharmProjects\\encode-message\\messaging.py', reloading
+05/27/2023 10:27:29.393 |:| INFO |:|  * Restarting with stat
+05/27/2023 10:27:30.184 |:| WARNING |:|  * Debugger is active!
+05/27/2023 10:27:30.189 |:| INFO |:|  * Debugger PIN: 125-543-471
+05/27/2023 10:27:34.311 |:| INFO |:| Submitting decode form with msg: doub
+legging tolle burrow
+thawed
+brydie ogden's hilde fourthquarter cleaner girouard hwan's, offset: 0
+05/27/2023 10:27:34.311 |:| INFO |:| DECODING...
+05/27/2023 10:27:34.312 |:| INFO |:| get_syllables_for_sentence: "doub" 
+05/27/2023 10:27:34.529 |:| INFO |:| get_syllables_for_sentence: "legging tolle burrow" 
+05/27/2023 10:27:34.696 |:| INFO |:| get_syllables_for_sentence: "thawed" 
+05/27/2023 10:27:34.851 |:| INFO |:| get_syllables_for_sentence: "brydie ogden's hilde fourthquarter cleaner girouard hwan's" 
+05/27/2023 10:27:35.037 |:| INFO |:| Returning decoded message.
+05/27/2023 10:27:35.048 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:27:35] "POST /decode HTTP/1.1" 200 -
+05/27/2023 10:27:35.099 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:27:35] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:28:06.471 |:| INFO |:|  * Detected change in 'C:\\Users\\adamb\\PycharmProjects\\encode-message\\messaging.py', reloading
+05/27/2023 10:28:06.566 |:| INFO |:|  * Restarting with stat
+05/27/2023 10:28:07.361 |:| WARNING |:|  * Debugger is active!
+05/27/2023 10:28:07.366 |:| INFO |:|  * Debugger PIN: 125-543-471
+05/27/2023 10:28:09.029 |:| INFO |:| Submitting decode form with msg: doub
+legging tolle burrow
+thawed
+brydie ogden's hilde fourthquarter cleaner girouard hwan's, offset: 0
+05/27/2023 10:28:09.029 |:| INFO |:| DECODING...
+05/27/2023 10:28:09.029 |:| INFO |:| get_syllables_for_sentence: "doub" 
+05/27/2023 10:28:09.232 |:| INFO |:| get_syllables_for_sentence: "legging tolle burrow" 
+05/27/2023 10:28:09.407 |:| INFO |:| get_syllables_for_sentence: "thawed" 
+05/27/2023 10:28:09.576 |:| INFO |:| get_syllables_for_sentence: "brydie ogden's hilde fourthquarter cleaner girouard hwan's" 
+05/27/2023 10:28:09.772 |:| INFO |:| Returning decoded message.
+05/27/2023 10:28:09.783 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:28:09] "POST /decode HTTP/1.1" 200 -
+05/27/2023 10:28:09.846 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:28:09] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:28:15.272 |:| INFO |:| Clearing decode form.
+05/27/2023 10:28:15.272 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:28:15] "[32mPOST /decode HTTP/1.1[0m" 302 -
+05/27/2023 10:28:15.278 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:28:15] "GET /decode HTTP/1.1" 200 -
+05/27/2023 10:28:15.304 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:28:15] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:28:18.584 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:28:18] "GET /encode HTTP/1.1" 200 -
+05/27/2023 10:28:18.614 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:28:18] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:28:21.162 |:| INFO |:| Submitting encode form with msg: hi, offset: 0
+05/27/2023 10:28:21.163 |:| INFO |:| ENCODING...
+05/27/2023 10:28:21.163 |:| INFO |:| format_api_sentence - 2: 1 = Decode, 2 = Encode
+05/27/2023 10:28:21.163 |:| INFO |:| encode - Got the Codex: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+05/27/2023 10:28:21.163 |:| INFO |:| get_words_for_syllables: 8
+05/27/2023 10:28:21.320 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:28:21.328 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:28:21.337 |:| INFO |:| Syllables used so far: 3
+05/27/2023 10:28:21.346 |:| INFO |:| Syllables used so far: 5
+05/27/2023 10:28:21.355 |:| INFO |:| Syllables used so far: 7
+05/27/2023 10:28:21.359 |:| INFO |:| get_words_for_syllables - got words: huntsville hui issues homage lege 
+05/27/2023 10:28:21.363 |:| INFO |:| get_words_for_syllables: 9
+05/27/2023 10:28:21.514 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:28:21.534 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:28:21.549 |:| INFO |:| Syllables used so far: 4
+05/27/2023 10:28:21.565 |:| INFO |:| Syllables used so far: 6
+05/27/2023 10:28:21.577 |:| INFO |:| Syllables used so far: 8
+05/27/2023 10:28:21.581 |:| INFO |:| get_words_for_syllables - got words: birkett hafley nipon armband pye 
+05/27/2023 10:28:21.585 |:| INFO |:| encode - Returning encoded message.
+05/27/2023 10:28:21.586 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:28:21] "POST /encode HTTP/1.1" 200 -
+05/27/2023 10:28:21.608 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:28:21] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:29:57.798 |:| INFO |:| Submitting encode form with msg: hi, offset: 0
+05/27/2023 10:29:57.798 |:| INFO |:| ENCODING...
+05/27/2023 10:29:57.799 |:| INFO |:| format_api_sentence - 2: 1 = Decode, 2 = Encode
+05/27/2023 10:29:57.800 |:| INFO |:| encode - Got the Codex: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+05/27/2023 10:29:57.800 |:| INFO |:| get_words_for_syllables: 8
+05/27/2023 10:29:57.965 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:29:57.974 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:29:57.982 |:| INFO |:| Syllables used so far: 4
+05/27/2023 10:29:57.992 |:| INFO |:| Syllables used so far: 6
+05/27/2023 10:29:58.000 |:| INFO |:| Syllables used so far: 7
+05/27/2023 10:29:58.004 |:| INFO |:| get_words_for_syllables - got words: paysops hasids relays span forse 
+05/27/2023 10:29:58.008 |:| INFO |:| get_words_for_syllables: 9
+05/27/2023 10:29:58.153 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:29:58.161 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:29:58.171 |:| INFO |:| Syllables used so far: 3
+05/27/2023 10:29:58.188 |:| INFO |:| Syllables used so far: 5
+05/27/2023 10:29:58.198 |:| INFO |:| Syllables used so far: 8
+05/27/2023 10:29:58.202 |:| INFO |:| get_words_for_syllables - got words: oyler barres letter grasshoppers quant 
+05/27/2023 10:29:58.206 |:| INFO |:| encode - Returning encoded message.
+05/27/2023 10:29:58.208 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:29:58] "POST /encode HTTP/1.1" 200 -
+05/27/2023 10:29:58.296 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:29:58] "GET /static/css/style.css HTTP/1.1" 200 -
+05/27/2023 10:30:01.202 |:| INFO |:| Submitting encode form with msg: hi, offset: 0
+05/27/2023 10:30:01.202 |:| INFO |:| ENCODING...
+05/27/2023 10:30:01.202 |:| INFO |:| format_api_sentence - 2: 1 = Decode, 2 = Encode
+05/27/2023 10:30:01.202 |:| INFO |:| encode - Got the Codex: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+05/27/2023 10:30:01.202 |:| INFO |:| get_words_for_syllables: 8
+05/27/2023 10:30:01.394 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:30:01.402 |:| INFO |:| Syllables used so far: 1
+05/27/2023 10:30:01.412 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:30:01.421 |:| INFO |:| Syllables used so far: 4
+05/27/2023 10:30:01.431 |:| INFO |:| get_words_for_syllables - got words: riek tiled brownies avellino 
+05/27/2023 10:30:01.436 |:| INFO |:| get_words_for_syllables: 9
+05/27/2023 10:30:01.605 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:30:01.618 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:30:01.634 |:| INFO |:| Syllables used so far: 4
+05/27/2023 10:30:01.647 |:| INFO |:| Syllables used so far: 7
+05/27/2023 10:30:01.658 |:| INFO |:| get_words_for_syllables - got words: berries kallus paulita sabo 
+05/27/2023 10:30:01.665 |:| INFO |:| encode - Returning encoded message.
+05/27/2023 10:30:01.665 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:30:01] "POST /encode HTTP/1.1" 200 -
+05/27/2023 10:30:01.702 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:30:01] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:30:04.897 |:| INFO |:| Clearing encode form.
+05/27/2023 10:30:04.897 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:30:04] "[32mPOST /encode HTTP/1.1[0m" 302 -
+05/27/2023 10:30:04.904 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:30:04] "GET /encode HTTP/1.1" 200 -
+05/27/2023 10:30:04.935 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:30:04] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:30:13.324 |:| INFO |:| Clearing encode form.
+05/27/2023 10:30:13.324 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:30:13] "[32mPOST /encode HTTP/1.1[0m" 302 -
+05/27/2023 10:30:13.349 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:30:13] "GET /encode HTTP/1.1" 200 -
+05/27/2023 10:30:13.379 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:30:13] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:30:21.835 |:| INFO |:| Submitting encode form with msg: hi, offset: 0
+05/27/2023 10:30:21.835 |:| INFO |:| ENCODING...
+05/27/2023 10:30:21.835 |:| INFO |:| format_api_sentence - 2: 1 = Decode, 2 = Encode
+05/27/2023 10:30:21.836 |:| INFO |:| encode - Got the Codex: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+05/27/2023 10:30:21.836 |:| INFO |:| get_words_for_syllables: 8
+05/27/2023 10:30:21.991 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:30:21.999 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:30:22.009 |:| INFO |:| Syllables used so far: 4
+05/27/2023 10:30:22.034 |:| INFO |:| Syllables used so far: 5
+05/27/2023 10:30:22.044 |:| INFO |:| Syllables used so far: 6
+05/27/2023 10:30:22.052 |:| INFO |:| get_words_for_syllables - got words: fuji's frontline bitz tyre harden 
+05/27/2023 10:30:22.058 |:| INFO |:| get_words_for_syllables: 9
+05/27/2023 10:30:22.213 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:30:22.221 |:| INFO |:| Syllables used so far: 3
+05/27/2023 10:30:22.231 |:| INFO |:| Syllables used so far: 4
+05/27/2023 10:30:22.241 |:| INFO |:| Syllables used so far: 6
+05/27/2023 10:30:22.250 |:| INFO |:| Syllables used so far: 7
+05/27/2023 10:30:22.257 |:| INFO |:| get_words_for_syllables - got words: restatements pulse pettee huhn drobny 
+05/27/2023 10:30:22.263 |:| INFO |:| encode - Returning encoded message.
+05/27/2023 10:30:22.263 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:30:22] "POST /encode HTTP/1.1" 200 -
+05/27/2023 10:30:22.288 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:30:22] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:33:51.197 |:| INFO |:|  * Detected change in 'C:\\Users\\adamb\\PycharmProjects\\encode-message\\app.py', reloading
+05/27/2023 10:33:51.294 |:| INFO |:|  * Restarting with stat
+05/27/2023 10:33:52.200 |:| WARNING |:|  * Debugger is active!
+05/27/2023 10:33:52.205 |:| INFO |:|  * Debugger PIN: 125-543-471
+05/27/2023 10:34:01.770 |:| INFO |:| Submitting encode form with msg: hi, offset: 0
+05/27/2023 10:34:01.770 |:| INFO |:| ENCODING...
+05/27/2023 10:34:01.770 |:| INFO |:| format_api_sentence - 2: 1 = Decode, 2 = Encode
+05/27/2023 10:34:01.770 |:| INFO |:| encode - Got the Codex: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+05/27/2023 10:34:01.770 |:| INFO |:| get_words_for_syllables: 8
+05/27/2023 10:34:01.927 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:34:01.936 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:34:01.945 |:| INFO |:| Syllables used so far: 5
+05/27/2023 10:34:01.954 |:| INFO |:| Syllables used so far: 7
+05/27/2023 10:34:01.958 |:| INFO |:| get_words_for_syllables - got words: ansley regular searches zaher 
+05/27/2023 10:34:01.963 |:| INFO |:| get_words_for_syllables: 9
+05/27/2023 10:34:02.113 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:34:02.122 |:| INFO |:| Syllables used so far: 3
+05/27/2023 10:34:02.133 |:| INFO |:| Syllables used so far: 7
+05/27/2023 10:34:02.142 |:| INFO |:| get_words_for_syllables - got words: extinguish embellishment herzig 
+05/27/2023 10:34:02.148 |:| INFO |:| encode - Returning encoded message.
+05/27/2023 10:34:02.159 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:34:02] "POST /encode HTTP/1.1" 200 -
+05/27/2023 10:34:02.221 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:34:02] "GET /static/css/style.css HTTP/1.1" 200 -
+05/27/2023 10:34:35.603 |:| INFO |:|  * Detected change in 'C:\\Users\\adamb\\PycharmProjects\\encode-message\\app.py', reloading
+05/27/2023 10:34:35.674 |:| INFO |:|  * Restarting with stat
+05/27/2023 10:34:36.486 |:| WARNING |:|  * Debugger is active!
+05/27/2023 10:34:36.491 |:| INFO |:|  * Debugger PIN: 125-543-471
+05/27/2023 10:34:40.157 |:| INFO |:| Submitting encode form with msg: hi, offset: 0
+05/27/2023 10:34:40.157 |:| INFO |:| ENCODING...
+05/27/2023 10:34:40.157 |:| INFO |:| format_api_sentence - 2: 1 = Decode, 2 = Encode
+05/27/2023 10:34:40.158 |:| INFO |:| encode - Got the Codex: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+05/27/2023 10:34:40.158 |:| INFO |:| get_words_for_syllables: 8
+05/27/2023 10:34:40.332 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:34:40.339 |:| INFO |:| Syllables used so far: 4
+05/27/2023 10:34:40.349 |:| INFO |:| Syllables used so far: 6
+05/27/2023 10:34:40.356 |:| INFO |:| get_words_for_syllables - got words: detrimental stately notebook 
+05/27/2023 10:34:40.362 |:| INFO |:| get_words_for_syllables: 9
+05/27/2023 10:34:40.506 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:34:40.513 |:| INFO |:| Syllables used so far: 1
+05/27/2023 10:34:40.523 |:| INFO |:| Syllables used so far: 4
+05/27/2023 10:34:40.533 |:| INFO |:| Syllables used so far: 7
+05/27/2023 10:34:40.540 |:| INFO |:| get_words_for_syllables - got words: daves trinidad computers mendyk 
+05/27/2023 10:34:40.546 |:| INFO |:| encode - Returning encoded message.
+05/27/2023 10:34:40.557 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:34:40] "POST /encode HTTP/1.1" 200 -
+05/27/2023 10:34:40.603 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:34:40] "GET /static/css/style.css HTTP/1.1" 200 -
+05/27/2023 10:34:54.866 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:34:54] "GET /decode HTTP/1.1" 200 -
+05/27/2023 10:34:54.903 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:34:54] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:34:56.044 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:34:56] "GET /encode HTTP/1.1" 200 -
+05/27/2023 10:34:56.099 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:34:56] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:34:59.034 |:| INFO |:| Submitting encode form with msg: hi, offset: 0
+05/27/2023 10:34:59.034 |:| INFO |:| ENCODING...
+05/27/2023 10:34:59.034 |:| INFO |:| format_api_sentence - 2: 1 = Decode, 2 = Encode
+05/27/2023 10:34:59.034 |:| INFO |:| encode - Got the Codex: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+05/27/2023 10:34:59.034 |:| INFO |:| get_words_for_syllables: 8
+05/27/2023 10:34:59.231 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:34:59.240 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:34:59.251 |:| INFO |:| Syllables used so far: 4
+05/27/2023 10:34:59.263 |:| INFO |:| Syllables used so far: 7
+05/27/2023 10:34:59.267 |:| INFO |:| get_words_for_syllables - got words: sandridge milloy dentremont gwin 
+05/27/2023 10:34:59.272 |:| INFO |:| get_words_for_syllables: 9
+05/27/2023 10:34:59.429 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:34:59.437 |:| INFO |:| Syllables used so far: 1
+05/27/2023 10:34:59.447 |:| INFO |:| Syllables used so far: 3
+05/27/2023 10:34:59.455 |:| INFO |:| Syllables used so far: 4
+05/27/2023 10:34:59.466 |:| INFO |:| Syllables used so far: 5
+05/27/2023 10:34:59.475 |:| INFO |:| Syllables used so far: 7
+05/27/2023 10:34:59.483 |:| INFO |:| get_words_for_syllables - got words: vaughn hatchel mobbs rewey treated homegrown 
+05/27/2023 10:34:59.489 |:| INFO |:| encode - Returning encoded message.
+05/27/2023 10:34:59.490 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:34:59] "POST /encode HTTP/1.1" 200 -
+05/27/2023 10:34:59.523 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:34:59] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:35:06.722 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:35:06] "GET /decode HTTP/1.1" 200 -
+05/27/2023 10:35:06.757 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:35:06] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:35:09.691 |:| INFO |:| Submitting decode form with msg: sandridge milloy dentremont gwin
+vaughn hatchel mobbs rewey treated homegrown, offset: 0
+05/27/2023 10:35:09.692 |:| INFO |:| DECODING...
+05/27/2023 10:35:09.692 |:| INFO |:| get_syllables_for_sentence: "sandridge milloy dentremont gwin" 
+05/27/2023 10:35:09.921 |:| INFO |:| get_syllables_for_sentence: "vaughn hatchel mobbs rewey treated homegrown" 
+05/27/2023 10:35:10.132 |:| INFO |:| Returning decoded message.
+05/27/2023 10:35:10.133 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:35:10] "POST /decode HTTP/1.1" 200 -
+05/27/2023 10:35:10.155 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:35:10] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:36:52.737 |:| INFO |:|  * Detected change in 'C:\\Users\\adamb\\PycharmProjects\\encode-message\\app.py', reloading
+05/27/2023 10:36:52.814 |:| INFO |:|  * Restarting with stat
+05/27/2023 10:36:53.648 |:| WARNING |:|  * Debugger is active!
+05/27/2023 10:36:53.653 |:| INFO |:|  * Debugger PIN: 125-543-471
+05/27/2023 10:36:57.003 |:| INFO |:| Submitting decode form with msg: sandridge milloy dentremont gwin
+vaughn hatchel mobbs rewey treated homegrown, offset: 0
+05/27/2023 10:36:57.003 |:| INFO |:| DECODING...
+05/27/2023 10:36:57.003 |:| INFO |:| get_syllables_for_sentence: "sandridge milloy dentremont gwin" 
+05/27/2023 10:36:57.195 |:| INFO |:| get_syllables_for_sentence: "vaughn hatchel mobbs rewey treated homegrown" 
+05/27/2023 10:36:57.387 |:| INFO |:| Returning decoded message.
+05/27/2023 10:36:57.398 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:36:57] "POST /decode HTTP/1.1" 200 -
+05/27/2023 10:36:57.455 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:36:57] "GET /static/css/style.css HTTP/1.1" 200 -
+05/27/2023 10:36:57.470 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:36:57] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+05/27/2023 10:37:00.749 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:37:00] "GET /encode HTTP/1.1" 200 -
+05/27/2023 10:37:00.783 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:37:00] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:37:03.955 |:| INFO |:| Submitting encode form with msg: hi, offset: 0
+05/27/2023 10:37:03.955 |:| INFO |:| ENCODING...
+05/27/2023 10:37:03.955 |:| INFO |:| format_api_sentence - 2: 1 = Decode, 2 = Encode
+05/27/2023 10:37:03.956 |:| INFO |:| encode - Got the Codex: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+05/27/2023 10:37:03.957 |:| INFO |:| get_words_for_syllables: 8
+05/27/2023 10:37:04.132 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:37:04.141 |:| INFO |:| Syllables used so far: 3
+05/27/2023 10:37:04.150 |:| INFO |:| Syllables used so far: 5
+05/27/2023 10:37:04.160 |:| INFO |:| Syllables used so far: 7
+05/27/2023 10:37:04.164 |:| INFO |:| get_words_for_syllables - got words: orabelle hershner mak-kwan xus 
+05/27/2023 10:37:04.168 |:| INFO |:| get_words_for_syllables: 9
+05/27/2023 10:37:04.335 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:37:04.344 |:| INFO |:| Syllables used so far: 1
+05/27/2023 10:37:04.353 |:| INFO |:| Syllables used so far: 3
+05/27/2023 10:37:04.363 |:| INFO |:| Syllables used so far: 5
+05/27/2023 10:37:04.373 |:| INFO |:| Syllables used so far: 6
+05/27/2023 10:37:04.382 |:| INFO |:| Syllables used so far: 8
+05/27/2023 10:37:04.387 |:| INFO |:| get_words_for_syllables - got words: clued bolick barfield liz villette meyo 
+05/27/2023 10:37:04.391 |:| INFO |:| encode - Returning encoded message.
+05/27/2023 10:37:04.392 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:37:04] "POST /encode HTTP/1.1" 200 -
+05/27/2023 10:37:04.415 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:37:04] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:37:46.081 |:| INFO |:|  * Detected change in 'C:\\Users\\adamb\\PycharmProjects\\encode-message\\app.py', reloading
+05/27/2023 10:37:46.193 |:| INFO |:|  * Restarting with stat
+05/27/2023 10:37:47.053 |:| WARNING |:|  * Debugger is active!
+05/27/2023 10:37:47.058 |:| INFO |:|  * Debugger PIN: 125-543-471
+05/27/2023 10:38:02.876 |:| INFO |:| Submitting encode form with msg: hi, offset: 0
+05/27/2023 10:38:02.876 |:| INFO |:| ENCODING...
+05/27/2023 10:38:02.876 |:| INFO |:| format_api_sentence - 2: 1 = Decode, 2 = Encode
+05/27/2023 10:38:02.876 |:| INFO |:| encode - Got the Codex: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+05/27/2023 10:38:02.876 |:| INFO |:| get_words_for_syllables: 8
+05/27/2023 10:38:03.059 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:38:03.066 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:38:03.076 |:| INFO |:| Syllables used so far: 5
+05/27/2023 10:38:03.086 |:| INFO |:| Syllables used so far: 6
+05/27/2023 10:38:03.093 |:| INFO |:| get_words_for_syllables - got words: perrot zwolinski girls' verrette 
+05/27/2023 10:38:03.099 |:| INFO |:| get_words_for_syllables: 9
+05/27/2023 10:38:03.244 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:38:03.252 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:38:03.262 |:| INFO |:| Syllables used so far: 6
+05/27/2023 10:38:03.271 |:| INFO |:| get_words_for_syllables - got words: baver mattikalli bateson 
+05/27/2023 10:38:03.276 |:| INFO |:| encode - Returning encoded message.
+05/27/2023 10:38:03.287 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:38:03] "POST /encode HTTP/1.1" 200 -
+05/27/2023 10:38:03.340 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:38:03] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:38:08.951 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:38:08] "GET /decode HTTP/1.1" 200 -
+05/27/2023 10:38:08.992 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:38:08] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:38:11.945 |:| INFO |:| Submitting decode form with msg: perrot zwolinski girls' verrette
+baver mattikalli bateson, offset: 0
+05/27/2023 10:38:11.945 |:| INFO |:| DECODING...
+05/27/2023 10:38:11.945 |:| INFO |:| get_syllables_for_sentence: "perrot zwolinski girls' verrette" 
+05/27/2023 10:38:12.135 |:| INFO |:| get_syllables_for_sentence: "baver mattikalli bateson" 
+05/27/2023 10:38:12.315 |:| INFO |:| Returning decoded message.
+05/27/2023 10:38:12.315 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:38:12] "POST /decode HTTP/1.1" 200 -
+05/27/2023 10:38:12.343 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:38:12] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:38:53.632 |:| INFO |:|  * Detected change in 'C:\\Users\\adamb\\PycharmProjects\\encode-message\\app.py', reloading
+05/27/2023 10:38:53.734 |:| INFO |:|  * Restarting with stat
+05/27/2023 10:38:54.532 |:| WARNING |:|  * Debugger is active!
+05/27/2023 10:38:54.537 |:| INFO |:|  * Debugger PIN: 125-543-471
+05/27/2023 10:38:58.090 |:| INFO |:| Submitting decode form with msg: perrot zwolinski girls' verrette
+baver mattikalli bateson, offset: 0
+05/27/2023 10:38:58.091 |:| INFO |:| DECODING...
+05/27/2023 10:38:58.091 |:| INFO |:| get_syllables_for_sentence: "perrot zwolinski girls' verrette" 
+05/27/2023 10:38:58.344 |:| INFO |:| get_syllables_for_sentence: "baver mattikalli bateson" 
+05/27/2023 10:38:58.582 |:| INFO |:| Returning decoded message.
+05/27/2023 10:38:58.593 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:38:58] "POST /decode HTTP/1.1" 200 -
+05/27/2023 10:38:58.642 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:38:58] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:39:28.645 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:39:28] "GET /encode HTTP/1.1" 200 -
+05/27/2023 10:39:28.699 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:39:28] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:39:33.137 |:| INFO |:| Submitting encode form with msg: hi, offset: 0
+05/27/2023 10:39:33.137 |:| INFO |:| ENCODING...
+05/27/2023 10:39:33.137 |:| INFO |:| format_api_sentence - 2: 1 = Decode, 2 = Encode
+05/27/2023 10:39:33.137 |:| INFO |:| encode - Got the Codex: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+05/27/2023 10:39:33.137 |:| INFO |:| get_words_for_syllables: 8
+05/27/2023 10:39:33.313 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:39:33.322 |:| INFO |:| Syllables used so far: 4
+05/27/2023 10:39:33.331 |:| INFO |:| Syllables used so far: 7
+05/27/2023 10:39:33.335 |:| INFO |:| get_words_for_syllables - got words: mcmanigal chesler quigg 
+05/27/2023 10:39:33.339 |:| INFO |:| get_words_for_syllables: 9
+05/27/2023 10:39:33.496 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:39:33.504 |:| INFO |:| Syllables used so far: 3
+05/27/2023 10:39:33.513 |:| INFO |:| Syllables used so far: 6
+05/27/2023 10:39:33.523 |:| INFO |:| Syllables used so far: 8
+05/27/2023 10:39:33.527 |:| INFO |:| get_words_for_syllables - got words: delvalle salvager hardwick schuld 
+05/27/2023 10:39:33.532 |:| INFO |:| encode - Returning encoded message.
+05/27/2023 10:39:33.532 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:39:33] "POST /encode HTTP/1.1" 200 -
+05/27/2023 10:39:33.566 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:39:33] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:39:47.628 |:| INFO |:| Submitting encode form with msg: hi\nhi, offset: 0
+05/27/2023 10:39:47.629 |:| INFO |:| ENCODING...
+05/27/2023 10:39:47.629 |:| INFO |:| format_api_sentence - 2: 1 = Decode, 2 = Encode
+05/27/2023 10:39:47.629 |:| INFO |:| encode - Got the Codex: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+05/27/2023 10:39:47.629 |:| INFO |:| get_words_for_syllables: 8
+05/27/2023 10:39:47.809 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:39:47.817 |:| INFO |:| Syllables used so far: 1
+05/27/2023 10:39:47.838 |:| INFO |:| Syllables used so far: 3
+05/27/2023 10:39:47.848 |:| INFO |:| Syllables used so far: 5
+05/27/2023 10:39:47.858 |:| INFO |:| Syllables used so far: 6
+05/27/2023 10:39:47.866 |:| INFO |:| get_words_for_syllables - got words: arps holcomb commune tough lightnings 
+05/27/2023 10:39:47.871 |:| INFO |:| get_words_for_syllables: 9
+05/27/2023 10:39:48.019 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:39:48.026 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:39:48.035 |:| INFO |:| Syllables used so far: 4
+05/27/2023 10:39:48.045 |:| INFO |:| get_words_for_syllables - got words: glaspy windholz association's 
+05/27/2023 10:39:48.051 |:| INFO |:| get_words_for_syllables: 14
+05/27/2023 10:39:48.197 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:39:48.206 |:| INFO |:| Syllables used so far: 4
+05/27/2023 10:39:48.215 |:| INFO |:| Syllables used so far: 6
+05/27/2023 10:39:48.224 |:| INFO |:| Syllables used so far: 9
+05/27/2023 10:39:48.234 |:| INFO |:| Syllables used so far: 11
+05/27/2023 10:39:48.243 |:| INFO |:| Syllables used so far: 12
+05/27/2023 10:39:48.251 |:| INFO |:| Syllables used so far: 13
+05/27/2023 10:39:48.254 |:| INFO |:| get_words_for_syllables - got words: america's chattering liechtenstein nowadays eave kratt nie 
+05/27/2023 10:39:48.258 |:| INFO |:| get_words_for_syllables: 8
+05/27/2023 10:39:48.401 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:39:48.409 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:39:48.427 |:| INFO |:| Syllables used so far: 6
+05/27/2023 10:39:48.444 |:| INFO |:| Syllables used so far: 7
+05/27/2023 10:39:48.449 |:| INFO |:| get_words_for_syllables - got words: youngster affidavit kreis bihm 
+05/27/2023 10:39:48.454 |:| INFO |:| get_words_for_syllables: 9
+05/27/2023 10:39:48.599 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:39:48.609 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:39:48.621 |:| INFO |:| Syllables used so far: 6
+05/27/2023 10:39:48.631 |:| INFO |:| Syllables used so far: 7
+05/27/2023 10:39:48.640 |:| INFO |:| Syllables used so far: 8
+05/27/2023 10:39:48.644 |:| INFO |:| get_words_for_syllables - got words: postscript koversada tuks laced ige 
+05/27/2023 10:39:48.648 |:| INFO |:| encode - Returning encoded message.
+05/27/2023 10:39:48.649 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:39:48] "POST /encode HTTP/1.1" 200 -
+05/27/2023 10:39:48.677 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:39:48] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:40:05.089 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:40:05] "GET /decode HTTP/1.1" 200 -
+05/27/2023 10:40:05.184 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:40:05] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:40:08.412 |:| INFO |:| Submitting decode form with msg: arps holcomb commune tough lightnings
+glaspy windholz association's
+america's chattering liechtenstein nowadays eave kratt nie
+youngster affidavit kreis bihm
+postscript koversada tuks laced ige, offset: 0
+05/27/2023 10:40:08.412 |:| INFO |:| DECODING...
+05/27/2023 10:40:08.412 |:| INFO |:| get_syllables_for_sentence: "arps holcomb commune tough lightnings" 
+05/27/2023 10:40:08.596 |:| INFO |:| get_syllables_for_sentence: "glaspy windholz association's" 
+05/27/2023 10:40:08.848 |:| INFO |:| get_syllables_for_sentence: "america's chattering liechtenstein nowadays eave kratt nie" 
+05/27/2023 10:40:09.033 |:| INFO |:| get_syllables_for_sentence: "youngster affidavit kreis bihm" 
+05/27/2023 10:40:09.196 |:| INFO |:| get_syllables_for_sentence: "postscript koversada tuks laced ige" 
+05/27/2023 10:40:09.374 |:| INFO |:| Returning decoded message.
+05/27/2023 10:40:09.375 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:40:09] "POST /decode HTTP/1.1" 200 -
+05/27/2023 10:40:09.398 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:40:09] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:40:19.430 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:40:19] "GET /encode HTTP/1.1" 200 -
+05/27/2023 10:40:19.482 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:40:19] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:40:22.210 |:| INFO |:| Submitting encode form with msg: hi, offset: 0
+05/27/2023 10:40:22.210 |:| INFO |:| ENCODING...
+05/27/2023 10:40:22.210 |:| INFO |:| format_api_sentence - 2: 1 = Decode, 2 = Encode
+05/27/2023 10:40:22.210 |:| INFO |:| encode - Got the Codex: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+05/27/2023 10:40:22.210 |:| INFO |:| get_words_for_syllables: 8
+05/27/2023 10:40:22.373 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:40:22.380 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:40:22.390 |:| INFO |:| Syllables used so far: 4
+05/27/2023 10:40:22.399 |:| INFO |:| Syllables used so far: 5
+05/27/2023 10:40:22.408 |:| INFO |:| Syllables used so far: 7
+05/27/2023 10:40:22.412 |:| INFO |:| get_words_for_syllables - got words: timid chipmunk keeth meldons gade 
+05/27/2023 10:40:22.416 |:| INFO |:| get_words_for_syllables: 9
+05/27/2023 10:40:22.558 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:40:22.566 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:40:22.576 |:| INFO |:| Syllables used so far: 4
+05/27/2023 10:40:22.585 |:| INFO |:| Syllables used so far: 6
+05/27/2023 10:40:22.594 |:| INFO |:| get_words_for_syllables - got words: drifting kolbo euclid santelli 
+05/27/2023 10:40:22.599 |:| INFO |:| encode - Returning encoded message.
+05/27/2023 10:40:22.600 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:40:22] "POST /encode HTTP/1.1" 200 -
+05/27/2023 10:40:22.634 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:40:22] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:41:12.793 |:| INFO |:|  * Detected change in 'C:\\Users\\adamb\\PycharmProjects\\encode-message\\app.py', reloading
+05/27/2023 10:41:12.860 |:| INFO |:|  * Restarting with stat
+05/27/2023 10:41:13.541 |:| WARNING |:|  * Debugger is active!
+05/27/2023 10:41:13.546 |:| INFO |:|  * Debugger PIN: 125-543-471
+05/27/2023 10:41:16.494 |:| INFO |:| Submitting encode form with msg: hi, offset: 0
+05/27/2023 10:41:16.494 |:| INFO |:| ENCODING...
+05/27/2023 10:41:16.494 |:| INFO |:| format_api_sentence - 2: 1 = Decode, 2 = Encode
+05/27/2023 10:41:16.495 |:| INFO |:| encode - Got the Codex: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+05/27/2023 10:41:16.495 |:| INFO |:| get_words_for_syllables: 8
+05/27/2023 10:41:16.850 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:41:16.884 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:41:16.914 |:| INFO |:| Syllables used so far: 4
+05/27/2023 10:41:16.931 |:| INFO |:| Syllables used so far: 6
+05/27/2023 10:41:16.952 |:| INFO |:| get_words_for_syllables - got words: corkum burtness phuong suicide 
+05/27/2023 10:41:16.967 |:| INFO |:| get_words_for_syllables: 9
+05/27/2023 10:41:17.256 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:41:17.265 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:41:17.280 |:| INFO |:| Syllables used so far: 5
+05/27/2023 10:41:17.290 |:| INFO |:| Syllables used so far: 8
+05/27/2023 10:41:17.295 |:| INFO |:| get_words_for_syllables - got words: molson depaola snappiest shotts 
+05/27/2023 10:41:17.300 |:| INFO |:| encode - Returning encoded message.
+05/27/2023 10:41:17.318 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:41:17] "POST /encode HTTP/1.1" 200 -
+05/27/2023 10:41:17.395 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:41:17] "GET /static/css/style.css HTTP/1.1" 200 -
+05/27/2023 10:41:25.105 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:41:25] "GET /decode HTTP/1.1" 200 -
+05/27/2023 10:41:25.160 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:41:25] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:41:26.402 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:41:26] "GET /encode HTTP/1.1" 200 -
+05/27/2023 10:41:26.456 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:41:26] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:41:30.196 |:| INFO |:| Submitting encode form with msg: adam, offset: 0
+05/27/2023 10:41:30.196 |:| INFO |:| ENCODING...
+05/27/2023 10:41:30.196 |:| INFO |:| format_api_sentence - 2: 1 = Decode, 2 = Encode
+05/27/2023 10:41:30.196 |:| INFO |:| encode - Got the Codex: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+05/27/2023 10:41:30.196 |:| INFO |:| get_words_for_syllables: 1
+05/27/2023 10:41:30.396 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:41:30.399 |:| INFO |:| get_words_for_syllables - got words: doll 
+05/27/2023 10:41:30.403 |:| INFO |:| get_words_for_syllables: 4
+05/27/2023 10:41:30.546 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:41:30.553 |:| INFO |:| Syllables used so far: 3
+05/27/2023 10:41:30.558 |:| INFO |:| get_words_for_syllables - got words: polanco budge 
+05/27/2023 10:41:30.562 |:| INFO |:| get_words_for_syllables: 1
+05/27/2023 10:41:30.708 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:41:30.712 |:| INFO |:| get_words_for_syllables - got words: wrote 
+05/27/2023 10:41:30.716 |:| INFO |:| get_words_for_syllables: 13
+05/27/2023 10:41:30.865 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:41:30.873 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:41:30.882 |:| INFO |:| Syllables used so far: 4
+05/27/2023 10:41:30.892 |:| INFO |:| Syllables used so far: 6
+05/27/2023 10:41:30.901 |:| INFO |:| Syllables used so far: 7
+05/27/2023 10:41:30.911 |:| INFO |:| Syllables used so far: 9
+05/27/2023 10:41:30.920 |:| INFO |:| Syllables used so far: 12
+05/27/2023 10:41:30.925 |:| INFO |:| get_words_for_syllables - got words: hamlett krumwiede scheiman lost bodice alaska's tebbe 
+05/27/2023 10:41:30.929 |:| INFO |:| encode - Returning encoded message.
+05/27/2023 10:41:30.930 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:41:30] "POST /encode HTTP/1.1" 200 -
+05/27/2023 10:41:30.953 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:41:30] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:41:36.497 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:41:36] "GET /decode HTTP/1.1" 200 -
+05/27/2023 10:41:36.588 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:41:36] "GET /static/css/style.css HTTP/1.1" 200 -
+05/27/2023 10:41:40.070 |:| INFO |:| Submitting decode form with msg: doll
+polanco budge
+wrote
+hamlett krumwiede scheiman lost bodice alaska's tebbe, offset: 0
+05/27/2023 10:41:40.070 |:| INFO |:| DECODING...
+05/27/2023 10:41:40.070 |:| INFO |:| get_syllables_for_sentence: "doll" 
+05/27/2023 10:41:40.249 |:| INFO |:| get_syllables_for_sentence: "polanco budge" 
+05/27/2023 10:41:40.409 |:| INFO |:| get_syllables_for_sentence: "wrote" 
+05/27/2023 10:41:40.562 |:| INFO |:| get_syllables_for_sentence: "hamlett krumwiede scheiman lost bodice alaska's tebbe" 
+05/27/2023 10:41:40.805 |:| INFO |:| Returning decoded message.
+05/27/2023 10:41:40.805 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:41:40] "POST /decode HTTP/1.1" 200 -
+05/27/2023 10:41:40.836 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:41:40] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:42:37.278 |:| INFO |:|  * Detected change in 'C:\\Users\\adamb\\PycharmProjects\\encode-message\\app.py', reloading
+05/27/2023 10:42:37.362 |:| INFO |:|  * Restarting with stat
+05/27/2023 10:42:38.109 |:| WARNING |:|  * Debugger is active!
+05/27/2023 10:42:38.114 |:| INFO |:|  * Debugger PIN: 125-543-471
+05/27/2023 10:42:42.701 |:| INFO |:| Submitting decode form with msg: doll
+polanco budge
+wrote
+hamlett krumwiede scheiman lost bodice alaska's tebbe, offset: 0
+05/27/2023 10:42:42.701 |:| INFO |:| DECODING...
+05/27/2023 10:42:42.701 |:| INFO |:| get_syllables_for_sentence: "doll" 
+05/27/2023 10:42:42.871 |:| INFO |:| get_syllables_for_sentence: "polanco budge" 
+05/27/2023 10:42:43.035 |:| INFO |:| get_syllables_for_sentence: "wrote" 
+05/27/2023 10:42:43.213 |:| INFO |:| get_syllables_for_sentence: "hamlett krumwiede scheiman lost bodice alaska's tebbe" 
+05/27/2023 10:42:43.390 |:| INFO |:| Returning decoded message.
+05/27/2023 10:42:43.401 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:42:43] "POST /decode HTTP/1.1" 200 -
+05/27/2023 10:42:43.476 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:42:43] "GET /static/css/style.css HTTP/1.1" 200 -
+05/27/2023 10:43:10.171 |:| INFO |:| Clearing decode form.
+05/27/2023 10:43:10.172 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:43:10] "[32mPOST /decode HTTP/1.1[0m" 302 -
+05/27/2023 10:43:10.178 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:43:10] "GET /decode HTTP/1.1" 200 -
+05/27/2023 10:43:10.211 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:43:10] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:43:11.704 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:43:11] "POST /decode HTTP/1.1" 200 -
+05/27/2023 10:43:11.728 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:43:11] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:43:13.301 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:43:13] "GET /encode HTTP/1.1" 200 -
+05/27/2023 10:43:13.392 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:43:13] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:43:14.886 |:| INFO |:| Clearing encode form.
+05/27/2023 10:43:14.886 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:43:14] "[32mPOST /encode HTTP/1.1[0m" 302 -
+05/27/2023 10:43:14.892 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:43:14] "GET /encode HTTP/1.1" 200 -
+05/27/2023 10:43:14.915 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:43:14] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:43:15.718 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:43:15] "POST /encode HTTP/1.1" 200 -
+05/27/2023 10:43:15.796 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:43:15] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:43:18.142 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:43:18] "GET /decode HTTP/1.1" 200 -
+05/27/2023 10:43:18.181 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:43:18] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:43:19.281 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:43:19] "POST /decode HTTP/1.1" 200 -
+05/27/2023 10:43:19.330 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:43:19] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:43:21.905 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:43:21] "GET /encode HTTP/1.1" 200 -
+05/27/2023 10:43:21.977 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:43:21] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:43:28.248 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:43:28] "GET /decode HTTP/1.1" 200 -
+05/27/2023 10:43:28.294 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:43:28] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:46:07.845 |:| INFO |:|  * Detected change in 'C:\\Users\\adamb\\PycharmProjects\\encode-message\\app.py', reloading
+05/27/2023 10:46:07.933 |:| INFO |:|  * Restarting with stat
+05/27/2023 10:46:09.275 |:| WARNING |:|  * Debugger is active!
+05/27/2023 10:46:09.281 |:| INFO |:|  * Debugger PIN: 125-543-471
+05/27/2023 10:46:14.705 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:46:14] "GET /encode HTTP/1.1" 200 -
+05/27/2023 10:46:14.800 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:46:14] "GET /static/css/style.css HTTP/1.1" 200 -
+05/27/2023 10:46:14.879 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:46:14] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+05/27/2023 10:46:20.387 |:| INFO |:| Submitting encode form with msg: hi, offset: 2
+05/27/2023 10:46:20.387 |:| INFO |:| ENCODING...
+05/27/2023 10:46:20.387 |:| INFO |:| format_api_sentence - 2: 1 = Decode, 2 = Encode
+05/27/2023 10:46:20.387 |:| INFO |:| encode - Got the Codex: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+05/27/2023 10:46:20.387 |:| INFO |:| get_words_for_syllables: 10
+05/27/2023 10:46:20.578 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:46:20.594 |:| INFO |:| Syllables used so far: 3
+05/27/2023 10:46:20.614 |:| INFO |:| Syllables used so far: 5
+05/27/2023 10:46:20.628 |:| INFO |:| Syllables used so far: 8
+05/27/2023 10:46:20.637 |:| INFO |:| Syllables used so far: 9
+05/27/2023 10:46:20.640 |:| INFO |:| get_words_for_syllables - got words: merica burmese albanian sharf thayne 
+05/27/2023 10:46:20.645 |:| INFO |:| get_words_for_syllables: 11
+05/27/2023 10:46:20.809 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:46:20.818 |:| INFO |:| Syllables used so far: 2
+05/27/2023 10:46:20.827 |:| INFO |:| Syllables used so far: 6
+05/27/2023 10:46:20.837 |:| INFO |:| Syllables used so far: 8
+05/27/2023 10:46:20.845 |:| INFO |:| get_words_for_syllables - got words: ecole deangelis errett aguado 
+05/27/2023 10:46:20.852 |:| INFO |:| encode - Returning encoded message.
+05/27/2023 10:46:20.853 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:46:20] "POST /encode HTTP/1.1" 200 -
+05/27/2023 10:46:20.885 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:46:20] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:46:28.350 |:| INFO |:| Clearing encode form.
+05/27/2023 10:46:28.350 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:46:28] "[32mPOST /encode HTTP/1.1[0m" 302 -
+05/27/2023 10:46:28.363 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:46:28] "GET /encode HTTP/1.1" 200 -
+05/27/2023 10:46:28.390 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:46:28] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:46:29.309 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:46:29] "GET /decode HTTP/1.1" 200 -
+05/27/2023 10:46:29.345 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:46:29] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:46:34.820 |:| INFO |:| Submitting decode form with msg: merica burmese albanian sharf thayne
+ecole deangelis errett aguado, offset: 2
+05/27/2023 10:46:34.820 |:| INFO |:| DECODING...
+05/27/2023 10:46:34.820 |:| INFO |:| get_syllables_for_sentence: "merica burmese albanian sharf thayne" 
+05/27/2023 10:46:35.188 |:| INFO |:| get_syllables_for_sentence: "ecole deangelis errett aguado" 
+05/27/2023 10:46:35.651 |:| INFO |:| Returning decoded message.
+05/27/2023 10:46:35.651 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:46:35] "POST /decode HTTP/1.1" 200 -
+05/27/2023 10:46:35.676 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:46:35] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:46:43.230 |:| INFO |:| Clearing decode form.
+05/27/2023 10:46:43.230 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:46:43] "[32mPOST /decode HTTP/1.1[0m" 302 -
+05/27/2023 10:46:43.240 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:46:43] "GET /decode HTTP/1.1" 200 -
+05/27/2023 10:46:43.279 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:46:43] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:49:04.717 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:49:04] "GET /decode HTTP/1.1" 200 -
+05/27/2023 10:49:04.758 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:49:04] "GET /static/css/style.css HTTP/1.1" 200 -
+05/27/2023 10:49:06.173 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:49:06] "GET /encode HTTP/1.1" 200 -
+05/27/2023 10:49:06.208 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:49:06] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:49:06.210 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:49:06] "GET /static/js/encode.js HTTP/1.1" 200 -
+05/27/2023 10:49:11.226 |:| INFO |:| Submitting encode form with msg: hi, offset: 1
+05/27/2023 10:49:11.226 |:| INFO |:| ENCODING...
+05/27/2023 10:49:11.226 |:| INFO |:| format_api_sentence - 2: 1 = Decode, 2 = Encode
+05/27/2023 10:49:11.227 |:| INFO |:| encode - Got the Codex: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+05/27/2023 10:49:11.227 |:| INFO |:| get_words_for_syllables: 9
+05/27/2023 10:49:11.449 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:49:11.459 |:| INFO |:| Syllables used so far: 4
+05/27/2023 10:49:11.471 |:| INFO |:| Syllables used so far: 6
+05/27/2023 10:49:11.481 |:| INFO |:| Syllables used so far: 8
+05/27/2023 10:49:11.485 |:| INFO |:| get_words_for_syllables - got words: transafrica murdy mitchum clare 
+05/27/2023 10:49:11.490 |:| INFO |:| get_words_for_syllables: 10
+05/27/2023 10:49:11.711 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:49:11.735 |:| INFO |:| Syllables used so far: 1
+05/27/2023 10:49:11.758 |:| INFO |:| Syllables used so far: 3
+05/27/2023 10:49:11.785 |:| INFO |:| Syllables used so far: 5
+05/27/2023 10:49:11.814 |:| INFO |:| Syllables used so far: 8
+05/27/2023 10:49:11.831 |:| INFO |:| get_words_for_syllables - got words: waln astra's timer natchez's hutchins 
+05/27/2023 10:49:11.842 |:| INFO |:| encode - Returning encoded message.
+05/27/2023 10:49:11.842 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:49:11] "POST /encode HTTP/1.1" 200 -
+05/27/2023 10:49:11.886 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:49:11] "[36mGET /static/js/encode.js HTTP/1.1[0m" 304 -
+05/27/2023 10:49:11.889 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:49:11] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:49:16.827 |:| INFO |:| Clearing encode form.
+05/27/2023 10:49:16.827 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:49:16] "[32mPOST /encode HTTP/1.1[0m" 302 -
+05/27/2023 10:49:16.842 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:49:16] "GET /encode HTTP/1.1" 200 -
+05/27/2023 10:49:16.870 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:49:16] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:49:16.871 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:49:16] "[36mGET /static/js/encode.js HTTP/1.1[0m" 304 -
+05/27/2023 10:49:22.469 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:49:22] "GET /encode HTTP/1.1" 200 -
+05/27/2023 10:51:09.078 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:09] "GET /decode HTTP/1.1" 200 -
+05/27/2023 10:51:09.267 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:09] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:51:09.288 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:09] "GET /static/js/decode.js HTTP/1.1" 200 -
+05/27/2023 10:51:13.201 |:| INFO |:| Clearing decode form.
+05/27/2023 10:51:13.202 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:13] "[32mPOST /decode HTTP/1.1[0m" 302 -
+05/27/2023 10:51:13.217 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:13] "GET /decode HTTP/1.1" 200 -
+05/27/2023 10:51:13.263 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:13] "[36mGET /static/js/decode.js HTTP/1.1[0m" 304 -
+05/27/2023 10:51:13.264 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:13] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:51:17.144 |:| INFO |:| Clearing decode form.
+05/27/2023 10:51:17.144 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:17] "[32mPOST /decode HTTP/1.1[0m" 302 -
+05/27/2023 10:51:17.163 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:17] "GET /decode HTTP/1.1" 200 -
+05/27/2023 10:51:17.209 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:17] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:51:17.210 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:17] "[36mGET /static/js/decode.js HTTP/1.1[0m" 304 -
+05/27/2023 10:51:18.421 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:18] "GET /encode HTTP/1.1" 200 -
+05/27/2023 10:51:18.464 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:18] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:51:18.477 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:18] "[36mGET /static/js/encode.js HTTP/1.1[0m" 304 -
+05/27/2023 10:51:23.010 |:| INFO |:| Submitting encode form with msg: hi, offset: 4
+05/27/2023 10:51:23.010 |:| INFO |:| ENCODING...
+05/27/2023 10:51:23.010 |:| INFO |:| format_api_sentence - 2: 1 = Decode, 2 = Encode
+05/27/2023 10:51:23.010 |:| INFO |:| encode - Got the Codex: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+05/27/2023 10:51:23.010 |:| INFO |:| get_words_for_syllables: 12
+05/27/2023 10:51:23.206 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:51:23.215 |:| INFO |:| Syllables used so far: 3
+05/27/2023 10:51:23.243 |:| INFO |:| Syllables used so far: 5
+05/27/2023 10:51:23.254 |:| INFO |:| Syllables used so far: 6
+05/27/2023 10:51:23.265 |:| INFO |:| Syllables used so far: 7
+05/27/2023 10:51:23.277 |:| INFO |:| Syllables used so far: 9
+05/27/2023 10:51:23.287 |:| INFO |:| Syllables used so far: 11
+05/27/2023 10:51:23.291 |:| INFO |:| get_words_for_syllables - got words: tillotson bosco sant volle drenning ahlgren sause 
+05/27/2023 10:51:23.296 |:| INFO |:| get_words_for_syllables: 13
+05/27/2023 10:51:23.442 |:| INFO |:| Syllables used so far: 0
+05/27/2023 10:51:23.451 |:| INFO |:| Syllables used so far: 3
+05/27/2023 10:51:23.461 |:| INFO |:| Syllables used so far: 5
+05/27/2023 10:51:23.470 |:| INFO |:| Syllables used so far: 7
+05/27/2023 10:51:23.480 |:| INFO |:| Syllables used so far: 10
+05/27/2023 10:51:23.489 |:| INFO |:| get_words_for_syllables - got words: mccamant fischl influenced masteller cyrano 
+05/27/2023 10:51:23.495 |:| INFO |:| encode - Returning encoded message.
+05/27/2023 10:51:23.495 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:23] "POST /encode HTTP/1.1" 200 -
+05/27/2023 10:51:23.519 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:23] "[36mGET /static/js/encode.js HTTP/1.1[0m" 304 -
+05/27/2023 10:51:23.520 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:23] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:51:29.798 |:| INFO |:| Clearing encode form.
+05/27/2023 10:51:29.799 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:29] "[32mPOST /encode HTTP/1.1[0m" 302 -
+05/27/2023 10:51:30.196 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:30] "GET /encode HTTP/1.1" 200 -
+05/27/2023 10:51:30.413 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:30] "[36mGET /static/js/encode.js HTTP/1.1[0m" 304 -
+05/27/2023 10:51:30.431 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:30] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:51:30.815 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:30] "GET /decode HTTP/1.1" 200 -
+05/27/2023 10:51:30.935 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:30] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:51:30.937 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:30] "[36mGET /static/js/decode.js HTTP/1.1[0m" 304 -
+05/27/2023 10:51:35.806 |:| INFO |:| Submitting decode form with msg: tillotson bosco sant volle drenning ahlgren sause
+mccamant fischl influenced masteller cyrano, offset: 4
+05/27/2023 10:51:35.806 |:| INFO |:| DECODING...
+05/27/2023 10:51:35.806 |:| INFO |:| get_syllables_for_sentence: "tillotson bosco sant volle drenning ahlgren sause" 
+05/27/2023 10:51:36.089 |:| INFO |:| get_syllables_for_sentence: "mccamant fischl influenced masteller cyrano" 
+05/27/2023 10:51:36.368 |:| INFO |:| Returning decoded message.
+05/27/2023 10:51:36.369 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:36] "POST /decode HTTP/1.1" 200 -
+05/27/2023 10:51:36.407 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:36] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:51:36.408 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:36] "[36mGET /static/js/decode.js HTTP/1.1[0m" 304 -
+05/27/2023 10:51:40.186 |:| INFO |:| Clearing decode form.
+05/27/2023 10:51:40.186 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:40] "[32mPOST /decode HTTP/1.1[0m" 302 -
+05/27/2023 10:51:40.193 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:40] "GET /decode HTTP/1.1" 200 -
+05/27/2023 10:51:40.304 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:40] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+05/27/2023 10:51:40.305 |:| INFO |:| 127.0.0.1 - - [27/May/2023 10:51:40] "[36mGET /static/js/decode.js HTTP/1.1[0m" 304 -
