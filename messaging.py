@@ -55,7 +55,7 @@ def get_sentence_syllables(sentences: str, format_option: int) -> list:
 
     syllables = list()
     log.info(f"get_sentence_syllables - Passed in the following:\n----\n{sentences}\n----")
-    formatted_sentences = format_api_sentence(sentences, format_option)
+    formatted_sentences = format_sentence(sentences, format_option)
     log.info(formatted_sentences, type(formatted_sentences))
     sentences = formatted_sentences.split("\n")
     for sentence in sentences:
@@ -69,7 +69,7 @@ def get_sentence_syllables(sentences: str, format_option: int) -> list:
 
 
 # Removes punctuation and changes any numeric number into the correct english word.
-def format_api_sentence(sentence: str, option: int) -> str:
+def format_sentence(sentence: str, option: int) -> str:
     """Formats a sentence to be sent to the Datamuse API.
 
     :param (str) sentence: The sentence we need to format.
@@ -148,7 +148,7 @@ def encode(input_message: str) -> str:
         input_message = "test message"
 
     # Format the message
-    formatted_message = format_api_sentence(input_message, 2)
+    formatted_message = format_sentence(input_message, 2)
 
     # Get the corresponding letters according to the codex.
     with open('codex.txt') as f:
