@@ -115,7 +115,7 @@ def decode(input_message: str) -> str:
         try:
             syllables_list.append(get_syllables_for_sentence(sentence))
         except IndexError:
-            decoded_message = "Message could not be decrypted."
+            decoded_message = "Message could not be decoded."
 
     # Get the corresponding letters according to the codex
     with open('codex.txt', encoding="utf8") as f:
@@ -123,7 +123,7 @@ def decode(input_message: str) -> str:
         codex_list = [line.strip("\n") for line in codex_lines]
     log.debug(f"decode - Codex List: {codex_list}")
     if None in syllables_list:
-        return "Message could not be decrypted."
+        return "Message could not be decoded."
     for num in syllables_list:
         corrected_num = (num - 1 - offset) % 26
         log.debug(f"{num} syllables = {codex_list[corrected_num]}")

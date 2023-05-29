@@ -9,6 +9,11 @@ app.debug = True
 return_spacer = "-----------------------"
 
 
+# Load Browser Favorite Icon
+@app.route('/favicon.ico')
+def favicon():
+    return redirect(url_for('static', filename='image/favicon.ico'), code=302)
+
 # cache definition @app.after_request def add_header(response): Add headers to both force latest IE rendering engine or Chrome Frame, and also to cache the rendered page for 10 minutes.
 @app.after_request
 def add_header(response):
@@ -35,7 +40,7 @@ def encode():
             if msg:
                 messaging.log.info(f"Submitting encode form with msg: {msg}, offset: {offset}")
                 messaging.offset = offset
-                encoded_msg = f"Offset: {offset}\nInput Message: {msg}\nEncrypted Message:\n{return_spacer}{messaging.encode(msg)}"
+                encoded_msg = f"Offset: {offset}\nInput Message: {msg}\nEncoded Message:\n{return_spacer}{messaging.encode(msg)}"
                 return render_template(page_template, encoded_message=encoded_msg)
             else:
                 flash("Please enter a message to encode.")
@@ -56,7 +61,7 @@ def decode():
             if msg:
                 messaging.log.info(f"Submitting decode form with msg: {msg}, offset: {offset}")
                 messaging.offset = offset
-                decoded_msg = f"Offset: {offset}\nEncrypted Message:\n{return_spacer}\n{msg}\n{return_spacer}\nDecrypted Message:\n{return_spacer}\n{messaging.decode(msg)}"
+                decoded_msg = f"Offset: {offset}\nEncoded Message:\n{return_spacer}\n{msg}\n{return_spacer}\nDecoded Message:\n{return_spacer}\n{messaging.decode(msg)}"
                 return render_template(page_template, decoded_message=decoded_msg)
             else:
                 flash("Please enter a message to decode.")

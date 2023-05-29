@@ -5,8 +5,10 @@ Please see the initial design document for in-depth design details: __Message_Co
 
 Syllable dataset downloaded from [Kaggle](https://www.kaggle.com/datasets/schwartstack/english-phonetic-and-syllable-count-dictionary?resource=download)
 
+"Hieroglyph" icon by Jajang Nurrahman from <a href="https://thenounproject.com/browse/icons/term/hieroglyph/" target="_blank" title="Hieroglyph Icons">Noun Project</a>
+
 ### File Overview:
-__messaging.py__ - Contains the encryption and decryption functionality used by the flask app.
+__messaging.py__ - Contains the encoding and decoding functionality used by the flask app.
 
 __app.py__ - The Flask application controller.
 
@@ -30,7 +32,7 @@ __requirements.txt__ & __vercel.json__ - Vercel config properties for hosting.
 - Take an english sentence or phrase and turn it into something that does not make sense.
 
 ### Decoding:
-- Take a message that has been encrypted using this same program and decrypt it into it's original meaning.
+- Take a message that has been encoded using this same program and decode it into it's original meaning.
 
 ## Running:
 Make sure that the FLASK_KEY environment variable is set on your machine or in the projects **activate.bat** file if using virtual environment.

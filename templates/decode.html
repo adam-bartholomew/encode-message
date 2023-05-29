@@ -6,10 +6,9 @@
 
 <form id="decodeForm" method="post">
     <div class="mb-3">
-        <!--<label for="inputMessage" class="form-label">Message</label>-->
         <textarea id="inputMessage" maxlength="1000" name="inputMessage" placeholder="Please enter your encoded message here." class="form-control">{{ request.form['inputMessage'] }}</textarea>
         <br/>
-        <label for="decodeOffset" title="This should be the same value used to encrypt" class="form-label">Select the decryption offset:</label>
+        <label for="decodeOffset" title="This should be the same value used to encode" class="form-label">Select the decoding offset:</label>
         <input type="number" id="decodeOffset" name="decodeOffset" class="form-control" max="25" min="-25" placeholder="0" form="decodeForm" title="Select a number between -25 and 25 | Defaults to 0">
     </div>
     <div class="mb-3">
@@ -18,7 +17,7 @@
     </div>
     <hr class="mt-1 mb-3"/>
     <div class="mb-3">
-        <textarea id="decodedMessage" name="decodedMessage" rows="10" cols="140" readonly="readonly" placeholder="Decrypted message displayed here." class="form-control">{{ decoded_message }}</textarea>
+        <textarea id="decodedMessage" name="decodedMessage" rows="10" cols="140" readonly="readonly" placeholder="The decoded message gets displayed here." class="form-control">{{ decoded_message }}</textarea>
     </div>
 </form>
 <script src="{{ url_for('static', filename='js/decode.js') }}"></script>
