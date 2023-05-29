@@ -9,7 +9,7 @@
         <!--<label for="inputMessage" class="form-label">Message</label>-->
         <input id="inputMessage" type="text" maxlength="500" name="inputMessage" placeholder="Please enter your message here." class="form-control" value="{{ request.form['inputMessage'] }}"/>
         <br/>
-        <label for="encodeOffset" title="Used to further obfuscate the message" class="form-label">Select the encryption offset:</label>
+        <label for="encodeOffset" title="Used to further obfuscate the message" class="form-label">Select the encoding offset:</label>
         <input type="number" id="encodeOffset" name="encodeOffset" class="form-control" max="25" min="-25" placeholder="0" form="encodeForm" title="Select a number between -25 and 25 | Defaults to 0">
     </div>
     <div class="mb-3">
