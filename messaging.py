@@ -319,5 +319,4 @@ if __name__ == '__main__':
     log.info("Calling __main__")
     offset = 0  # Default: 0
     words_api_counter = 0
-    print(encode("love pooping killers"))
-    print(decode(encode("love pooping killers")))
+
