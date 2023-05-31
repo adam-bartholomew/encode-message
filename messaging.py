@@ -105,17 +105,24 @@ def decode(input_message: str) -> str:
     log.info("DECODING...")
     decoded_message = str()
     syllables_list = []
+    spaces = []
     if not input_message or len(input_message) < 1:
         input_message = "haven't done it\n" \
-                        "singularity\n" \
+                        "singularity.\n" \
                         "forty-five"
 
-    for sentence in input_message.split("\n"):
+    input_message_list = [s for s in input_message.split("\n") if s.strip()]  # Create a list of the sentences provided.
+    for ind, sentence in enumerate(input_message_list):
         sentence = sentence.rstrip("\r")
+        if sentence.endswith("."):
+            spaces.append(ind)
+            sentence = sentence.rstrip(".")
         try:
             syllables_list.append(get_syllables_for_sentence(sentence))
         except IndexError:
             decoded_message = "Message could not be decoded."
+    log.info(f"Decode sentence space positions: {spaces}")
+    #print(f"decode syllables: {syllables_list}")
 
     # Get the corresponding letters according to the codex
     with open('codex.txt', encoding="utf8") as f:
@@ -124,10 +131,13 @@ def decode(input_message: str) -> str:
     log.debug(f"decode - Codex List: {codex_list}")
     if None in syllables_list:
         return "Message could not be decoded."
-    for num in syllables_list:
+    for ind, num in enumerate(syllables_list):
         corrected_num = (num - 1 - offset) % 26
         log.debug(f"{num} syllables = {codex_list[corrected_num]}")
-        decoded_message += codex_list[corrected_num]
+        if ind in spaces:
+            decoded_message += codex_list[corrected_num] + " "
+        else:
+            decoded_message += codex_list[corrected_num]
     log.info("Returning decoded message.")
     return decoded_message
 
@@ -139,8 +149,9 @@ def encode(input_message: str) -> str:
     :param (str) input_message: The message we want to encode.
     :return (str): The encoded message.
     """
-    log.info("ENCODING...")
+    log.info("ENCODING.")
     syllables = list()
+    spaces = list()
     encoded_message = str()
     words = list()
 
@@ -157,10 +168,13 @@ def encode(input_message: str) -> str:
     log.info(f"encode - Got the Codex: {codex_list}")
 
     # Get the syllables needed for each line of the encoded message.
-    for c in formatted_message:
+    for i, c in enumerate(formatted_message):
         if c == " ":
+            spaces.append(i - (1 + len(spaces)))
             continue
         syllables.append((codex_list.index(c) + 1 + offset) % 26)
+    log.info(f"Encode sentence space positions: {spaces}")
+    #print(f"formatted msg:{formatted_message}")
 
     # 1. get words for the syllable count of a line.
     for num in syllables:
@@ -169,7 +183,10 @@ def encode(input_message: str) -> str:
         words.append(word)
 
     # 2. build the message.
-    for line in words:
+    for ind, line in enumerate(words):
+        #print(f"words, index line {ind} {line}")
+        if ind in spaces:
+            line = line + "."
         encoded_message = encoded_message + "\n" + line
     log.info("encode - Returning encoded message.")
     return encoded_message
@@ -302,4 +319,5 @@ if __name__ == '__main__':
     log.info("Calling __main__")
     offset = 0  # Default: 0
     words_api_counter = 0
-
+    print(encode("love pooping killers"))
+    print(decode(encode("love pooping killers")))
