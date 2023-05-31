@@ -122,7 +122,6 @@ def decode(input_message: str) -> str:
         except IndexError:
             decoded_message = "Message could not be decoded."
     log.info(f"Decode sentence space positions: {spaces}")
-    #print(f"decode syllables: {syllables_list}")
 
     # Get the corresponding letters according to the codex
     with open('codex.txt', encoding="utf8") as f:
