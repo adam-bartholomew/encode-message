@@ -2,11 +2,12 @@ import string
 import pandas as pd
 import csv
 import requests
-import datetime as datetime
+from datetime import datetime, date
 from datamuse import Datamuse
 from num2words import num2words
 from typing import Union
 import logging
+import random
 # https://api.datamuse.com/words?sl=i%27ll
 # https://wordsapiv1.p.rapidapi.com/words/aberration/syllables | This costs money after 2500 requests
 # https://github.com/gmarmstrong/python-datamuse/
@@ -15,8 +16,7 @@ import logging
 # https://www.onelook.com/thesaurus/?s=&f_ns=6&sortby=le0&sorttopn=1000
 # https://www.howmanysyllables.com
 
-offset = 0  # Default: 0
-log_filename = "./logs/encode-message_" + datetime.datetime.now().strftime("%Y%m%d") + ".log"
+log_filename = "./logs/encode-message_" + datetime.now().strftime("%Y%m%d") + ".log"
 logging.basicConfig(filename=log_filename, format="%(asctime)s.%(msecs)03d |:| %(levelname)s |:| %(message)s", level=logging.INFO, datefmt="%m/%d/%Y %H:%M:%S")
 log = logging.getLogger()
 
@@ -112,6 +112,10 @@ def decode(input_message: str) -> str:
                         "forty-five"
 
     input_message_list = [s for s in input_message.split("\n") if s.strip()]  # Create a list of the sentences provided.
+    log.info(input_message_list)
+    decode_offset = decode_offset_date(input_message_list.pop(0).rstrip("\r"))
+
+    # Find where any spaces should go.
     for ind, sentence in enumerate(input_message_list):
         sentence = sentence.rstrip("\r")
         if sentence.endswith("."):
@@ -131,7 +135,7 @@ def decode(input_message: str) -> str:
     if None in syllables_list:
         return "Message could not be decoded."
     for ind, num in enumerate(syllables_list):
-        corrected_num = (num - 1 - offset) % 26
+        corrected_num = (num - 1 - decode_offset) % 26
         log.debug(f"{num} syllables = {codex_list[corrected_num]}")
         if ind in spaces:
             decoded_message += codex_list[corrected_num] + " "
@@ -142,17 +146,18 @@ def decode(input_message: str) -> str:
 
 
 # Encodes a message
-def encode(input_message: str) -> str:
+def encode(input_message: str, encode_offset: int) -> str:
     """Encodes a message according the codex on the system.
 
     :param (str) input_message: The message we want to encode.
+    :param (int) encode_offset: The message offset used to encode.
     :return (str): The encoded message.
     """
     log.info("ENCODING.")
     syllables = list()
     spaces = list()
-    encoded_message = str()
     words = list()
+    encoded_message = build_offset_date(encode_offset)
 
     if not input_message or len(input_message) < 1:
         input_message = "test message"
@@ -171,23 +176,22 @@ def encode(input_message: str) -> str:
         if c == " ":
             spaces.append(i - (1 + len(spaces)))
             continue
-        syllables.append((codex_list.index(c) + 1 + offset) % 26)
+        count = (codex_list.index(c) + 1 + encode_offset) % 26
+        syllables.append(26 if count == 0 else count)
     log.info(f"Encode sentence space positions: {spaces}")
-    #print(f"formatted msg:{formatted_message}")
 
-    # 1. get words for the syllable count of a line.
+    # Get words for the syllable count of a line.
     for num in syllables:
         num = int(num)
         word = get_words_for_syllables(num)
         words.append(word)
 
-    # 2. build the message.
+    # Build the message.
     for ind, line in enumerate(words):
-        #print(f"words, index line {ind} {line}")
         if ind in spaces:
             line = line + "."
         encoded_message = encoded_message + "\n" + line
-    log.info("encode - Returning encoded message.")
+    log.info(f"encode - Returning encoded message:\n{encoded_message}")
     return encoded_message
 
 
@@ -225,7 +229,7 @@ def get_syllables_for_sentence(sentence: str) -> Union[int, None]:
     """Gets the syllable count for a sentence.
 
     :param (str) sentence: The sentence to get the syllables for.
-    :return (int): The amount of syllables in the sentence.
+    :return (int|None): The amount of syllables in the sentence.
     """
 
     log.info(f"get_syllables_for_sentence: \"{sentence}\" ")
@@ -251,7 +255,7 @@ def clean_dictionary():
     :return:
     """
     log.info('cleaning the dictionary.')
-    new_filename = f"datasets/phoneticDictionary_cleaned_{datetime.datetime.now().strftime('%Y%m%d')}.csv"
+    new_filename = f"datasets/phoneticDictionary_cleaned_{datetime.now().strftime('%Y%m%d')}.csv"
     log.info(f"Cleaned Dictionary Name: {new_filename}")
     with open('datasets/phoneticDictionary.csv', 'r', encoding='utf8') as in_file, open(new_filename, 'w', encoding='utf8', newline='') as out_file:
         seen = set()
@@ -262,7 +266,7 @@ def clean_dictionary():
         for row in reader:
             word = row['word']  # Get the word for the row
 
-            # If the word is a duplicate, starts with "'", or contains "." skip it.
+            # If the word is a duplicate, starts with ' or contains . skip it.
             if word in seen or word.startswith("'") or "." in word:
                 continue
 
@@ -314,8 +318,37 @@ def validate_word(word: str) -> bool:
         return True
 
 
+def build_offset_date(int_offset: int) -> str:
+    """Builds a date string for the beginning of the encoded message to communicate the offset.
+
+    The offset is represented in the date by the day - month.
+
+    :param (int) int_offset: The integer offset value.
+    :return: (str): The date portion of the encoded message.
+    """
+    if not isinstance(int_offset, int) or int_offset < 0:
+        return "Offset must be an integer less than 26 and greater than or equal to 0."
+
+    date_msg = None
+    while date_msg is None:
+        int_month = random.randint(1, 12)
+        int_day = int_offset + int_month
+        if int_day < 1 or int_day > 31:
+            log.info(f"build_offset_date: bad date - month:{int_month}, day:{int_day}")
+        elif (int_month == 2 and int_day > 29) or (int_month in [4, 6, 9, 11] and int_day > 30) or (int_month in [1, 3, 5, 7, 8, 10, 12] and int_day > 31):
+            log.info(f"build_offset_date: bad date - month:{int_month}, day:{int_day}")
+        else:
+            date_msg = date(date.today().year, int_month, int_day).strftime("%A, %B %d, %Y")
+            log.info(f"build_offset_date: good date - {date_msg}")
+    return str(date_msg)
+
+
+def decode_offset_date(offset_date: str) -> int:
+    log.info(f"decode_offset_date: param \"offset_date\" - {datetime.strptime(offset_date, '%A, %B %d, %Y')}")
+    dt = datetime.strptime(offset_date, '%A, %B %d, %Y')
+    return dt.day - dt.month
+
+
 if __name__ == '__main__':
     log.info("Calling __main__")
-    offset = 0  # Default: 0
     words_api_counter = 0
-

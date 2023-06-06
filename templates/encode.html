@@ -8,14 +8,14 @@
     <div class="mb-3">
         <input id="inputMessage" type="text" maxlength="500" name="inputMessage" placeholder="Please enter the message to encode here." class="form-control" value="{{ request.form['inputMessage'] }}"/>
         <br/>
-        <label for="encodeOffset" title="Used to further obfuscate the message" class="form-label">Select the encoding offset:</label>
-        <input type="number" id="encodeOffset" name="encodeOffset" class="form-control" max="25" min="-25" placeholder="0" form="encodeForm" title="Select a number between -25 and 25, default is 0">
+        <label for="encodeOffset" title="Different offsets result in different messages" class="form-label">Select the encoding offset value:</label>
+        <input type="number" id="encodeOffset" name="encodeOffset" class="form-control" max="25" min="0" placeholder="0" form="encodeForm" title="Select a number between 0 and 25 | Default is 0">
     </div>
     <div class="mb-3">
-        <button name="encodeSubmit" id="encodeSubmit" value="Submit" type="submit" class="btn btn-outline-primary" form="encodeForm">Submit</button>
-        <button name="encodeClear" id="encodeClear" value="Clear" type="submit" class="btn btn-outline-danger" form="encodeForm" onClick="clearEncodeForm()">Clear</button>
+        <button name="encodeSubmit" id="encodeSubmit" value="Submit" type="submit" class="btn btn-outline-primary" form="encodeForm" Title="Submit message for encoding">Submit</button>
+        <button name="encodeClear" id="encodeClear" value="Clear" type="submit" class="btn btn-outline-danger" form="encodeForm" onClick="clearEncodeForm()" Title="Clear all page fields">Clear</button>
     </div>
-    <hr class="mt-1 mb-3"/>
+    <hr class="mt-1 mb-1"/>
     <div class="mb-3">
         <div class="d-flex align-items-center highlight-toolbar ps-3 pe-2 py-1 border-0">
             <div class="d-flex ms-auto">
@@ -24,7 +24,7 @@
                 </button>
             </div>
         </div>
-        <textarea id="encodedMessage" name="encodedMessage" rows="10" cols="140" readonly="readonly" placeholder="The encoded message gets displayed here." class="form-control">{{ encoded_message }}</textarea>
+        <textarea id="encodedMessage" name="encodedMessage" rows="20" cols="140" readonly="readonly" placeholder="The encoded message gets displayed here." class="form-control">{{ encoded_message }}</textarea>
     </div>
 </form>
 <script src="{{ url_for('static', filename='js/encodeMessage.js') }}"></script>

@@ -39,8 +39,7 @@ def encode():
             offset = int(request.form.get('encodeOffset')) if request.form.get('encodeOffset').isnumeric() else 0
             if msg:
                 messaging.log.info(f"Submitting encode form with msg: {msg}, offset: {offset}")
-                messaging.offset = offset
-                encoded_msg = f"Offset: {offset}\nInput Message: {msg}\nEncoded Message:\n{return_spacer}{messaging.encode(msg)}"
+                encoded_msg = f"Offset: {offset}\nInput Message: {msg}\nEncoded Message:\n{return_spacer}\n{messaging.encode(msg, offset)}"
                 return render_template(page_template, encoded_message=encoded_msg)
             else:
                 flash("Please enter a message to encode.")
@@ -57,11 +56,9 @@ def decode():
     if request.method == 'POST':
         if request.form.get('decodeSubmit') == 'Submit':
             msg = request.form.get('inputMessage')
-            offset = int(request.form.get('decodeOffset')) if request.form.get('decodeOffset').isnumeric() else 0
             if msg:
-                messaging.log.info(f"Submitting decode form with msg: {msg}, offset: {offset}")
-                messaging.offset = offset
-                decoded_msg = f"Offset: {offset}\nEncoded Message:\n{return_spacer}\n{msg}\n{return_spacer}\nDecoded Message:\n{return_spacer}\n{messaging.decode(msg)}"
+                messaging.log.info(f"Submitting decode form with msg: {msg}")
+                decoded_msg = f"Encoded Message:\n{return_spacer}\n{msg}\n{return_spacer}\nDecoded Message:\n{return_spacer}\n{messaging.decode(msg)}"
                 return render_template(page_template, decoded_message=decoded_msg)
             else:
                 flash("Please enter a message to decode.")
