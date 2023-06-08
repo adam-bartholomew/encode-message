@@ -14,6 +14,12 @@ return_spacer = "-----------------------"
 def favicon():
     return redirect(url_for('static', filename='image/favicon.ico'), code=302)
 
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return "This page does not exist", 404, "\n", error
+
+
 # cache definition @app.after_request def add_header(response): Add headers to both force latest IE rendering engine or Chrome Frame, and also to cache the rendered page for 10 minutes.
 @app.after_request
 def add_header(response):
@@ -55,9 +61,9 @@ def decode():
     page_template = f"{page_name}.html"
     if request.method == 'POST':
         if request.form.get('decodeSubmit') == 'Submit':
-            msg = request.form.get('inputMessage')
+            msg = request.form.get('inputMessage').replace("\r", "")
             if msg:
-                messaging.log.info(f"Submitting decode form with msg: {msg}")
+                messaging.log.info(f"Submitting decode form with msg:\n{msg}")
                 decoded_msg = f"Encoded Message:\n{return_spacer}\n{msg}\n{return_spacer}\nDecoded Message:\n{return_spacer}\n{messaging.decode(msg)}"
                 return render_template(page_template, decoded_message=decoded_msg)
             else:

@@ -113,11 +113,10 @@ def decode(input_message: str) -> str:
 
     input_message_list = [s for s in input_message.split("\n") if s.strip()]  # Create a list of the sentences provided.
     log.info(input_message_list)
-    decode_offset = decode_offset_date(input_message_list.pop(0).rstrip("\r"))
+    decode_offset = decode_offset_date(input_message_list.pop(0))
 
     # Find where any spaces should go.
     for ind, sentence in enumerate(input_message_list):
-        sentence = sentence.rstrip("\r")
         if sentence.endswith("."):
             spaces.append(ind)
             sentence = sentence.rstrip(".")
