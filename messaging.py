@@ -95,11 +95,11 @@ def format_sentence(sentence: str, option: int) -> str:
 
 
 # Decodes a message.
-def decode(input_message: str) -> str:
+def decode(input_message: str) -> tuple:
     """Decodes a message according to the codex on the system.
 
     :param (str) input_message: The message we want to decode.
-    :return (str): The decoded message.
+    :return (tuple): Element at index 0 is the response code: 0 - Bad, 1 - Good. Element at index 1 is the response message.
     """
 
     log.info("DECODING...")
@@ -114,6 +114,8 @@ def decode(input_message: str) -> str:
     input_message_list = [s for s in input_message.split("\n") if s.strip()]  # Create a list of the sentences provided.
     log.info(input_message_list)
     decode_offset = decode_offset_date(input_message_list.pop(0))
+    if isinstance(decode_offset, str):
+        return 0, f"Message could not be decoded. {decode_offset}"
 
     # Find where any spaces should go.
     for ind, sentence in enumerate(input_message_list):
@@ -132,16 +134,16 @@ def decode(input_message: str) -> str:
         codex_list = [line.strip("\n") for line in codex_lines]
     log.debug(f"decode - Codex List: {codex_list}")
     if None in syllables_list:
-        return "Message could not be decoded."
+        return 0, "The message could not be decoded. Please ensure that there are no blank lines in your message."
     for ind, num in enumerate(syllables_list):
         corrected_num = (num - 1 - decode_offset) % 26
-        log.debug(f"{num} syllables = {codex_list[corrected_num]}")
+        log.info(f"{num} syllables = {codex_list[corrected_num]}")
         if ind in spaces:
             decoded_message += codex_list[corrected_num] + " "
         else:
             decoded_message += codex_list[corrected_num]
     log.info("Returning decoded message.")
-    return decoded_message
+    return 1, decoded_message
 
 
 # Encodes a message
@@ -156,6 +158,7 @@ def encode(input_message: str, encode_offset: int) -> str:
     syllables = list()
     spaces = list()
     words = list()
+    hyphens = list()
     encoded_message = build_offset_date(encode_offset)
 
     if not input_message or len(input_message) < 1:
@@ -163,6 +166,7 @@ def encode(input_message: str, encode_offset: int) -> str:
 
     # Format the message
     formatted_message = format_sentence(input_message, 2)
+    log.info(f"formatted: {formatted_message}")
 
     # Get the corresponding letters according to the codex.
     with open('codex.txt') as f:
@@ -175,9 +179,12 @@ def encode(input_message: str, encode_offset: int) -> str:
         if c == " ":
             spaces.append(i - (1 + len(spaces)))
             continue
+        if c == "-":
+            hyphens.append(i - (1 + len(hyphens)))
+            continue
         count = (codex_list.index(c) + 1 + encode_offset) % 26
         syllables.append(26 if count == 0 else count)
-    log.info(f"Encode sentence space positions: {spaces}")
+    log.info(f"Encode sentence space positions: {spaces}\nEncode sentence hyphen positions: {hyphens}")
 
     # Get words for the syllable count of a line.
     for num in syllables:
@@ -342,9 +349,12 @@ def build_offset_date(int_offset: int) -> str:
     return str(date_msg)
 
 
-def decode_offset_date(offset_date: str) -> int:
-    log.info(f"decode_offset_date: param \"offset_date\" - {datetime.strptime(offset_date, '%A, %B %d, %Y')}")
-    dt = datetime.strptime(offset_date, '%A, %B %d, %Y')
+def decode_offset_date(offset_date: str) -> Union[int, str]:
+    try:
+        log.info(f"decode_offset_date: param \"offset_date\" - {datetime.strptime(offset_date, '%A, %B %d, %Y')}")
+        dt = datetime.strptime(offset_date, '%A, %B %d, %Y')
+    except ValueError:
+        return "The message must begin with a date following this format: Monday, January 1, 1990"
     return dt.day - dt.month
 
 

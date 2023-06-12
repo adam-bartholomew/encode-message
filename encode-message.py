@@ -44,9 +44,18 @@ def encode():
             msg = request.form.get('inputMessage')
             offset = int(request.form.get('encodeOffset')) if request.form.get('encodeOffset').isnumeric() else 0
             if msg:
-                messaging.log.info(f"Submitting encode form with msg: {msg}, offset: {offset}")
-                encoded_msg = f"Offset: {offset}\nInput Message: {msg}\nEncoded Message:\n{return_spacer}\n{messaging.encode(msg, offset)}"
-                return render_template(page_template, encoded_message=encoded_msg)
+                if msg.isascii():
+                    messaging.log.info(f"Submitting encode form with msg: {msg}, offset: {offset}")
+                    encoded_msg = f"Offset: {offset}\nInput Message: {msg}\nEncoded Message:\n{return_spacer}\n{messaging.encode(msg, offset)}"
+                    return render_template(page_template, encoded_message=encoded_msg)
+                else:
+                    bad_char = None
+                    for c in msg:
+                        if not c.isascii():
+                            bad_char = c
+                            break
+                    flash(
+                        f"Only English is supported at this time. Your message contained: {bad_char}. Please ensure that your message only contains ASCII characters.")
             else:
                 flash("Please enter a message to encode.")
         if request.form.get('encodeClear') == 'Clear':
@@ -64,8 +73,12 @@ def decode():
             msg = request.form.get('inputMessage').replace("\r", "")
             if msg:
                 messaging.log.info(f"Submitting decode form with msg:\n{msg}")
-                decoded_msg = f"Encoded Message:\n{return_spacer}\n{msg}\n{return_spacer}\nDecoded Message:\n{return_spacer}\n{messaging.decode(msg)}"
-                return render_template(page_template, decoded_message=decoded_msg)
+                decoded_msg = messaging.decode(msg)
+                if decoded_msg[0] != 1:
+                    flash(decoded_msg[1])
+                else:
+                    decode_resp = f"Encoded Message:\n{return_spacer}\n{msg}\n{return_spacer}\nDecoded Message:\n{return_spacer}\n{decoded_msg[1]}"
+                    return render_template(page_template, decoded_message=decode_resp)
             else:
                 flash("Please enter a message to decode.")
         if request.form.get('decodeClear') == 'Clear':

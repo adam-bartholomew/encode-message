@@ -6,7 +6,7 @@
 
 <form id="decodeForm" method="post">
     <div class="mb-3">
-        <textarea id="inputMessage" maxlength="1000" name="inputMessage" placeholder="Please enter your encoded message here." class="form-control" Title="This should contain a date on the first line with text following on each subsequent line.">{{ request.form['inputMessage'] }}</textarea>
+        <textarea id="inputMessage" name="inputMessage" placeholder="Please enter your encoded message here." class="form-control" Title="This should contain a date on the first line with text following on each subsequent line.">{{ request.form['inputMessage'] }}</textarea>
     </div>
     <div class="mb-3">
         <button name="decodeSubmit" id="decodeSubmit" value="Submit" type="submit" class="btn btn-outline-primary" form="decodeForm" Title="Submit message for decoding" onClick="loading()">Submit</button>
@@ -16,7 +16,7 @@
     <div class="mb-3">
         <div class="d-flex align-items-center highlight-toolbar ps-3 pe-2 py-1 border-0">
             <div class="d-flex ms-auto">
-                <button aria-label="Copy to clipboard" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy to clipboard" class="btn btn-outline-secondary btn-sm clipboard-button" type="button" onclick="copyToClipboard('decodedMessage')">
+                <button id="copyButton" aria-label="Copy to clipboard" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy to clipboard" class="btn btn-outline-warning btn-sm clipboard-button" type="button" onclick="copyToClipboard('decodedMessage')">
                     <i class="bi bi-clipboard" aria-hidden="true"></i>
                 </button>
             </div>
@@ -25,8 +25,16 @@
     </div>
 </form>
 <script src="{{ url_for('static', filename='js/encodeMessage.js') }}"></script>
-<!-- Done this way so the input is cleared after submitting -->
+<!-- page-specific javascript -->
 <script>
+    // Clear input after submitting
     document.getElementById('inputMessage').value = "";
+
+    // Disable copy when textarea is empty
+    if(document.getElementById('decodedMessage').value != ""){
+        document.getElementById('copyButton').disabled = false;
+    }else{
+        document.getElementById('copyButton').disabled = true;
+    }
 </script>
 {% endblock %}

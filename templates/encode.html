@@ -19,7 +19,7 @@
     <div class="mb-3">
         <div class="d-flex align-items-center highlight-toolbar ps-3 pe-2 py-1 border-0">
             <div class="d-flex ms-auto">
-                <button aria-label="Copy to clipboard" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy to clipboard" class="btn btn-outline-secondary btn-sm clipboard-button" type="button" onclick="copyToClipboard('encodedMessage')">
+                <button id="copyButton" aria-label="Copy to clipboard" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy to clipboard" class="btn btn-outline-warning btn-sm clipboard-button" type="button" onclick="copyToClipboard('encodedMessage')">
                     <i class="bi bi-clipboard" aria-hidden="true"></i>
                 </button>
             </div>
@@ -28,8 +28,16 @@
     </div>
 </form>
 <script src="{{ url_for('static', filename='js/encodeMessage.js') }}"></script>
-<!-- Done this way so the input is cleared after submitting -->
+<!-- page-specific javascript -->
 <script>
+    // Done here way so the input is cleared after submitting
     document.getElementById('inputMessage').value = "";
+
+    // Disable copy when textarea is empty
+    if(document.getElementById('encodedMessage').value != ""){
+        document.getElementById('copyButton').disabled = false;
+    }else{
+        document.getElementById('copyButton').disabled = true;
+    }
 </script>
 {% endblock %}
