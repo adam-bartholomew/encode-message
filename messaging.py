@@ -90,7 +90,7 @@ def format_sentence(sentence: str, option: int) -> str:
         new_sentence = sentence.translate(str.maketrans('', '', string.punctuation))  # remove all punctuation.
         for word in new_sentence.split(" "):
             if word.isnumeric():  # change numeric values into the english words.
-                new_sentence = new_sentence.replace(word, num2words(word))
+                new_sentence = new_sentence.replace(word, num2words(word)).replace("-", " ")
         return new_sentence.upper()
 
 
@@ -147,7 +147,7 @@ def decode(input_message: str) -> tuple:
 
 
 # Encodes a message
-def encode(input_message: str, encode_offset: int) -> str:
+def encode(input_message: str, encode_offset: int) -> tuple:
     """Encodes a message according the codex on the system.
 
     :param (str) input_message: The message we want to encode.
@@ -158,7 +158,6 @@ def encode(input_message: str, encode_offset: int) -> str:
     syllables = list()
     spaces = list()
     words = list()
-    hyphens = list()
     encoded_message = build_offset_date(encode_offset)
 
     if not input_message or len(input_message) < 1:
@@ -166,7 +165,12 @@ def encode(input_message: str, encode_offset: int) -> str:
 
     # Format the message
     formatted_message = format_sentence(input_message, 2)
-    log.info(f"formatted: {formatted_message}")
+    log.info(f"Formatted Message: {formatted_message}")
+
+    # Check for any non-ascii characters.
+    for c in formatted_message:
+        if not c.isascii():
+            return 0, f"Only English is supported at this time. Your message contained: {c}. Please ensure that your message only contains ASCII characters."
 
     # Get the corresponding letters according to the codex.
     with open('codex.txt') as f:
@@ -179,12 +183,9 @@ def encode(input_message: str, encode_offset: int) -> str:
         if c == " ":
             spaces.append(i - (1 + len(spaces)))
             continue
-        if c == "-":
-            hyphens.append(i - (1 + len(hyphens)))
-            continue
         count = (codex_list.index(c) + 1 + encode_offset) % 26
         syllables.append(26 if count == 0 else count)
-    log.info(f"Encode sentence space positions: {spaces}\nEncode sentence hyphen positions: {hyphens}")
+    log.info(f"Encode sentence space positions: {spaces}")
 
     # Get words for the syllable count of a line.
     for num in syllables:
@@ -198,7 +199,7 @@ def encode(input_message: str, encode_offset: int) -> str:
             line = line + "."
         encoded_message = encoded_message + "\n" + line
     log.info(f"encode - Returning encoded message:\n{encoded_message}")
-    return encoded_message
+    return 1, encoded_message
 
 
 def get_words_for_syllables(total_syllables: int) -> str:

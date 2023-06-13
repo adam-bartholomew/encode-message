@@ -1,5 +1,4 @@
-from flask import Flask, render_template, request, url_for, flash, redirect, current_app
-from werkzeug.exceptions import abort
+from flask import Flask, render_template, request, url_for, flash, redirect
 import messaging as messaging
 import os
 
@@ -39,28 +38,23 @@ def encode():
     page_name = "encode"
     page_template = f"{page_name}.html"
 
-    if request.method == 'POST':
-        if request.form.get('encodeSubmit') == 'Submit':
-            msg = request.form.get('inputMessage')
-            offset = int(request.form.get('encodeOffset')) if request.form.get('encodeOffset').isnumeric() else 0
-            if msg:
-                if msg.isascii():
-                    messaging.log.info(f"Submitting encode form with msg: {msg}, offset: {offset}")
-                    encoded_msg = f"Offset: {offset}\nInput Message: {msg}\nEncoded Message:\n{return_spacer}\n{messaging.encode(msg, offset)}"
-                    return render_template(page_template, encoded_message=encoded_msg)
-                else:
-                    bad_char = None
-                    for c in msg:
-                        if not c.isascii():
-                            bad_char = c
-                            break
-                    flash(
-                        f"Only English is supported at this time. Your message contained: {bad_char}. Please ensure that your message only contains ASCII characters.")
+    if request.method == 'POST' and request.form.get('encodeSubmit') == 'Submit':
+        msg = request.form.get('inputMessage')
+        offset = int(request.form.get('encodeOffset')) if request.form.get('encodeOffset').isnumeric() else 0
+        if msg:
+            messaging.log.info(f"Submitting encode form with msg: {msg}, offset: {offset}")
+            encoded_msg = messaging.encode(msg, offset)
+            if encoded_msg[0] != 1:
+                flash(encoded_msg[1])
             else:
-                flash("Please enter a message to encode.")
-        if request.form.get('encodeClear') == 'Clear':
-            messaging.log.info("Clearing encode form.")
-            return redirect(url_for(page_name))
+                encode_resp = f"Offset: {offset}\nInput Message: {msg}\nEncoded Message:\n{return_spacer}\n{encoded_msg[1]}"
+                return render_template(page_template, encoded_message=encode_resp)
+        else:
+            flash("Please enter a message to encode.")
+
+    if request.method == 'POST' and request.form.get('encodeClear') == 'Clear':
+        messaging.log.info("Clearing encode form.")
+        return redirect(url_for(page_name))
     return render_template(page_template)
 
 
