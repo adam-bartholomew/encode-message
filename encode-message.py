@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, url_for, flash, redirect
 import messaging as messaging
 import os
+import func_timeout
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_KEY')  # FLASK_KEY stored as system environment variable.
@@ -43,12 +44,17 @@ def encode():
         offset = int(request.form.get('encodeOffset')) if request.form.get('encodeOffset').isnumeric() else 0
         if msg:
             messaging.log.info(f"Submitting encode form with msg: {msg}, offset: {offset}")
-            encoded_msg = messaging.encode(msg, offset)
-            if encoded_msg[0] != 1:
-                flash(encoded_msg[1])
+            try:
+                encoded_msg = func_timeout.func_timeout(9.99, messaging.encode, args=[msg, offset])
+            except func_timeout.FunctionTimedOut:
+                messaging.log.info("The call to messaging.encode took more than 10 seconds.")
+                flash("Aborted encoding due to timeout. Try shortening the message or reducing the complexity.")
             else:
-                encode_resp = f"Offset: {offset}\nInput Message: {msg}\nEncoded Message:\n{return_spacer}\n{encoded_msg[1]}"
-                return render_template(page_template, encoded_message=encode_resp)
+                if encoded_msg[0] != 1:
+                    flash(encoded_msg[1])
+                else:
+                    encode_resp = f"Offset: {offset}\nInput Message: {msg}\nEncoded Message:\n{return_spacer}\n{encoded_msg[1]}"
+                    return render_template(page_template, encoded_message=encode_resp)
         else:
             flash("Please enter a message to encode.")
 
@@ -67,12 +73,17 @@ def decode():
             msg = request.form.get('inputMessage').replace("\r", "")
             if msg:
                 messaging.log.info(f"Submitting decode form with msg:\n{msg}")
-                decoded_msg = messaging.decode(msg)
-                if decoded_msg[0] != 1:
-                    flash(decoded_msg[1])
+                try:
+                    decoded_msg = func_timeout.func_timeout(9.99, messaging.decode, args=[msg])
+                except func_timeout.FunctionTimedOut:
+                    messaging.log.info("The call to messaging.decode took more than 10 seconds.")
+                    flash("Aborted decoding due to timeout. Try shortening the message or reducing the complexity.")
                 else:
-                    decode_resp = f"Encoded Message:\n{return_spacer}\n{msg}\n{return_spacer}\nDecoded Message:\n{return_spacer}\n{decoded_msg[1]}"
-                    return render_template(page_template, decoded_message=decode_resp)
+                    if decoded_msg[0] != 1:
+                        flash(decoded_msg[1])
+                    else:
+                        decode_resp = f"Encoded Message:\n{return_spacer}\n{msg}\n{return_spacer}\nDecoded Message:\n{return_spacer}\n{decoded_msg[1]}"
+                        return render_template(page_template, decoded_message=decode_resp)
             else:
                 flash("Please enter a message to decode.")
         if request.form.get('decodeClear') == 'Clear':

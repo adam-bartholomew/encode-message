@@ -217,7 +217,7 @@ def get_words_for_syllables(total_syllables: int) -> str:
 
     # While we still have syllables to use, get another word.
     while syllables_used < total_syllables:
-        log.info(f"Syllables used so far: {syllables_used}")
+        # log.info(f"Syllables used so far: {syllables_used}")
 
         # Create a dataframe for words with a syllable count compatible with the number of syllables left.
         df_matching_syllables = df.loc[df['syl'] <= (total_syllables - syllables_used)]
