@@ -4,7 +4,7 @@
 {% block content %}
 <h1>{% block title %} Decode a Message {% endblock %}</h1>
 
-<form id="decodeForm" method="post">
+<form id="decodeForm" method="post" class="form-general">
     <div class="mb-3">
         <textarea id="inputMessage" name="inputMessage" placeholder="Please enter your encoded message here." class="form-control" Title="This should contain a date on the first line with text following on each subsequent line.">{{ request.form['inputMessage'] }}</textarea>
     </div>

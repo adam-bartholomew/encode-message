@@ -78,7 +78,7 @@
             </div>
         </div>
     </nav>
-    <div class="container">
+    <div class="container main-body">
         {% for message in get_flashed_messages() %}
             <div class="alert alert-danger">{{ message }}</div>
         {% endfor %}
@@ -87,6 +87,14 @@
         </div>
         {% block content %} {% endblock %}
     </div>
+    {% if active_page == 'encode' or active_page == 'decode' %}
+    <div class="row sticky-bottom footer-general">
+        <hr class="mt-1 mb-3"/>
+        <div class="col-md-8 offset-md-2 div-title-center">
+            <p>Please note that if the encoding/decoding takes longer than 10 seconds you will get a "504: GATEWAY_TIMEOUT" error saying "The Serverless Function has crashed". If that happens, navigate back to the app and try a smaller message. This is a limitation of Vercel's hobby account.</p>
+        </div>
+    </div>
+    {% endif %}
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
