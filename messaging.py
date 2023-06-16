@@ -6,7 +6,6 @@ from datetime import datetime, date
 from datamuse import Datamuse
 from num2words import num2words
 from typing import Union
-from logging.config import dictConfig
 import logging
 import random
 # https://api.datamuse.com/words?sl=i%27ll
@@ -17,31 +16,9 @@ import random
 # https://www.onelook.com/thesaurus/?s=&f_ns=6&sortby=le0&sorttopn=1000
 # https://www.howmanysyllables.com
 
-dictConfig(
-    {
-        "version": 1,
-        "formatters": {
-            "default": {
-                "format": "%(asctime)s.%(msecs)03d |:| %(levelname)s in %(module)s |:| %(message)s",
-                "datefmt": "%m/%d/%Y %H:%M:%S",
-            },
-        },
-        "handlers": {
-            "console": {
-                "class": "logging.StreamHandler",
-                "formatter": "default",
-            },
-            "file": {
-                "class": "logging.FileHandler",
-                "filename": f"./logs/encode-message_{datetime.now().strftime('%Y%m%d')}.log",
-                "formatter": "default",
-            },
-        },
-        "root": {"level": "DEBUG", "handlers": ["console", "file"]},
-    }
-)
-
-logger = logging.getLogger()
+log_filename = "./logs/encode-message_" + datetime.now().strftime("%Y%m%d") + ".log"
+logging.basicConfig(filename=log_filename, format="%(asctime)s.%(msecs)03d |:| %(levelname)s |:| %(message)s", level=logging.INFO, datefmt="%m/%d/%Y %H:%M:%S")
+log = logging.getLogger()
 
 
 # Retrieves the word from the Datamuse API to get the number of syllables.
@@ -52,15 +29,15 @@ def get_word_syllables(word: str) -> int:
     :return (int): The amount of syllables.
     """
 
-    logger.info(f"get_word_syllables: {word}")
+    log.info(f"get_word_syllables: {word}")
     api = Datamuse()
     results = api.words(sl=word)
-    logger.info(f"API returned results: {results}")
+    log.info(f"API returned results: {results}")
     if list(filter(lambda x: x['word'] == word, results)):  # Check to see if the word itself is in the list.
         result = list(filter(lambda x: x['word'] == word, results))[0]
     else:  # get the word with the highest score.
         result = max(results, key=lambda x: x['score'])
-    logger.info(f"Selected: {result} {type(result)}")
+    log.info(f"Selected: {result} {type(result)}")
     if result:
         return result['numSyllables']
     else:
@@ -77,16 +54,16 @@ def get_sentence_syllables(sentences: str, format_option: int) -> list:
     """
 
     syllables = list()
-    logger.info(f"get_sentence_syllables - Passed in the following:\n----\n{sentences}\n----")
+    log.info(f"get_sentence_syllables - Passed in the following:\n----\n{sentences}\n----")
     formatted_sentences = format_sentence(sentences, format_option)
-    logger.info(formatted_sentences, type(formatted_sentences))
+    log.info(formatted_sentences, type(formatted_sentences))
     sentences = formatted_sentences.split("\n")
     for sentence in sentences:
         sentence_syllables = 0  # Initialize the sentence syllable counter
-        logger.debug(f"Sending the following sentence to Datamuse: \"{sentence}\"")
+        log.debug(f"Sending the following sentence to Datamuse: \"{sentence}\"")
         for word in sentence.split():
             sentence_syllables += get_word_syllables(word)
-        logger.info(f"The sentence \"{sentence}\" has a total of {sentence_syllables} syllables.")
+        log.info(f"The sentence \"{sentence}\" has a total of {sentence_syllables} syllables.")
         syllables.append(sentence_syllables)
     return syllables
 
@@ -100,7 +77,7 @@ def format_sentence(sentence: str, option: int) -> str:
     :return (str): The formatted sentence.
     """
 
-    logger.info(f"format_api_sentence - {option}: 1 = Decode, 2 = Encode")
+    log.info(f"format_api_sentence - {option}: 1 = Decode, 2 = Encode")
 
     if option == 1:  # DECODE
         decode_punctuation = string.punctuation.replace("'", "").replace("-", "")  # required to not remove ' and - from the sentence.
@@ -125,7 +102,7 @@ def decode(input_message: str) -> tuple:
     :return (tuple): Element at index 0 is the response code: 0 - Bad, 1 - Good. Element at index 1 is the response message.
     """
 
-    logger.info("DECODING...")
+    log.info("DECODING...")
     decoded_message = str()
     syllables_list = []
     spaces = []
@@ -135,7 +112,7 @@ def decode(input_message: str) -> tuple:
                         "forty-five"
 
     input_message_list = [s for s in input_message.split("\n") if s.strip()]  # Create a list of the sentences provided.
-    logger.info(input_message_list)
+    log.info(input_message_list)
     decode_offset = decode_offset_date(input_message_list.pop(0))
     if isinstance(decode_offset, str):
         return 0, f"Message could not be decoded. {decode_offset}"
@@ -149,23 +126,23 @@ def decode(input_message: str) -> tuple:
             syllables_list.append(get_syllables_for_sentence(sentence))
         except IndexError:
             decoded_message = "Message could not be decoded."
-    logger.info(f"Decode sentence space positions: {spaces}")
+    log.info(f"Decode sentence space positions: {spaces}")
 
     # Get the corresponding letters according to the codex
     with open('codex.txt', encoding="utf8") as f:
         codex_lines = f.readlines()
         codex_list = [line.strip("\n") for line in codex_lines]
-    logger.debug(f"decode - Codex List: {codex_list}")
+    log.debug(f"decode - Codex List: {codex_list}")
     if None in syllables_list:
         return 0, "The message could not be decoded. Please ensure that there are no blank lines in your message."
     for ind, num in enumerate(syllables_list):
         corrected_num = (num - 1 - decode_offset) % 26
-        logger.info(f"{num} syllables = {codex_list[corrected_num]}")
+        log.info(f"{num} syllables = {codex_list[corrected_num]}")
         if ind in spaces:
             decoded_message += codex_list[corrected_num] + " "
         else:
             decoded_message += codex_list[corrected_num]
-    logger.info("Returning decoded message.")
+    log.info("Returning decoded message.")
     return 1, decoded_message
 
 
@@ -177,7 +154,7 @@ def encode(input_message: str, encode_offset: int) -> tuple:
     :param (int) encode_offset: The message offset used to encode.
     :return (str): The encoded message.
     """
-    logger.info("ENCODING.")
+    log.info("ENCODING.")
     syllables = list()
     spaces = list()
     words = list()
@@ -188,7 +165,7 @@ def encode(input_message: str, encode_offset: int) -> tuple:
 
     # Format the message
     formatted_message = format_sentence(input_message, 2)
-    logger.info(f"Formatted Message: {formatted_message}")
+    log.info(f"Formatted Message: {formatted_message}")
 
     # Check for any non-ascii characters.
     for c in formatted_message:
@@ -199,7 +176,7 @@ def encode(input_message: str, encode_offset: int) -> tuple:
     with open('codex.txt') as f:
         codex_lines = f.readlines()
         codex_list = [line.strip("\n") for line in codex_lines]
-    logger.info(f"encode - Got the Codex: {codex_list}")
+    log.info(f"encode - Got the Codex: {codex_list}")
 
     # Get the syllables needed for each line of the encoded message.
     for i, c in enumerate(formatted_message):
@@ -208,7 +185,7 @@ def encode(input_message: str, encode_offset: int) -> tuple:
             continue
         count = (codex_list.index(c) + 1 + encode_offset) % 26
         syllables.append(26 if count == 0 else count)
-    logger.info(f"Encode sentence space positions: {spaces}")
+    log.info(f"Encode sentence space positions: {spaces}")
 
     # Get words for the syllable count of a line.
     for num in syllables:
@@ -221,7 +198,7 @@ def encode(input_message: str, encode_offset: int) -> tuple:
         if ind in spaces:
             line = line + "."
         encoded_message = encoded_message + "\n" + line
-    logger.info(f"encode - Returning encoded message:\n{encoded_message}")
+    log.info(f"encode - Returning encoded message:\n{encoded_message}")
     return 1, encoded_message
 
 
@@ -232,7 +209,7 @@ def get_words_for_syllables(total_syllables: int) -> str:
     :return (str): A space separated string of words.
     """
 
-    logger.info(f"get_words_for_syllables: {total_syllables}")
+    log.info(f"get_words_for_syllables: {total_syllables}")
     # Use pandas to read the list of words to find a word to use.
     df = pd.read_csv('datasets/phoneticDictionary_cleaned_20230515.csv')
     syllables_used = 0
@@ -251,7 +228,7 @@ def get_words_for_syllables(total_syllables: int) -> str:
         # Add the word to the return string.
         words += row['word'].values[0] + " "
         syllables_used += row['syl'].values[0]
-    logger.info(f"get_words_for_syllables - got words: {words}")
+    log.info(f"get_words_for_syllables - got words: {words}")
     return words.rstrip(" ")
 
 
@@ -262,7 +239,7 @@ def get_syllables_for_sentence(sentence: str) -> Union[int, None]:
     :return (int|None): The amount of syllables in the sentence.
     """
 
-    logger.info(f"get_syllables_for_sentence: \"{sentence}\" ")
+    log.info(f"get_syllables_for_sentence: \"{sentence}\" ")
     df = pd.read_csv('datasets/phoneticDictionary_cleaned_20230515.csv')
     words = sentence.lower().split(' ')
     syllables = 0
@@ -284,9 +261,9 @@ def clean_dictionary():
 
     :return:
     """
-    logger.info('cleaning the dictionary.')
+    log.info('cleaning the dictionary.')
     new_filename = f"datasets/phoneticDictionary_cleaned_{datetime.now().strftime('%Y%m%d')}.csv"
-    logger.info(f"Cleaned Dictionary Name: {new_filename}")
+    log.info(f"Cleaned Dictionary Name: {new_filename}")
     with open('datasets/phoneticDictionary.csv', 'r', encoding='utf8') as in_file, open(new_filename, 'w', encoding='utf8', newline='') as out_file:
         seen = set()
         reader = csv.DictReader(in_file)
@@ -339,12 +316,12 @@ def validate_word(word: str) -> bool:
     global words_api_counter
     words_api_counter += 1
 
-    logger.debug(f"Response/Status: {response.json()}, {response.status_code}")
+    log.debug(f"Response/Status: {response.json()}, {response.status_code}")
     if response.status_code != 200:
-        logger.info('bad resp')
+        log.info('bad resp')
         return False
     else:
-        logger.info('good resp')
+        log.info('good resp')
         return True
 
 
@@ -364,18 +341,18 @@ def build_offset_date(int_offset: int) -> str:
         int_month = random.randint(1, 12)
         int_day = int_offset + int_month
         if int_day < 1 or int_day > 31:
-            logger.info(f"build_offset_date: bad date - month:{int_month}, day:{int_day}")
+            log.info(f"build_offset_date: bad date - month:{int_month}, day:{int_day}")
         elif (int_month == 2 and int_day > 29) or (int_month in [4, 6, 9, 11] and int_day > 30) or (int_month in [1, 3, 5, 7, 8, 10, 12] and int_day > 31):
-            logger.info(f"build_offset_date: bad date - month:{int_month}, day:{int_day}")
+            log.info(f"build_offset_date: bad date - month:{int_month}, day:{int_day}")
         else:
             date_msg = date(date.today().year, int_month, int_day).strftime("%A, %B %d, %Y")
-            logger.info(f"build_offset_date: good date - {date_msg}")
+            log.info(f"build_offset_date: good date - {date_msg}")
     return str(date_msg)
 
 
 def decode_offset_date(offset_date: str) -> Union[int, str]:
     try:
-        logger.info(f"decode_offset_date: param \"offset_date\" - {datetime.strptime(offset_date, '%A, %B %d, %Y')}")
+        log.info(f"decode_offset_date: param \"offset_date\" - {datetime.strptime(offset_date, '%A, %B %d, %Y')}")
         dt = datetime.strptime(offset_date, '%A, %B %d, %Y')
     except ValueError:
         return "The message must begin with a date following this format: Monday, January 1, 1990"
@@ -383,5 +360,5 @@ def decode_offset_date(offset_date: str) -> Union[int, str]:
 
 
 if __name__ == '__main__':
-    logger.info("Calling __main__")
+    log.info("Calling __main__")
     words_api_counter = 0
