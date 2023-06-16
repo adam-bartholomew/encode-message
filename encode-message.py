@@ -2,6 +2,32 @@ from flask import Flask, render_template, request, url_for, flash, redirect
 import messaging as messaging
 import os
 import func_timeout
+from datetime import datetime
+from logging.config import dictConfig
+
+dictConfig(
+    {
+        "version": 1,
+        "formatters": {
+            "default": {
+                "format": "%(asctime)s.%(msecs)03d |:| %(levelname)s in %(module)s |:| %(message)s",
+                "datefmt": "%m/%d/%Y %H:%M:%S",
+            },
+        },
+        "handlers": {
+            "console": {
+                "class": "logging.StreamHandler",
+                "formatter": "default",
+            },
+            "file": {
+                "class": "logging.FileHandler",
+                "filename": f"./logs/encode-message_{datetime.now().strftime('%Y%m%d')}.log",
+                "formatter": "default",
+            },
+        },
+        "root": {"level": "DEBUG", "handlers": ["console", "file"]},
+    }
+)
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_KEY')  # FLASK_KEY stored as system environment variable.
@@ -31,6 +57,7 @@ def add_header(response):
 @app.route('/')
 def index():
     template = 'index.html'
+    app.logger.info("A user visited the home page. ")
     return render_template(template)
 
 
@@ -43,11 +70,11 @@ def encode():
         msg = request.form.get('inputMessage')
         offset = int(request.form.get('encodeOffset')) if request.form.get('encodeOffset').isnumeric() else 0
         if msg:
-            messaging.log.info(f"Submitting encode form with msg: {msg}, offset: {offset}")
+            app.logger.debug(f"Submitting encode form with msg: {msg}, offset: {offset}")
             try:
                 encoded_msg = func_timeout.func_timeout(9.99, messaging.encode, args=[msg, offset])
             except func_timeout.FunctionTimedOut:
-                messaging.log.info("The call to messaging.encode took more than 10 seconds.")
+                app.logger.info("The call to messaging.encode took more than 10 seconds.")
                 flash("Aborted encoding due to timeout. Try shortening the message or reducing the complexity.")
             else:
                 if encoded_msg[0] != 1:
@@ -59,7 +86,7 @@ def encode():
             flash("Please enter a message to encode.")
 
     if request.method == 'POST' and request.form.get('encodeClear') == 'Clear':
-        messaging.log.info("Clearing encode form.")
+        app.logger.info("Clearing encode form.")
         return redirect(url_for(page_name))
     return render_template(page_template)
 
@@ -72,11 +99,11 @@ def decode():
         if request.form.get('decodeSubmit') == 'Submit':
             msg = request.form.get('inputMessage').replace("\r", "")
             if msg:
-                messaging.log.info(f"Submitting decode form with msg:\n{msg}")
+                messaging.logger.info(f"Submitting decode form with msg:\n{msg}")
                 try:
                     decoded_msg = func_timeout.func_timeout(9.99, messaging.decode, args=[msg])
                 except func_timeout.FunctionTimedOut:
-                    messaging.log.info("The call to messaging.decode took more than 10 seconds.")
+                    messaging.logger.info("The call to messaging.decode took more than 10 seconds.")
                     flash("Aborted decoding due to timeout. Try shortening the message or reducing the complexity.")
                 else:
                     if decoded_msg[0] != 1:
@@ -87,7 +114,7 @@ def decode():
             else:
                 flash("Please enter a message to decode.")
         if request.form.get('decodeClear') == 'Clear':
-            messaging.log.info("Clearing decode form.")
+            messaging.logger.info("Clearing decode form.")
             return redirect(url_for(page_name))
 
     return render_template('decode.html')
