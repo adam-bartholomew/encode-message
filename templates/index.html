@@ -1,18 +1,23 @@
-{% extends 'base.html' %}
-{% set active_page = "index" %}
-
-{% block content %}
-<div class="row">
-    <div class="col-md-8 offset-md-2 div-title-center">
-        <h1>{% block title %} Welcome! {% endblock %}</h1>
-        <h5>Please use the links in the navigation bar at the top of the page to select a destination.</h5>
-        <p>This application was built to encode and decode an English message around the number of syllables in a word. A more detailed design document can be found in the GitHub repository linked in the "About" section.</p>
-    </div>
-</div>
-<div class="row fixed-bottom footer-general">
-    <hr class="mt-1 mb-3"/>
-    <div class="col-md-8 offset-md-2 div-title-center">
-        <p>This app is a work in progress, apologies for any errors or issues encountered. Please stop by the <a target="_blank" href="https://github.com/adam-bartholomew/encode-message">GitHub repo</a> to create an issue if you'd like.</p>
-    </div>
-</div>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+  </head>
+  {% set active_page = "home" %}
+  <body>
+    <nav>
+      <ul>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/register">Create account</a></li>
+      </ul>
+    </nav>
+    {% if current_user.is_authenticated %}
+    <h1>You are logged in</h1>
+    {% else %}
+    <h1>You are not logged in</h1>
+    {% endif %}
+  </body>
+</html>
