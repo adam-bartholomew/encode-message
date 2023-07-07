@@ -1,30 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Login</title>
-	<style>
-		h1{
-		color: green;
-		}
-	</style>
-</head>
-<body>
-	<nav>
-	<ul>
-		<li><a href="/login">Login</a></li>
-		<li><a href="/register">Create account</a></li>
-	</ul>
-	</nav>
-	<h1>Login to your account</h1>
-	<form action="#" method="post">
-	<label for="username">Username:</label>
-	<input type="text" name="username" />
-	<label for="password">Password:</label>
-	<input type="password" name="password" />
-	<button type="submit">Submit</button>
-	</form>
-</body>
-</html>
+{% extends 'base.html' %}
+{% set active_page = "login" %}
+
+{% block content %}
+<h1>{% block title %} Login {% endblock %}</h1>
+<form action="\login" id="loginForm" method="post" class="form-general">
+	<div class="mb-3">
+		<input type="text" name="username" required="required" placeholder="Username" maxlength="25" class="form-control"/>
+		<br/>
+		<input type="password" name="password" required="required" placeholder="Password" maxlength="25" class="form-control"/>
+	</div>
+	<div class="mb-3">
+		<button name="loginSubmit" class="btn btn-primary" Value="Login" type="submit" form="loginForm" title="Login">Login</button>
+	</div>
+</form>
+{% endblock %}

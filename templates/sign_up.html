@@ -1,30 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign Up</title>
-    <style>
-      h1 {
-        color: green;
-      }
-    </style>
-  </head>
-  <body>
-    <nav>
-      <ul>
-        <li><a href="/login">Login</a></li>
-        <li><a href="/register">Create account</a></li>
-      </ul>
-    </nav>
-    <h1>Create an account</h1>
-    <form action="#" method="post">
-      <label for="username">Username:</label>
-      <input type="text" name="username" />
-      <label for="password">Password:</label>
-      <input type="password" name="password" />
-      <button type="submit">Submit</button>
-    </form>
-  </body>
-</html>
+{% extends 'base.html' %}
+{% set active_page = "register" %}
+
+{% block content %}
+<h1>{% block title %}Create an account{% endblock %}</h1>
+<form id="signUpForm" action="#" method="post" class="form-general">
+    <div class="mb-3">
+        <input type="text" name="username" required="required" placeholder="Username" maxlength="25" class="form-control"/>
+        <br/>
+        <input type="password" name="password" required="required" placeholder="Password" maxlength="25" class="form-control"/>
+    </div>
+    <div class="mb-3">
+        <button name="registerSubmit" class="btn btn-primary" Value="Sign Up" type="submit" form="signUpForm" title="Register an account">Sign Up</button>
+    </div>
+</form>
+{% endblock %}
