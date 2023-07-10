@@ -12,11 +12,8 @@ app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_KEY')  # FLASK_KEY stored as system environment variable.
 app.debug = True
 
-# Initialize db and sql extensions
-# Local config
-#app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{os.environ.get('ENCODE_MESSAGE_DB_USER')}:{os.environ.get('ENCODE_MESSAGE_DB_PWD')}@localhost:5432/encode_message"
-# vercel config
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://default:5Uio0SvrCzgs@ep-lively-dust-350007.us-east-1.postgres.vercel-storage.com:5432/verceldb"
+# Initialize db packages & connection
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('VERCEL_POSTGRES_URL')
 db = SQLAlchemy()
 migrate = Migrate(app, db)
 return_spacer = "-----------------------"
@@ -37,9 +34,9 @@ class UserModel(db.Model, UserMixin):
     last_name = db.Column(db.String(100))
     email = db.Column(db.String(80), unique=True)
     creation_datetime = db.Column(db.DateTime(timezone=False), nullable=False, server_default=func.now())
-    last_modified_datetime = db.Column(db.DateTime(timezone=False))
+    last_modified_datetime = db.Column(db.DateTime(timezone=False), server_default=func.now())
     creation_userid = db.Column(db.String(25), nullable=False, server_default='flask_app')
-    last_modified_userid = db.Column(db.String(25))
+    last_modified_userid = db.Column(db.String(25), server_default='flask_app')
 
     def __init__(self, username, password):
         self.username = username
