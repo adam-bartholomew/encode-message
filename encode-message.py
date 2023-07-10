@@ -83,20 +83,21 @@ def add_header(response):
 @app.route('/')
 def index():
     if current_user.is_authenticated:
-        return render_template("home.html")
-    return render_template("login.html")
+        return render_template('home.html')
+    return redirect(url_for('login'))
 
 
 @app.route('/home')
-@login_required
 def home():
-    return render_template("home.html")
+    if current_user.is_authenticated:
+        return render_template('home.html')
+    return redirect(url_for('login'))
 
 
 @app.route('/encode', methods=('GET', 'POST'))
 @login_required
 def encode():
-    page_name = "encode"
+    page_name = 'encode'
     page_template = f"{page_name}.html"
 
     if request.method == 'POST' and request.form.get('encodeSubmit') == 'Submit':
@@ -121,7 +122,7 @@ def encode():
 @app.route('/decode', methods=('GET', 'POST'))
 @login_required
 def decode():
-    page_name = "decode"
+    page_name = 'decode'
     page_template = f"{page_name}.html"
     if request.method == 'POST':
         if request.form.get('decodeSubmit') == 'Submit':
@@ -139,8 +140,7 @@ def decode():
         if request.form.get('decodeClear') == 'Clear':
             messaging.log.info("Clearing decode form.")
             return redirect(url_for(page_name))
-
-    return render_template('decode.html')
+    return render_template(page_template)
 
 
 @app.route('/about')
@@ -158,37 +158,37 @@ def profile():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        new_user = UserModel(username=request.form.get("username"), password=hash_password(request.form.get("password")))
+        new_user = UserModel(username=request.form.get('username'), password=hash_password(request.form.get('password')))
         db.session.add(new_user)
         db.session.commit()
         messaging.log.info(f"New user created: {new_user}")
-        return redirect(url_for("login"))
-    return render_template("sign_up.html")
+        return redirect(url_for('login'))
+    return render_template('sign_up.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     # If a post request was made, find the user by filtering for the username
     if request.method == 'POST':
-        form_name = request.form.get("username")
+        form_name = request.form.get('username')
         user = UserModel.query.filter_by(username=form_name).first()
         # Check if the password entered is the same as the user's password
         if user is not None:
-            if check_password(user.password, request.form.get("password")):
+            if check_password(user.password, request.form.get('password')):
                 login_user(user)
                 messaging.log.info(f"User logged in: {user}.")
-                return redirect(url_for("home"))
+                return redirect(url_for('home'))
         messaging.log.info(f"Log in failed for user: <{form_name}>.")
         flash(f"Username and/or password is incorrect for {form_name}.")
-        return redirect(url_for("login"))
-    return render_template("login.html")
+        return redirect(url_for('login'))
+    return render_template('login.html')
 
 
-@app.route("/logout")
+@app.route('/logout')
 def logout():
     messaging.log.info(f"User logged out: {current_user}")
     logout_user()
-    return redirect(url_for("index"))
+    return render_template('login.html')
 
 
 if __name__ == "__main__":

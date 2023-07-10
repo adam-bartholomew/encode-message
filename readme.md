@@ -1,7 +1,7 @@
-## Message Encoding - A way to encode and decode messages.
+## Message Encoding - A way to encode and decode messages by syllable count.
 ###### Created by [Adam Bartholomew](https://www.linkedin.com/in/adam-bartholomew/) 
 ###### Uses [Python](https://www.python.org/), [Flask](https://flask.palletsprojects.com/en/2.3.x/), and [Bootstrap](https://getbootstrap.com/docs/5.3/getting-started/introduction/)
-###### Hosted on Vercel - [here](https://encode-message.vercel.app/).
+###### Application and Database Hosted on Vercel - [here](https://encode-message.vercel.app/).
 
 Please see the initial design document for in-depth design details: __Message_Coding_Initial_Design.odt__
 
@@ -37,10 +37,11 @@ __requirements.txt__ & __vercel.json__ - Vercel config properties for hosting.
 - Take a message that has been encoded using this same program and decode it into it's original meaning.
 
 ## Running:
-Make sure that the FLASK_KEY environment variable is set on your machine or in the projects **activate.bat** file if using virtual environment.
+Make sure that the environment variable(s) are set on your machine or in the projects **activate.bat** file if using virtual environment. You will need 1 for the flask key and 1 or more for a connection to a database.
 
     ...
-    @set FLASK_KEY="secret-flask-key"
+    @set FLASK_APP_KEY="secret-flask-key"
+    @set DATABASE_CONNECTION_URL="database-connection-url"
     ...
 
 Prior to starting up please execute the following 2 commands:
@@ -50,4 +51,4 @@ Prior to starting up please execute the following 2 commands:
 
 To run app in development:
 
-    flask --app app run --debug
+    flask --app encode-message run --debug
