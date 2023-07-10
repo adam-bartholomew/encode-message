@@ -5,9 +5,9 @@
 <h1>{% block title %} Login {% endblock %}</h1>
 <form action="\login" id="loginForm" method="post" class="form-general">
 	<div class="mb-3">
-		<input type="text" name="username" required="required" placeholder="Username" maxlength="25" class="form-control"/>
+		<input type="text" name="username" required="required" Title="Username is case sensitive" placeholder="Username" class="form-control"/>
 		<br/>
-		<input type="password" name="password" required="required" placeholder="Password" maxlength="25" class="form-control"/>
+		<input type="password" name="password" required="required" Title="Password must be 8 - 25 characters in length" placeholder="Password" class="form-control"/>
 	</div>
 	<div class="mb-3">
 		<button name="loginSubmit" class="btn btn-primary" Value="Login" type="submit" form="loginForm" title="Login">Login</button>

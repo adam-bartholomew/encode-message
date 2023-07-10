@@ -6,7 +6,6 @@ from flask_bcrypt import generate_password_hash, check_password_hash
 from sqlalchemy.sql import func
 import messaging as messaging
 import os
-import func_timeout
 
 # Create flask application
 app = Flask(__name__)
@@ -14,10 +13,10 @@ app.secret_key = os.environ.get('FLASK_KEY')  # FLASK_KEY stored as system envir
 app.debug = True
 
 # Initialize db and sql extensions
-#Local config
-#app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{os.environ.get('ENCODE_MESSAGE_DB_USER')}:{os.environ.get('ENCODE_MESSAGE_DB_PWD')}@localhost:5432/encode_message"
-#vercel config
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://default:5Uio0SvrCzgs@ep-lively-dust-350007.us-east-1.postgres.vercel-storage.com:5432/verceldb"
+# Local config
+app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{os.environ.get('ENCODE_MESSAGE_DB_USER')}:{os.environ.get('ENCODE_MESSAGE_DB_PWD')}@localhost:5432/encode_message"
+# vercel config
+# app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://default:5Uio0SvrCzgs@ep-lively-dust-350007.us-east-1.postgres.vercel-storage.com:5432/verceldb"
 db = SQLAlchemy()
 migrate = Migrate(app, db)
 return_spacer = "-----------------------"
@@ -108,17 +107,12 @@ def encode():
         offset = int(request.form.get('encodeOffset')) if request.form.get('encodeOffset').isnumeric() else 0
         if msg:
             messaging.log.info(f"Submitting encode form with msg: {msg}, offset: {offset}")
-            try:
-                encoded_msg = func_timeout.func_timeout(9.99, messaging.encode, args=[msg, offset])
-            except func_timeout.FunctionTimedOut:
-                messaging.log.info("The call to messaging.encode took more than 10 seconds.")
-                flash("Aborted encoding due to timeout. Try shortening the message or reducing the complexity.")
+            encoded_msg = messaging.encode(msg, offset)
+            if encoded_msg[0] != 1:
+                flash(encoded_msg[1])
             else:
-                if encoded_msg[0] != 1:
-                    flash(encoded_msg[1])
-                else:
-                    encode_resp = f"Offset: {offset}\nInput Message: {msg}\nEncoded Message:\n{return_spacer}\n{encoded_msg[1]}"
-                    return render_template(page_template, encoded_message=encode_resp)
+                encode_resp = f"Offset: {offset}\nInput Message: {msg}\nEncoded Message:\n{return_spacer}\n{encoded_msg[1]}"
+                return render_template(page_template, encoded_message=encode_resp)
         else:
             flash("Please enter a message to encode.")
     if request.method == 'POST' and request.form.get('encodeClear') == 'Clear':
@@ -137,17 +131,12 @@ def decode():
             msg = request.form.get('inputMessage').replace("\r", "")
             if msg:
                 messaging.log.info(f"Submitting decode form with msg:\n{msg}")
-                try:
-                    decoded_msg = func_timeout.func_timeout(9.99, messaging.decode, args=[msg])
-                except func_timeout.FunctionTimedOut:
-                    messaging.log.info("The call to messaging.decode took more than 10 seconds.")
-                    flash("Aborted decoding due to timeout. Try shortening the message or reducing the complexity.")
+                decoded_msg = messaging.decode(msg)
+                if decoded_msg[0] != 1:
+                    flash(decoded_msg[1])
                 else:
-                    if decoded_msg[0] != 1:
-                        flash(decoded_msg[1])
-                    else:
-                        decode_resp = f"Encoded Message:\n{return_spacer}\n{msg}\n{return_spacer}\nDecoded Message:\n{return_spacer}\n{decoded_msg[1]}"
-                        return render_template(page_template, decoded_message=decode_resp)
+                    decode_resp = f"Encoded Message:\n{return_spacer}\n{msg}\n{return_spacer}\nDecoded Message:\n{return_spacer}\n{decoded_msg[1]}"
+                    return render_template(page_template, decoded_message=decode_resp)
             else:
                 flash("Please enter a message to decode.")
         if request.form.get('decodeClear') == 'Clear':

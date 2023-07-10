@@ -5,9 +5,9 @@
 <h1>{% block title %}Create an account{% endblock %}</h1>
 <form id="signUpForm" action="#" method="post" class="form-general">
     <div class="mb-3">
-        <input type="text" name="username" required="required" placeholder="Username" maxlength="25" class="form-control"/>
+        <input type="text" name="username" required="required" Title="Username is case sensitive" placeholder="Username" maxlength="25" class="form-control"/>
         <br/>
-        <input type="password" name="password" required="required" placeholder="Password" maxlength="25" class="form-control"/>
+        <input type="password" name="password" required="required" Title="Password must be 8 - 25 characters in length" placeholder="Password" minlength="8" maxlength="25" class="form-control"/>
     </div>
     <div class="mb-3">
         <button name="registerSubmit" class="btn btn-primary" Value="Sign Up" type="submit" form="signUpForm" title="Register an account">Sign Up</button>
