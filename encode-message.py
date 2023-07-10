@@ -14,9 +14,9 @@ app.debug = True
 
 # Initialize db and sql extensions
 # Local config
-app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{os.environ.get('ENCODE_MESSAGE_DB_USER')}:{os.environ.get('ENCODE_MESSAGE_DB_PWD')}@localhost:5432/encode_message"
+#app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{os.environ.get('ENCODE_MESSAGE_DB_USER')}:{os.environ.get('ENCODE_MESSAGE_DB_PWD')}@localhost:5432/encode_message"
 # vercel config
-# app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://default:5Uio0SvrCzgs@ep-lively-dust-350007.us-east-1.postgres.vercel-storage.com:5432/verceldb"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://default:5Uio0SvrCzgs@ep-lively-dust-350007.us-east-1.postgres.vercel-storage.com:5432/verceldb"
 db = SQLAlchemy()
 migrate = Migrate(app, db)
 return_spacer = "-----------------------"
