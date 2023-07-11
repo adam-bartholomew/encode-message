@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "wsgi.py" }
+    { "source": "(.*)", "destination": "/routes/index" }
   ]
 }
