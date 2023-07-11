@@ -30,8 +30,8 @@ def get_word_syllables(word: str) -> int:
     """
 
     log.info(f"get_word_syllables: {word}")
-    api = Datamuse()
-    results = api.words(sl=word)
+    datamuse = Datamuse()
+    results = datamuse.words(sl=word)
     log.info(f"API returned results: {results}")
     if list(filter(lambda x: x['word'] == word, results)):  # Check to see if the word itself is in the list.
         result = list(filter(lambda x: x['word'] == word, results))[0]
@@ -129,7 +129,7 @@ def decode(input_message: str) -> tuple:
     log.info(f"Decode sentence space positions: {spaces}")
 
     # Get the corresponding letters according to the codex
-    with open('codex.txt', encoding="utf8") as f:
+    with open('./myApp/codex.txt', encoding="utf8") as f:
         codex_lines = f.readlines()
         codex_list = [line.strip("\n") for line in codex_lines]
     log.debug(f"decode - Codex List: {codex_list}")
@@ -173,7 +173,7 @@ def encode(input_message: str, encode_offset: int) -> tuple:
             return 0, f"Only English is supported at this time. Your message contained: {c}. Please ensure that your message only contains ASCII characters."
 
     # Get the corresponding letters according to the codex.
-    with open('codex.txt') as f:
+    with open('./myApp/codex.txt') as f:
         codex_lines = f.readlines()
         codex_list = [line.strip("\n") for line in codex_lines]
     log.info(f"encode - Got the Codex: {codex_list}")
@@ -211,7 +211,7 @@ def get_words_for_syllables(total_syllables: int) -> str:
 
     log.info(f"get_words_for_syllables: {total_syllables}")
     # Use pandas to read the list of words to find a word to use.
-    df = pd.read_csv('datasets/phoneticDictionary_cleaned_20230515.csv')
+    df = pd.read_csv('./myApp/datasets/phoneticDictionary_cleaned_20230515.csv')
     syllables_used = 0
     words = ""
 
@@ -240,7 +240,7 @@ def get_syllables_for_sentence(sentence: str) -> Union[int, None]:
     """
 
     log.info(f"get_syllables_for_sentence: \"{sentence}\" ")
-    df = pd.read_csv('datasets/phoneticDictionary_cleaned_20230515.csv')
+    df = pd.read_csv('./myApp/datasets/phoneticDictionary_cleaned_20230515.csv')
     words = sentence.lower().split(' ')
     syllables = 0
 
@@ -262,9 +262,9 @@ def clean_dictionary():
     :return:
     """
     log.info('cleaning the dictionary.')
-    new_filename = f"datasets/phoneticDictionary_cleaned_{datetime.now().strftime('%Y%m%d')}.csv"
+    new_filename = f"./myApp/datasets/phoneticDictionary_cleaned_{datetime.now().strftime('%Y%m%d')}.csv"
     log.info(f"Cleaned Dictionary Name: {new_filename}")
-    with open('datasets/phoneticDictionary.csv', 'r', encoding='utf8') as in_file, open(new_filename, 'w', encoding='utf8', newline='') as out_file:
+    with open('./myApp/datasets/phoneticDictionary.csv', 'r', encoding='utf8') as in_file, open(new_filename, 'w', encoding='utf8', newline='') as out_file:
         seen = set()
         reader = csv.DictReader(in_file)
         writer = csv.writer(out_file)
@@ -302,7 +302,7 @@ def validate_word(word: str) -> bool:
 
     url = f"https://wordsapiv1.p.rapidapi.com/words/{word}/syllables"
 
-    with open('credentials.txt', 'r', encoding="utf8") as f:
+    with open('./credentials.txt', 'r', encoding="utf8") as f:
         for line in f:
             if line.startswith('"X-RapidAPI-Key":'):
                 api_key = (line.split(":")[1].split('"')[1])

@@ -3,7 +3,7 @@ __pycache__/
 *.pyc
 
 ## Ignore configuration files
-credentials.txt
+myApp/credentials.txt
 
 ## Ignore IntelliJ specific files
 .idea
