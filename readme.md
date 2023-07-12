@@ -3,8 +3,6 @@
 ###### Uses [Python](https://www.python.org/), [Flask](https://flask.palletsprojects.com/en/2.3.x/), and [Bootstrap](https://getbootstrap.com/docs/5.3/getting-started/introduction/)
 ###### Application and Database Hosted on Vercel - [here](https://encode-message.vercel.app/).
 
-Please see the initial design document for in-depth design details: __Message_Coding_Initial_Design.odt__
-
 Syllable dataset downloaded from [Kaggle](https://www.kaggle.com/datasets/schwartstack/english-phonetic-and-syllable-count-dictionary?resource=download)
 
 "Hieroglyph" icon by Jajang Nurrahman from <a href="https://thenounproject.com/browse/icons/term/hieroglyph/" target="_blank" title="Hieroglyph Icons">Noun Project</a>
@@ -41,13 +39,13 @@ __requirements.txt__ - Holds the Python packages and their versions used.
 __vercel.json__ - Vercel config properties for hosting.
 
 ### Encoding:
-- Take an english sentence or phrase and turn it into something that does not make sense.
+- Take an English sentence or phrase and turn it into something that does not make sense.
 
 ### Decoding:
-- Take a message that has been encoded using this same program and decode it into it's original meaning.
+- Take a message that has been encoded using this same program and decode it into its original meaning.
 
 ## Running:
-Make sure that the environment variable(s) are set on your machine or in the projects **activate.bat** file if using virtual environment. You will need 1 for the flask key and 1 or more for a connection to a database.
+Make sure that the environment variable(s) are set on your machine or in the projects **activate.bat** file if using a virtual environment. You will need 1 for the flask key and 1 or more for a connection to a database.
 
     ...
     @set FLASK_APP_KEY="secret-flask-key"
@@ -59,6 +57,6 @@ Prior to starting up please execute the following 2 commands:
     $ export FLASK_APP=wsgi
     $ export FLASK_ENV=development
 
-To run app in development:
+To run the app in development:
 
     flask --app wsgi run --debug
