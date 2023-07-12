@@ -5,6 +5,8 @@ from sqlalchemy import Column, String, Integer, DateTime
 
 
 class UserModel(db.Model, UserMixin):
+    """Define the structure of the "User" object used in the flask app.
+    """
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)

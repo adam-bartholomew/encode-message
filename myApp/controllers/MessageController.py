@@ -33,9 +33,11 @@ def get_word_syllables(word: str) -> int:
     datamuse = Datamuse()
     results = datamuse.words(sl=word)
     log.info(f"API returned results: {results}")
-    if list(filter(lambda x: x['word'] == word, results)):  # Check to see if the word itself is in the list.
+
+    # Check to see if the word is in the list. If not, take the highest score.
+    if list(filter(lambda x: x['word'] == word, results)):
         result = list(filter(lambda x: x['word'] == word, results))[0]
-    else:  # get the word with the highest score.
+    else:
         result = max(results, key=lambda x: x['score'])
     log.info(f"Selected: {result} {type(result)}")
     if result:
@@ -49,7 +51,7 @@ def get_sentence_syllables(sentences: str, format_option: int) -> list:
     """Gets the syllable count in a phrase, sentence, or group of lines.
 
     :param (str) sentences: The phrase, sentence, or group of lines to get the syllables for.
-    :param (int) format_option: Whether we are encoding or decoding a string - to be passed into the format_api_sentence call.
+    :param (int) format_option: Whether we are encoding (2) or decoding (1) a string.
     :return (list): Number of syllables per line/sentence.
     """
 
@@ -59,7 +61,7 @@ def get_sentence_syllables(sentences: str, format_option: int) -> list:
     log.info(formatted_sentences, type(formatted_sentences))
     sentences = formatted_sentences.split("\n")
     for sentence in sentences:
-        sentence_syllables = 0  # Initialize the sentence syllable counter
+        sentence_syllables = 0
         log.debug(f"Sending the following sentence to Datamuse: \"{sentence}\"")
         for word in sentence.split():
             sentence_syllables += get_word_syllables(word)
@@ -68,7 +70,7 @@ def get_sentence_syllables(sentences: str, format_option: int) -> list:
     return syllables
 
 
-# Removes punctuation and changes any numeric number into the correct english word.
+# Remove punctuation and change any numeric number into the correct english word.
 def format_sentence(sentence: str, option: int) -> str:
     """Formats a sentence to be sent to the Datamuse API.
 
@@ -99,7 +101,8 @@ def decode(input_message: str) -> tuple:
     """Decodes a message according to the codex on the system.
 
     :param (str) input_message: The message we want to decode.
-    :return (tuple): Element at index 0 is the response code: 0 - Bad, 1 - Good. Element at index 1 is the response message.
+    :return (tuple): Element at index 0 is the response code: 0 - Bad, 1 - Good.
+                        Element at index 1 is the response message.
     """
 
     log.info("DECODING...")
@@ -163,7 +166,6 @@ def encode(input_message: str, encode_offset: int) -> tuple:
     if not input_message or len(input_message) < 1:
         input_message = "test message"
 
-    # Format the message
     formatted_message = format_sentence(input_message, 2)
     log.info(f"Formatted Message: {formatted_message}")
 
@@ -210,19 +212,13 @@ def get_words_for_syllables(total_syllables: int) -> str:
     """
 
     log.info(f"get_words_for_syllables: {total_syllables}")
-    # Use pandas to read the list of words to find a word to use.
     df = pd.read_csv('./myApp/datasets/phoneticDictionary_cleaned_20230515.csv')
     syllables_used = 0
     words = ""
 
-    # While we still have syllables to use, get another word.
     while syllables_used < total_syllables:
         # log.info(f"Syllables used so far: {syllables_used}")
-
-        # Create a dataframe for words with a syllable count compatible with the number of syllables left.
         df_matching_syllables = df.loc[df['syl'] <= (total_syllables - syllables_used)]
-
-        # Get a random sample of rows from the dataframe.
         row = df_matching_syllables.sample()
 
         # Add the word to the return string.
@@ -273,19 +269,10 @@ def clean_dictionary():
         for row in reader:
             word = row['word']  # Get the word for the row
 
-            # If the word is a duplicate, starts with ' or contains . skip it.
             if word in seen or word.startswith("'") or "." in word:
                 continue
 
-            # Write the row to the new file & add it to the list of seen words.
-            writer.writerow([
-                row['id'],
-                row['word'],
-                row['phon'],
-                row['syl'],
-                row['start'],
-                row['end']
-            ])
+            writer.writerow([row['id'], row['word'], row['phon'], row['syl'], row['start'], row['end']])
             seen.add(word)
 
 
@@ -296,8 +283,8 @@ def validate_word(word: str) -> bool:
     Makes a request to the WordsAPI to see if the provided word returns a valid result.
     We are only allowed 2,500 requests per day for free.
 
-    :param (str) word: The word to check
-    :return (bool): True if the word is valid
+    :param (str) word: The word to check.
+    :return (bool): True if the word is valid.
     """
 
     url = f"https://wordsapiv1.p.rapidapi.com/words/{word}/syllables"

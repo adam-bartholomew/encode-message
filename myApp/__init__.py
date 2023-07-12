@@ -12,7 +12,9 @@ login_manager = LoginManager()
 
 
 def create_app():
-    # Create flask application
+    """Initialize the modules and packages then create the flask app.
+    """
+
     app = Flask(__name__)
     app.config.from_object(config)
 
