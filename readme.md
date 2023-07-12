@@ -9,26 +9,36 @@ Syllable dataset downloaded from [Kaggle](https://www.kaggle.com/datasets/schwar
 
 "Hieroglyph" icon by Jajang Nurrahman from <a href="https://thenounproject.com/browse/icons/term/hieroglyph/" target="_blank" title="Hieroglyph Icons">Noun Project</a>
 
-### File Overview:
-__messaging.py__ - Contains the encoding and decoding functionality used by the flask app.
+## File Overview:
+__wsgi.py__ - This holds the app and is what's called upon starting.
 
-__app.py__ - The Flask application controller.
+__config.py__ - Holds all Flask and other configuration settings needed in the application.
 
-__\static__ - Follows Flask standards.
+__myApp\\\_\_init\_\_.py__ - Creates and initializes the application and modules it depends on.
 
-__\templates__ - Follows Flask standards.
+__myApp\controllers\MessageController.py__ - Controls how messages are encoded and decoded.
 
-__\datasets__ - Contains the datasets of words with their syllable counts.
+__myApp\models\UserModel.py__ - Defines the class for a User.
 
-__codex.txt__ - Where the letter - syllable translation scheme is kept. The line number that each letter is on equals the number of syllables that letter corresponds to.
+__myApp\routes.py__ - The Flask application route controller.
 
-__credentials.txt__ - Please keep this file locally only, but any api keys should be put in this file:
+__myApp\static__ - Follows Flask standards for static web resources.
+
+__myApp\templates__ - Follows Flask standards for web templates.
+
+__myApp\datasets__ - Contains the word datasets.
+
+__myApp\codex.txt__ - Where the syllable count <--> letter translation scheme is kept.
+
+__myApp\credentials.txt__ - Please keep this file locally only, but any api keys need by a controller can be put in this file:
 
     words api headers:
     "X-RapidAPI-Key": "your-api-key",
     "X-RapidAPI-Host": "wordsapiv1.p.rapidapi.com"
 
-__requirements.txt__ & __vercel.json__ - Vercel config properties for hosting.
+__requirements.txt__ - Holds the Python packages and their versions used.
+
+__vercel.json__ - Vercel config properties for hosting.
 
 ### Encoding:
 - Take an english sentence or phrase and turn it into something that does not make sense.
@@ -46,9 +56,9 @@ Make sure that the environment variable(s) are set on your machine or in the pro
 
 Prior to starting up please execute the following 2 commands:
     
-    $ export FLASK_APP=app
+    $ export FLASK_APP=wsgi
     $ export FLASK_ENV=development
 
 To run app in development:
 
-    flask --app encode-message run --debug
+    flask --app wsgi run --debug

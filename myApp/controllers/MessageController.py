@@ -351,6 +351,11 @@ def build_offset_date(int_offset: int) -> str:
 
 
 def decode_offset_date(offset_date: str) -> Union[int, str]:
+    """Calculates the message offset of the encoded message.
+
+    :param offset_date: The date string that is the first line of the encoded message.
+    :return: (int) or (str): The integer offset, or a message if the integer offset could not be calculated.
+    """
     try:
         log.info(f"decode_offset_date: param \"offset_date\" - {datetime.strptime(offset_date, '%A, %B %d, %Y')}")
         dt = datetime.strptime(offset_date, '%A, %B %d, %Y')
