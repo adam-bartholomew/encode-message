@@ -25,4 +25,22 @@ class UserModel(db.Model, UserMixin):
         self.password = password
 
     def __repr__(self):
-        return f"<User {self.username}>"
+        return f"<User {self.id}>:" \
+               f"   username={self.username}" \
+               f"   first_name={self.first_name}" \
+               f"   last_name={self.last_name}" \
+               f"   email={self.email}"
+
+    def set_empty_properties(self):
+        if self.first_name is None:
+            self.first_name = ""
+        if self.last_name is None:
+            self.last_name = ""
+        if self.email is None:
+            self.email = ""
+
+    @staticmethod
+    def get_formatted_date(date):
+        if date is None:
+            return ""
+        return date.strftime("%B %d, %Y %I:%M:%S %p")

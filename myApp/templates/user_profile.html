@@ -1,6 +1,69 @@
 {% extends 'base.html' %}
-{% set active_page = "home" %}
+{% set active_page = "profile" %}
 
 {% block content %}
-<p>hi</p>
+
+<h1>{% block title %} Update Profile {% endblock %}</h1>
+<div class="div-profile-info">
+    <div class="row">
+        <div class="col-md-4">
+            <p>Created: {{ user.get_formatted_date(user.creation_datetime) }}</p>
+            <p>Created By: {{ user.creation_userid }}</p>
+        </div>
+        <div class="col-md-4">
+            <p>Last Modified: {{ user.get_formatted_date(user.last_modified_datetime) }}</p>
+            <p>Last Modified By: {{ user.last_modified_userid }}</p>
+        </div>
+    </div>
+    <form id="updateProfileForm" method="post" class="form-general">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="card-profile">
+                    <div class="card-body">
+                        <label for="profile_username" title="Username" class="form-label">Username:</label>
+                        <input type="text" id="profile_username" name="profile_username" required="required" Title="Username is case sensitive" placeholder="Username" value="{{ user.username }}" maxlength="25" class="form-control"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card-profile">
+                    <div class="card-body">
+                        <label for="profile_password" title="New Password" class="form-label">New Password:</label>
+                        <input id="profile_password" type="password" name="profile_password" Title="Password must be 8 - 25 characters in length" placeholder="Password" minlength="8" maxlength="25" class="form-control"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="card-profile">
+                    <div class="card-body">
+                        <label for="profile_firstname" title="First Name" class="form-label">First Name:</label>
+                        <input id="profile_firstname" type="text" name="profile_firstname" value="{{ user.first_name }}" placeholder="First Name" maxlength="100" class="form-control"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card-profile">
+                    <div class="card-body">
+                        <label for="profile_lastname" title="Last Name" class="form-label">Last Name:</label>
+                        <input id="profile_lastname" type="text" name="profile_lastname" value="{{ user.last_name }}" placeholder="Last Name" maxlength="100" class="form-control"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card-profile">
+                    <div class="card-body">
+                        <label for="profile_email" title="Email Address" class="form-label">Email Address:</label>
+                        <input id="profile_email" type="text" name="profile_email" value="{{ user.email }}" placeholder="Email Address" maxlength="80" class="form-control"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div class="mb-3">
+            <button name="updateProfile" class="btn btn-primary" Value="Update Profile" type="submit" form="updateProfileForm" title="Update Profile">Update Profile</button>
+        </div>
+    </form>
+</div>
 {% endblock %}

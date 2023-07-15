@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% set active_page = "404" %}
+
+{% block title %}404 Page Not Found{% endblock %}
+{% block content %}
+  <h1 style="text-align:center;">Oops! Looks like the page doesn't exist.</h1>
+  <h2 style="text-align:center;">Click <a href="{{ url_for('routes.index') }}">Here</a> to go to the Home Page.</h2>
+{% endblock %}

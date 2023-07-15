@@ -6,7 +6,7 @@
     ('/about', 'about', 'About', 'Bonus information')
 ] -%}
 {% set nav_bar_right = [
-    ('/profile', 'profile', 'Profile', 'User Profile'),
+    ('profile', 'profile', 'Profile', 'User Profile'),
     ('/logout', 'logout', 'Logout', 'Logout')
 ] -%}
 {% set nav_bar_img = [
@@ -15,7 +15,10 @@
     ('decode', 'bi-unlock'),
     ('about', 'bi-info-circle'),
     ('login', 'bi-box-arrow-in-right'),
-    ('register', 'bi-person-plus')
+    ('register', 'bi-person-plus'),
+    ('profile', 'bi-person-badge'),
+    ('404', 'bi-patch-question'),
+    ('401', 'bi-patch-question')
 ] -%}
 {% set not_logged_in = [
     ('/login', 'login', 'Login', 'Login'),
@@ -72,14 +75,21 @@
                     </ul>
                     <ul class="navbar-nav ms-auto">
                         {% for href, id, caption, hover in nav_bar_right %}
-                        {% if id == active_page %}
-                            {% set row_class = "nav-link active" %}
-                        {% else %}
-                            {% set row_class = "nav-link" %}
-                        {% endif %}
-                        <li class="nav-item">
-                            <a class="{{ row_class }}" href="{{ href|e }}" title="{{ hover|e }}">{{ caption|e }}</a>
-                        </li>
+                            {% if id == active_page %}
+                                {% set row_class = "nav-link active" %}
+                            {% else %}
+                                {% set row_class = "nav-link" %}
+                            {% endif %}
+                            {% if id == 'logout' %}
+                                <li class="nav-item">
+                                    <a class="{{ row_class }}" href="{{ href|e }}" title="{{ hover|e }}">{{ caption|e }}</a>
+                                </li>
+                            {% endif %}
+                            {% if id == 'profile' %}
+                                <li class="nav-item">
+                                    <a class="{{ row_class }}" href="{{ url_for('routes.' + href|e, user_id=current_user.id) }}" title="{{ hover|e }}">{{ caption|e }}</a>
+                                </li>
+                            {% endif %}
                         {% endfor %}
                     </ul>
                     {% else %}

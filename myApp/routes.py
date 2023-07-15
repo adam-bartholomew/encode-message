@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import render_template, request, url_for, flash, redirect, Blueprint
 from flask_login import login_user, logout_user, current_user, login_required
 from myApp import bcrypt, db, login_manager
@@ -6,6 +7,8 @@ from myApp.controllers import MessageController
 from config import RETURN_SPACER
 
 routes = Blueprint('routes', __name__)
+HOME_ROUTE = 'routes.home'
+LOGIN_ROUTE = 'routes.login'
 
 
 def hash_password(password):
@@ -17,15 +20,39 @@ def check_password(pw_hash, password):
     return bcrypt.check_password_hash(pw_hash=pw_hash, password=password)
 
 
+def validate_new_password(old_pwd_hash, new_pwd):
+    if 7 < len(new_pwd) < 26:
+        return not bcrypt.check_password_hash(pw_hash=old_pwd_hash, password=new_pwd)  # Not the same pwd.
+    return False
+
+
+def validate_new_username(old_username, new_username):
+    if old_username != new_username:
+        return UserModel.query.filter_by(username=new_username).first() is None  # The new username isn't in use.
+    return False
+
+
 # Creates a user loader callback that returns the user object given an id
 @login_manager.user_loader
 def load_user(username):
     return UserModel.query.get(username)
 
 
-@routes.errorhandler(404)
-def page_not_found(error):
-    return "This page does not exist", 404, "\n", error
+@routes.app_errorhandler(401)
+def unauthorized(error):
+    MessageController.log.error(f"{error} - {current_user}")
+    flash("You do not have permission to view this page.")
+    return render_template('401.html')
+
+
+@routes.app_errorhandler(404)
+def not_found(error):
+    if current_user.is_authenticated:
+        MessageController.log.error(error)
+        flash("The requested page does not exist.")
+        return render_template('404.html')
+    else:
+        return unauthorized("Current user is not authenticated.")
 
 
 # cache definition @app.after_request def add_header(response): Add headers to both force latest IE rendering engine or Chrome Frame, and also to cache the rendered page for 10 minutes.
@@ -36,7 +63,6 @@ def add_header(response):
     return response
 
 
-# Load Browser Favorite Icon
 @routes.route('/favicon.ico')
 def favicon():
     return redirect(url_for('static', filename='image/favicon.ico'), code=302)
@@ -46,22 +72,19 @@ def favicon():
 def index():
     if current_user.is_authenticated:
         return render_template('home.html')
-    return redirect(url_for('routes.login'))
+    return redirect(url_for(LOGIN_ROUTE))
 
 
 @routes.route('/home')
 def home():
     if current_user.is_authenticated:
         return render_template('home.html')
-    return redirect(url_for('routes.login'))
+    return redirect(url_for(LOGIN_ROUTE))
 
 
 @routes.route('/encode', methods=('GET', 'POST'))
 @login_required
 def encode():
-    page_name = 'encode'
-    page_template = f"{page_name}.html"
-
     if request.method == 'POST' and request.form.get('encodeSubmit') == 'Submit':
         msg = request.form.get('inputMessage')
         offset = int(request.form.get('encodeOffset')) if request.form.get('encodeOffset').isnumeric() else 0
@@ -72,7 +95,7 @@ def encode():
                 flash(encoded_msg[1])
             else:
                 encode_resp = f"Offset: {offset}\nInput Message: {msg}\nEncoded Message:\n{RETURN_SPACER}\n{encoded_msg[1]}"
-                return render_template(page_template, encoded_message=encode_resp)
+                return render_template('encode.html', encoded_message=encode_resp)
         else:
             flash("Please enter a message to encode.")
     if request.method == 'POST' and request.form.get('encodeClear') == 'Clear':
@@ -109,10 +132,37 @@ def about():
     return render_template('about.html')
 
 
-@routes.route('/profile')
+@routes.route('/profile/<int:user_id>', methods=['GET', 'POST'])
 @login_required
-def profile():
-    return render_template('user_profile.html')
+def profile(user_id):
+    user = UserModel.query.filter_by(id=user_id).first_or_404()
+    if current_user.username != user.username:
+        flash("You do not have permission to visit this page.")
+        return render_template('401.html')
+
+    user.set_empty_properties()
+    if request.method == 'POST':
+        form_username = request.form.get('profile_username')
+        form_first_name = request.form.get('profile_firstname')
+        form_last_name = request.form.get('profile_lastname')
+        form_email = request.form.get('profile_email')
+        form_password = request.form.get('profile_password')
+        if validate_new_username(user.username, form_username):
+            user.username = form_username
+        if validate_new_password(user.password, form_password):
+            user.password = hash_password(form_password)
+        if user.first_name != form_first_name:
+            user.first_name = form_first_name
+        if user.last_name != form_last_name:
+            user.last_name = form_last_name
+        if user.email != form_email:
+            user.email = form_email
+        user.last_modified_datetime = datetime.now()
+        user.last_modified_userid = form_username
+        MessageController.log.info(f"Saving the user: {user}")
+        db.session.commit()
+        user = UserModel.query.filter_by(username=user.username).first_or_404()
+    return render_template('user_profile.html', user=user)
 
 
 @routes.route('/register', methods=['GET', 'POST'])
@@ -122,7 +172,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         MessageController.log.info(f"New user created: {new_user}")
-        return redirect(url_for('routes.login'))
+        return redirect(url_for(LOGIN_ROUTE))
     return render_template('sign_up.html')
 
 
@@ -137,15 +187,15 @@ def login():
             if check_password(user.password, request.form.get('password')):
                 login_user(user)
                 MessageController.log.info(f"User login success: {user}.")
-                return redirect(url_for('routes.home'))
+                return redirect(url_for(HOME_ROUTE))
         MessageController.log.info(f"User login failure: <{form_name}>.")
-        flash(f"Username and/or password is incorrect for {form_name}.")
-        return redirect(url_for('routes.login'))
+        flash("The username and/or password is incorrect.")
+        return redirect(url_for(LOGIN_ROUTE))
     return render_template('login.html')
 
 
 @routes.route('/logout')
 def logout():
-    MessageController.log.info(f"User logout success: {current_user}")
+    MessageController.log.info(f"User logout success: {current_user.username}")
     logout_user()
     return render_template('login.html')
