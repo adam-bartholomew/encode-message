@@ -119,10 +119,17 @@
             {% block content %} {% endblock %}
         </div>
         {% if active_page == 'encode' or active_page == 'decode' %}
-        <div class="row sticky-bottom footer-general">
-            <hr class="mt-1 mb-3"/>
-            <div class="col-md-8 offset-md-2 div-title-center">
-                <p>Please note that if the encoding/decoding takes longer than 10 seconds you will get a "504: GATEWAY_TIMEOUT" error saying "The Serverless Function has crashed". If that happens, navigate back to the app and try a smaller message. This is a limitation of Vercel's hobby account.</p>
+        <div id="banner-bottom" class="fixed-bottom">
+            <div class="div-collapse">
+                <button Title="Hide/Show Info" type="button" class="btn btn-sm" data-toggle="collapse" data-target="#collapseFooter" aria-expanded="true" aria-controls="collapseExample">
+                    <i class="bi bi-arrow-down-up"></i>
+                </button>
+            </div>
+            <div id="collapseFooter" class="row footer-general collapse show">
+                <hr class="mt-1 mb-3"/>
+                <div class="col-md-8 offset-md-2 div-title-center">
+                    <p>Please note that if the encoding/decoding takes longer than 10 seconds you will get a "504: GATEWAY_TIMEOUT" error saying "The Serverless Function has crashed". If that happens, navigate back to the app and try a smaller message. This is a limitation of Vercel's hobby account.</p>
+                </div>
             </div>
         </div>
         {% endif %}

@@ -79,6 +79,11 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
-.footer-general{
+.footer-general {
     background-color: white;
+}
+.div-collapse {
+    position: relative;
+    left: 50%;
+    top: 5%;
 }
