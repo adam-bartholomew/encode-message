@@ -249,6 +249,7 @@ def get_syllables_for_sentence(sentence: str) -> Union[int, None]:
     return syllables
 
 
+# noinspection PyTypeChecker
 def clean_dictionary():
     """Cleans the data in datasets/phoneticDictionary.csv and puts it into new_clean.csv
 

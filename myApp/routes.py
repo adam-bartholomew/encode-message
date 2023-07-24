@@ -136,11 +136,13 @@ def about():
 @login_required
 def profile(user_id):
     user = UserModel.query.filter_by(id=user_id).first_or_404()
+    MessageController.log.info(f"Getting Info for User: {user}")
+    user.set_empty_properties()
+
     if current_user.username != user.username:
         flash("You do not have permission to visit this page.")
         return render_template('401.html')
 
-    user.set_empty_properties()
     if request.method == 'POST':
         form_username = request.form.get('profile_username')
         form_first_name = request.form.get('profile_firstname')
@@ -159,9 +161,12 @@ def profile(user_id):
             user.email = form_email
         user.last_modified_datetime = datetime.now()
         user.last_modified_userid = form_username
+        user.clear_empty_properties()
         MessageController.log.info(f"Saving the user: {user}")
         db.session.commit()
         user = UserModel.query.filter_by(username=user.username).first_or_404()
+        user.set_empty_properties()
+        redirect('routes.profile')
     return render_template('user_profile.html', user=user)
 
 

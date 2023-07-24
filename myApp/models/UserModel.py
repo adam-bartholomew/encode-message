@@ -39,6 +39,14 @@ class UserModel(db.Model, UserMixin):
         if self.email is None:
             self.email = ""
 
+    def clear_empty_properties(self):
+        if len(self.first_name.strip()) == 0:
+            self.first_name = None
+        if len(self.last_name.strip()) == 0:
+            self.last_name = None
+        if len(self.email.strip()) == 0:
+            self.email = None
+
     @staticmethod
     def get_formatted_date(date):
         if date is None:
