@@ -7,8 +7,8 @@ from myApp.controllers import MessageController
 from config import RETURN_SPACER
 
 routes = Blueprint('routes', __name__)
-HOME_ROUTE = 'routes.home'
-LOGIN_ROUTE = 'routes.login'
+HOME_ROUTE_REDIRECT = 'routes.home'
+LOGIN_ROUTE_REDIRECT = 'routes.login'
 
 
 def hash_password(password):
@@ -70,20 +70,15 @@ def favicon():
 
 @routes.route('/')
 def index():
-    if current_user.is_authenticated:
-        return render_template('home.html')
-    return redirect(url_for(LOGIN_ROUTE))
+    return render_template('home.html')
 
 
 @routes.route('/home')
 def home():
-    if current_user.is_authenticated:
-        return render_template('home.html')
-    return redirect(url_for(LOGIN_ROUTE))
+    return render_template('home.html')
 
 
 @routes.route('/encode', methods=('GET', 'POST'))
-@login_required
 def encode():
     if request.method == 'POST' and request.form.get('encodeSubmit') == 'Submit':
         msg = request.form.get('inputMessage')
@@ -105,7 +100,6 @@ def encode():
 
 
 @routes.route('/decode', methods=('GET', 'POST'))
-@login_required
 def decode():
     if request.method == 'POST':
         if request.form.get('decodeSubmit') == 'Submit':
@@ -127,7 +121,6 @@ def decode():
 
 
 @routes.route('/about')
-@login_required
 def about():
     return render_template('about.html')
 
@@ -172,17 +165,21 @@ def profile(user_id):
 
 @routes.route('/register', methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for(HOME_ROUTE_REDIRECT))
     if request.method == 'POST':
         new_user = UserModel(username=request.form.get('username'), password=hash_password(request.form.get('password')))
         db.session.add(new_user)
         db.session.commit()
         MessageController.log.info(f"New user created: {new_user}")
-        return redirect(url_for(LOGIN_ROUTE))
+        return redirect(url_for(LOGIN_ROUTE_REDIRECT))
     return render_template('sign_up.html')
 
 
 @routes.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for(HOME_ROUTE_REDIRECT))
     # If a post request was made, find the user by filtering for the username
     if request.method == 'POST':
         form_name = request.form.get('username')
@@ -192,15 +189,17 @@ def login():
             if check_password(user.password, request.form.get('password')):
                 login_user(user)
                 MessageController.log.info(f"User login success: {user}.")
-                return redirect(url_for(HOME_ROUTE))
+                return redirect(url_for(HOME_ROUTE_REDIRECT))
         MessageController.log.info(f"User login failure: <{form_name}>.")
         flash("The username and/or password is incorrect.")
-        return redirect(url_for(LOGIN_ROUTE))
+        return redirect(url_for(LOGIN_ROUTE_REDIRECT))
     return render_template('login.html')
 
 
 @routes.route('/logout')
 def logout():
+    if not current_user.is_authenticated:
+        return redirect(url_for(HOME_ROUTE_REDIRECT))
     MessageController.log.info(f"User logout success: {current_user.username}")
     logout_user()
     return render_template('login.html')

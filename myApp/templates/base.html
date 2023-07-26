@@ -5,9 +5,13 @@
     ('/decode', 'decode', 'Decode', 'Decode a message'),
     ('/about', 'about', 'About', 'Bonus information')
 ] -%}
-{% set nav_bar_right = [
+{% set nav_bar_right_auth = [
     ('profile', 'profile', 'Profile', 'User Profile'),
     ('/logout', 'logout', 'Logout', 'Logout')
+] -%}
+{% set nav_bar_right_anon = [
+    ('/login', 'login', 'Login', 'Login'),
+    ('/register', 'register', 'Register', 'Create an Account')
 ] -%}
 {% set nav_bar_img = [
     ('home', 'bi-house-door'),
@@ -19,10 +23,6 @@
     ('profile', 'bi-person-badge'),
     ('404', 'bi-patch-question'),
     ('401', 'bi-patch-question')
-] -%}
-{% set not_logged_in = [
-    ('/login', 'login', 'Login', 'Login'),
-    ('/register', 'register', 'Register', 'Create an Account')
 ] -%}
 {% set active_page = active_page|default('index') -%}
 <html lang="en">
@@ -60,51 +60,51 @@
 
                 <!--Navbar Items-->
                 <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                    {% if current_user.is_authenticated %}
                     <ul class="navbar-nav">
                         {% for href, id, caption, hover in nav_bar_left %}
-                        {% if id == active_page %}
-                            {% set row_class = "nav-link active" %}
-                        {% else %}
-                            {% set row_class = "nav-link" %}
-                        {% endif %}
-                        <li class="nav-item">
-                            <a class="{{ row_class }}" href="{{ href|e }}" title="{{ hover|e }}">{{ caption|e }}</a>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    <ul class="navbar-nav ms-auto">
-                        {% for href, id, caption, hover in nav_bar_right %}
                             {% if id == active_page %}
                                 {% set row_class = "nav-link active" %}
                             {% else %}
                                 {% set row_class = "nav-link" %}
                             {% endif %}
-                            {% if id == 'logout' %}
+                            <li class="nav-item">
+                                <a class="{{ row_class }}" href="{{ href|e }}" title="{{ hover|e }}">{{ caption|e }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    {% if current_user.is_authenticated %}
+                        <ul class="navbar-nav ms-auto">
+                            {% for href, id, caption, hover in nav_bar_right_auth %}
+                                {% if id == active_page %}
+                                    {% set row_class = "nav-link active" %}
+                                {% else %}
+                                    {% set row_class = "nav-link" %}
+                                {% endif %}
+                                {% if id == 'logout' %}
+                                    <li class="nav-item">
+                                        <a class="{{ row_class }}" href="{{ href|e }}" title="{{ hover|e }}">{{ caption|e }}</a>
+                                    </li>
+                                {% endif %}
+                                {% if id == 'profile' %}
+                                    <li class="nav-item">
+                                        <a class="{{ row_class }}" href="{{ url_for('routes.' + href|e, user_id=current_user.id) }}" title="{{ hover|e }}">{{ caption|e }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <ul class="navbar-nav ms-auto">
+                            {% for href, id, caption, hover in nav_bar_right_anon %}
+                                {% if id == active_page %}
+                                    {% set row_class = "nav-link active" %}
+                                {% else %}
+                                    {% set row_class = "nav-link" %}
+                                {% endif %}
                                 <li class="nav-item">
                                     <a class="{{ row_class }}" href="{{ href|e }}" title="{{ hover|e }}">{{ caption|e }}</a>
                                 </li>
-                            {% endif %}
-                            {% if id == 'profile' %}
-                                <li class="nav-item">
-                                    <a class="{{ row_class }}" href="{{ url_for('routes.' + href|e, user_id=current_user.id) }}" title="{{ hover|e }}">{{ caption|e }}</a>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                    {% else %}
-                    <ul class="navbar-nav">
-                        {% for href, id, caption, hover in not_logged_in %}
-                        {% if id == active_page %}
-                            {% set row_class = "nav-link active" %}
-                        {% else %}
-                            {% set row_class = "nav-link" %}
-                        {% endif %}
-                        <li class="nav-item">
-                            <a class="{{ row_class }}" href="{{ href|e }}" title="{{ hover|e }}">{{ caption|e }}</a>
-                        </li>
-                        {% endfor %}
-                    </ul>
+                            {% endfor %}
+                        </ul>
                     {% endif %}
                 </div>
             </div>
