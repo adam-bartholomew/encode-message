@@ -19,7 +19,17 @@
     <div class="mb-3">
         <div class="d-flex align-items-center highlight-toolbar ps-3 pe-2 py-1 border-0">
             <div class="d-flex ms-auto">
-                <button id="copyButton" aria-label="Copy to clipboard" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy to clipboard" class="btn btn-outline-warning btn-sm clipboard-button" type="button" onclick="copyToClipboard('encodedMessage')">
+                {% if current_user.is_authenticated %}
+                    {% if encoded_message|length < 1 %}
+                        {% set link_class = "btn btn-outline-success btn-sm disabled-link" %}
+                    {% else %}
+                        {% set link_class = "btn btn-outline-success btn-sm active-link" %}
+                    {% endif %}
+                    <a id="emailLink" class="{{ link_class }}" Title="Send Email" role="button" href="mailto:{{ current_user.email }}?subject=Your encoded message.&body={{ encoded_message.replace('\n', '%0D%0A') }}" target="_blank" rel="noopener noreferrer">
+                        <i class="bi bi-send" aria-hidden="true"></i>
+                    </a>
+                {% endif %}
+                <button id="copyButton" aria-label="Copy to clipboard" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy to clipboard" class="btn btn-outline-warning btn-sm msg-btn clipboard-button" type="button" onclick="copyToClipboard('encodedMessage')">
                     <i class="bi bi-clipboard" aria-hidden="true"></i>
                 </button>
             </div>

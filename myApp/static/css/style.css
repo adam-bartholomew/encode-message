@@ -43,7 +43,25 @@
     box-shadow: 1px 1px rgba(0,0,0,.08), 0 0 1px rgba(0,0,0,.05);
       transition: .1s transform cubic-bezier(.155,1.105,.295,1.12),.1s box-shadow,.1s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
 }
-.clipboard-button:hover {
+.disabled-link {
+    pointer-events: none;
+    color: rgba(108,196,143);
+    border: 1px solid;
+    border-color: rgba(108,196,143);
+    margin-right: 10%;
+    box-shadow: 1px 1px rgba(0,0,0,.08), 0 0 1px rgba(0,0,0,.05);
+      transition: .1s transform cubic-bezier(.155,1.105,.295,1.12),.1s box-shadow,.1s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
+    display: inline-block;
+
+}
+.active-link {
+    color: green;
+    margin-right: 10%;
+    box-shadow: 1px 1px rgba(0,0,0,.08), 0 0 1px rgba(0,0,0,.05);
+      transition: .1s transform cubic-bezier(.155,1.105,.295,1.12),.1s box-shadow,.1s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
+    display: inline-block;
+}
+.msg-btn:hover {
     transform: scale(1.01);
     box-shadow: 0 2px 2px rgba(0,0,0,.12), 0 2px 2px rgba(0,0,0,.06);
 }

@@ -96,7 +96,7 @@ def encode():
     if request.method == 'POST' and request.form.get('encodeClear') == 'Clear':
         MessageController.log.info("Clearing encode form.")
         return redirect(url_for('routes.encode'))
-    return render_template('encode.html')
+    return render_template('encode.html', encoded_message="")
 
 
 @routes.route('/decode', methods=('GET', 'POST'))
@@ -117,7 +117,7 @@ def decode():
         if request.form.get('decodeClear') == 'Clear':
             MessageController.log.info("Clearing decode form.")
             return redirect(url_for('routes.decode'))
-    return render_template('decode.html')
+    return render_template('decode.html', decoded_message="")
 
 
 @routes.route('/about')
