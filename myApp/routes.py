@@ -193,4 +193,5 @@ def logout():
         return redirect(url_for(HOME_ROUTE_REDIRECT))
     MessageController.log.info(f"User logout success: {current_user.username}")
     logout_user()
+    flash("You have successfully logged out.")
     return render_template('login.html')
