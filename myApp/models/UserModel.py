@@ -1,4 +1,4 @@
-from myApp import db
+from myApp import db, bcrypt
 from flask_login import UserMixin
 from sqlalchemy.sql import func
 from sqlalchemy import Column, String, Integer, DateTime
@@ -17,8 +17,8 @@ class UserModel(db.Model, UserMixin):
     email = Column(String(80), unique=True)
     creation_datetime = Column(DateTime(timezone=False), nullable=False, server_default=func.now())
     last_modified_datetime = Column(DateTime(timezone=False), server_default=func.now())
-    creation_userid = Column(String(25), nullable=False, server_default='flask_app')
-    last_modified_userid = Column(String(25), server_default='flask_app')
+    creation_userid = Column(String(25), nullable=False, server_default='system')
+    last_modified_userid = Column(String(25), server_default='system')
 
     def __init__(self, username, password):
         self.username = username
@@ -29,7 +29,11 @@ class UserModel(db.Model, UserMixin):
                f"   username={self.username}" \
                f"   first_name={self.first_name}" \
                f"   last_name={self.last_name}" \
-               f"   email={self.email}"
+               f"   email={self.email}" \
+               f"   creation_date={self.creation_datetime}" \
+               f"   creation_user={self.creation_userid}" \
+               f"   modified_date={self.last_modified_datetime}" \
+               f"   modified_user={self.last_modified_userid}"
 
     def set_empty_properties(self):
         if self.first_name is None:
@@ -52,3 +56,26 @@ class UserModel(db.Model, UserMixin):
         if date is None:
             return ""
         return date.strftime("%B %d, %Y %I:%M:%S %p")
+
+    @staticmethod
+    def hash_password(password):
+        pw_hash = bcrypt.generate_password_hash(password=password).decode('utf-8')
+        return pw_hash
+
+    @staticmethod
+    def check_password(pw_hash, password):
+        return bcrypt.check_password_hash(pw_hash=pw_hash, password=password)
+
+    # Verifies the length of the new password and checks that it is not the same as the old one.
+    @staticmethod
+    def validate_new_password(old_pwd_hash, new_pwd):
+        if 7 < len(new_pwd) < 26:
+            return not bcrypt.check_password_hash(pw_hash=old_pwd_hash, password=new_pwd)
+        return False
+
+    # Makes sure the new username is not in use already.
+    @staticmethod
+    def validate_new_username(old_username, new_username):
+        if old_username != new_username:
+            return UserModel.query.filter_by(username=new_username).first() is None
+        return False

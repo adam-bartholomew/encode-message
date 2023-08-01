@@ -1,7 +1,7 @@
 from datetime import datetime
 from flask import render_template, request, url_for, flash, redirect, Blueprint
 from flask_login import login_user, logout_user, current_user, login_required
-from myApp import bcrypt, db, login_manager
+from myApp import db, login_manager
 from myApp.models.UserModel import UserModel
 from myApp.controllers import MessageController
 from config import RETURN_SPACER
@@ -9,27 +9,6 @@ from config import RETURN_SPACER
 routes = Blueprint('routes', __name__)
 HOME_ROUTE_REDIRECT = 'routes.home'
 LOGIN_ROUTE_REDIRECT = 'routes.login'
-
-
-def hash_password(password):
-    pw_hash = bcrypt.generate_password_hash(password=password).decode('utf-8')
-    return pw_hash
-
-
-def check_password(pw_hash, password):
-    return bcrypt.check_password_hash(pw_hash=pw_hash, password=password)
-
-
-def validate_new_password(old_pwd_hash, new_pwd):
-    if 7 < len(new_pwd) < 26:
-        return not bcrypt.check_password_hash(pw_hash=old_pwd_hash, password=new_pwd)  # Not the same pwd.
-    return False
-
-
-def validate_new_username(old_username, new_username):
-    if old_username != new_username:
-        return UserModel.query.filter_by(username=new_username).first() is None  # The new username isn't in use.
-    return False
 
 
 # Creates a user loader callback that returns the user object given an id
@@ -129,8 +108,9 @@ def about():
 @login_required
 def profile(user_id):
     user = UserModel.query.filter_by(id=user_id).first_or_404()
-    MessageController.log.info(f"Getting Info for User: {user}")
+    MessageController.log.info(f"Getting Info for {user}")
     user.set_empty_properties()
+    has_changes = False
 
     if current_user.username != user.username:
         flash("You do not have permission to visit this page.")
@@ -142,24 +122,35 @@ def profile(user_id):
         form_last_name = request.form.get('profile_lastname')
         form_email = request.form.get('profile_email')
         form_password = request.form.get('profile_password')
-        if validate_new_username(user.username, form_username):
+        if user.validate_new_username(user.username, form_username):
+            has_changes = True
             user.username = form_username
-        if validate_new_password(user.password, form_password):
-            user.password = hash_password(form_password)
+        if user.validate_new_password(user.password, form_password):
+            has_changes = True
+            user.password = user.hash_password(form_password)
         if user.first_name != form_first_name:
+            has_changes = True
             user.first_name = form_first_name
         if user.last_name != form_last_name:
+            has_changes = True
             user.last_name = form_last_name
         if user.email != form_email:
+            has_changes = True
             user.email = form_email
-        user.last_modified_datetime = datetime.now()
-        user.last_modified_userid = form_username
-        user.clear_empty_properties()
-        MessageController.log.info(f"Saving the user: {user}")
-        db.session.commit()
-        user = UserModel.query.filter_by(username=user.username).first_or_404()
-        user.set_empty_properties()
-        redirect('routes.profile')
+
+        if has_changes:
+            user.last_modified_datetime = datetime.now()
+            user.last_modified_userid = form_username
+            user.clear_empty_properties()
+            MessageController.log.info(f"Saving {user}")
+            db.session.commit()
+            user = UserModel.query.filter_by(username=user.username).first_or_404()
+            user.set_empty_properties()
+            flash("Profile Updated")
+            redirect('routes.profile')
+        else:
+            MessageController.log.info(f"Info not changed {user}")
+
     return render_template('user_profile.html', user=user)
 
 
@@ -168,7 +159,7 @@ def register():
     if current_user.is_authenticated:
         return redirect(url_for(HOME_ROUTE_REDIRECT))
     if request.method == 'POST':
-        new_user = UserModel(username=request.form.get('username'), password=hash_password(request.form.get('password')))
+        new_user = UserModel(username=request.form.get('username'), password=UserModel.hash_password(request.form.get('password')))
         db.session.add(new_user)
         db.session.commit()
         MessageController.log.info(f"New user created: {new_user}")
@@ -186,9 +177,9 @@ def login():
         user = UserModel.query.filter_by(username=form_name).first()
         # Check if the password entered is the same as the user's password
         if user is not None:
-            if check_password(user.password, request.form.get('password')):
+            if user.check_password(user.password, request.form.get('password')):
                 login_user(user)
-                MessageController.log.info(f"User login success: {user}.")
+                MessageController.log.info(f"Login success {user}.")
                 return redirect(url_for(HOME_ROUTE_REDIRECT))
         MessageController.log.info(f"User login failure: <{form_name}>.")
         flash("The username and/or password is incorrect.")
