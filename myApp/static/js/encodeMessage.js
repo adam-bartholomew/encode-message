@@ -19,6 +19,6 @@ function copyToClipboard(elementId) {
 /* Displays the spinning loader wheel */
 function loading(){
     if(document.getElementById('inputMessage').value != ""){
-        document.getElementById("loading").style.display = "block";
+        document.getElementById('loading').style.display = "block";
     }
 }

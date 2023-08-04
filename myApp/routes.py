@@ -57,7 +57,7 @@ def home():
     return render_template('home.html')
 
 
-@routes.route('/encode', methods=('GET', 'POST'))
+@routes.route('/encode', methods=['GET', 'POST'])
 def encode():
     if request.method == 'POST' and request.form.get('encodeSubmit') == 'Submit':
         msg = request.form.get('inputMessage')
@@ -78,7 +78,7 @@ def encode():
     return render_template('encode.html', encoded_message="")
 
 
-@routes.route('/decode', methods=('GET', 'POST'))
+@routes.route('/decode', methods=['GET', 'POST'])
 def decode():
     if request.method == 'POST':
         if request.form.get('decodeSubmit') == 'Submit':
