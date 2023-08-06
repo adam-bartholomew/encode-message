@@ -101,3 +101,16 @@
     left: 50%;
     top: 5%;
 }
+.sso-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    float: right;
+}
+.sso-link-img {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
