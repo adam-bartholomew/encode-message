@@ -289,9 +289,8 @@ def oauth2_callback(provider):
 
 @routes.route('/logout')
 def logout():
-    if not current_user.is_authenticated:
-        return redirect(url_for(HOME_ROUTE_REDIRECT))
-    MessageController.log.info(f"User logged out: {current_user.username}")
-    logout_user()
-    flash("You have successfully logged out.")
-    return render_template('login.html')
+    if current_user.is_authenticated:
+        MessageController.log.info(f"User logged out: {current_user.username}")
+        logout_user()
+        flash("You have successfully logged out.")
+    return redirect(url_for(HOME_ROUTE_REDIRECT))
