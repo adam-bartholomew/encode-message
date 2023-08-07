@@ -13,13 +13,13 @@ OAUTH2_PROVIDERS = {
         'client_secret': GOOGLE_CLIENT_SECRET,
         'client_id': GOOGLE_CLIENT_ID,
         'redirect_uri': "https://localhost:5000/home",
-        'scope': 'https://www.googleapis.com/auth/userinfo.email',
         'prompt': 'consent',
         'authorize_url': 'https://accounts.google.com/o/oauth2/auth',
         'token_url': 'https://accounts.google.com/o/oauth2/token',
         'userinfo': {
             'url': 'https://www.googleapis.com/oauth2/v3/userinfo',
             'email': lambda json: json['email'],
+            'name': lambda json: json['name'],
         },
         'scopes': ['https://www.googleapis.com/auth/userinfo.email'],
     }

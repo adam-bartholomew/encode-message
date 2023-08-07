@@ -38,7 +38,8 @@ class UserModel(db.Model, UserMixin):
                f"   creation_date={self.creation_datetime}" \
                f"   creation_user={self.creation_userid}" \
                f"   modified_date={self.last_modified_datetime}" \
-               f"   modified_user={self.last_modified_userid}"
+               f"   modified_user={self.last_modified_userid}" \
+               f"   sso={self.sso}"
 
     def set_empty_properties(self):
         if self.first_name is None:
@@ -75,6 +76,8 @@ class UserModel(db.Model, UserMixin):
     @staticmethod
     def validate_new_password(old_pwd_hash, new_pwd):
         if 7 < len(new_pwd) < 26:
+            if len(old_pwd_hash.strip()) == 0:
+                return True
             return not bcrypt.check_password_hash(pw_hash=old_pwd_hash, password=new_pwd)
         return False
 

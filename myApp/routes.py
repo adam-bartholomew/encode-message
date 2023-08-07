@@ -163,7 +163,8 @@ def register():
     if current_user.is_authenticated:
         return redirect(url_for(HOME_ROUTE_REDIRECT))
     if request.method == 'POST':
-        new_user = UserModel(username=request.form.get('username'), password=UserModel.hash_password(request.form.get('password')))
+        new_user = UserModel(username=request.form.get('username'),
+                             password=UserModel.hash_password(request.form.get('password')))
         db.session.add(new_user)
         db.session.commit()
         MessageController.log.info(f"New user created: {new_user}")
@@ -183,10 +184,13 @@ def login():
         user = UserModel.query.filter_by(username=form_name).first()
         # Check if the password entered is the same as the user's password
         if user is not None:
-            if user.check_password(user.password, request.form.get('password')):
+            try:
+                user.check_password(user.password, request.form.get('password'))
                 login_user(user)
                 MessageController.log.info(f"Login success {user}.")
                 return redirect(url_for(HOME_ROUTE_REDIRECT))
+            except ValueError:
+                MessageController.log.error(f"User <{form_name}> tried logging in with the wrong salt.")
         MessageController.log.info(f"User login failure: <{form_name}>.")
         flash("The username and/or password is incorrect.")
         return redirect(url_for(LOGIN_ROUTE_REDIRECT))
@@ -201,7 +205,6 @@ def oauth2_authorize(provider):
     provider_data = config.OAUTH2_PROVIDERS.get(provider)
     if provider_data is None:
         abort(404)
-    #print(provider_data)
 
     # generate a random string for the state parameter
     session['oauth2_state'] = secrets.token_urlsafe(16)
@@ -263,12 +266,17 @@ def oauth2_callback(provider):
     if response.status_code != 200:
         abort(401)
     email = provider_data['userinfo']['email'](response.json())
-    #print(provider_data['userinfo'])
 
     # find or create the user in the database
     user = db.session.scalar(db.select(UserModel).where(UserModel.email == email))
     if user is None:
-        user = UserModel(username=email.split('@')[0], email=email, sso=provider.capitalize(), password="")
+        name = provider_data['userinfo']['name'](response.json()).split()
+        user = UserModel(username=email.split('@')[0],
+                         password="",
+                         first_name=(name[0] if len(name) > 0 else None),
+                         last_name=(name[1] if len(name) > 1 else None),
+                         email=email,
+                         sso=provider.capitalize())
         db.session.add(user)
         db.session.commit()
         MessageController.log.info(f"New user created via {provider.capitalize()}: {user}")
