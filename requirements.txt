@@ -5,12 +5,12 @@ Flask-Login==0.6.2
 Flask-Migrate==4.0.4
 Flask-SQLAlchemy==3.0.5
 Flask-WTF==1.1.1
-pandas==2.0.3
-SQLAlchemy==2.0.18
-python-datamuse==2.0.1
 Jinja2==3.1.2
-requests==2.31.0
 num2words==0.5.12
+pandas==2.0.3
+python-datamuse==2.0.1
+requests==2.31.0
+SQLAlchemy==2.0.18
 
 # Explicit package dependencies:
 Flask-BabelEx==0.9.4
@@ -24,6 +24,7 @@ certifi==2023.5.7
 charset-normalizer==3.2.0
 click==8.1.4
 colorama==0.4.6
+cryptography==41.0.3
 dnspython==2.3.0
 docopt==0.6.2
 email-validator==2.0.0.post2

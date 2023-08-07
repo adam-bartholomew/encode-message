@@ -1,10 +1,14 @@
+import secrets
+from urllib.parse import urlencode
+import requests
 from datetime import datetime
-from flask import render_template, request, url_for, flash, redirect, Blueprint
+from flask import render_template, request, url_for, flash, redirect, Blueprint, session, abort
 from flask_login import login_user, logout_user, current_user, login_required
+
 from myApp import db, login_manager
 from myApp.models.UserModel import UserModel
 from myApp.controllers import MessageController
-from config import RETURN_SPACER
+import config
 
 routes = Blueprint('routes', __name__)
 HOME_ROUTE_REDIRECT = 'routes.home'
@@ -57,7 +61,7 @@ def home():
     return render_template('home.html')
 
 
-@routes.route('/encode', methods=('GET', 'POST'))
+@routes.route('/encode', methods=['GET', 'POST'])
 def encode():
     if request.method == 'POST' and request.form.get('encodeSubmit') == 'Submit':
         msg = request.form.get('inputMessage')
@@ -68,7 +72,7 @@ def encode():
             if encoded_msg[0] != 1:
                 flash(encoded_msg[1])
             else:
-                encode_resp = f"Offset: {offset}\nInput Message: {msg}\nEncoded Message:\n{RETURN_SPACER}\n{encoded_msg[1]}"
+                encode_resp = f"Offset: {offset}\nInput Message: {msg}\nEncoded Message:\n{config.RETURN_SPACER}\n{encoded_msg[1]}"
                 return render_template('encode.html', encoded_message=encode_resp)
         else:
             flash("Please enter a message to encode.")
@@ -78,7 +82,7 @@ def encode():
     return render_template('encode.html', encoded_message="")
 
 
-@routes.route('/decode', methods=('GET', 'POST'))
+@routes.route('/decode', methods=['GET', 'POST'])
 def decode():
     if request.method == 'POST':
         if request.form.get('decodeSubmit') == 'Submit':
@@ -89,7 +93,7 @@ def decode():
                 if decoded_msg[0] != 1:
                     flash(decoded_msg[1])
                 else:
-                    decode_resp = f"Encoded Message:\n{RETURN_SPACER}\n{msg}\n{RETURN_SPACER}\nDecoded Message:\n{RETURN_SPACER}\n{decoded_msg[1]}"
+                    decode_resp = f"Encoded Message:\n{config.RETURN_SPACER}\n{msg}\n{config.RETURN_SPACER}\nDecoded Message:\n{config.RETURN_SPACER}\n{decoded_msg[1]}"
                     return render_template('decode.html', decoded_message=decode_resp)
             else:
                 flash("Please enter a message to decode.")
@@ -159,11 +163,14 @@ def register():
     if current_user.is_authenticated:
         return redirect(url_for(HOME_ROUTE_REDIRECT))
     if request.method == 'POST':
-        new_user = UserModel(username=request.form.get('username'), password=UserModel.hash_password(request.form.get('password')))
+        new_user = UserModel(username=request.form.get('username'),
+                             password=UserModel.hash_password(request.form.get('password')))
         db.session.add(new_user)
         db.session.commit()
         MessageController.log.info(f"New user created: {new_user}")
-        return redirect(url_for(LOGIN_ROUTE_REDIRECT))
+        login_user(new_user)
+        flash("Successfully logged in")
+        return redirect(url_for(HOME_ROUTE_REDIRECT))
     return render_template('sign_up.html')
 
 
@@ -177,21 +184,113 @@ def login():
         user = UserModel.query.filter_by(username=form_name).first()
         # Check if the password entered is the same as the user's password
         if user is not None:
-            if user.check_password(user.password, request.form.get('password')):
+            try:
+                user.check_password(user.password, request.form.get('password'))
                 login_user(user)
                 MessageController.log.info(f"Login success {user}.")
                 return redirect(url_for(HOME_ROUTE_REDIRECT))
+            except ValueError:
+                MessageController.log.error(f"User <{form_name}> tried logging in with the wrong salt.")
         MessageController.log.info(f"User login failure: <{form_name}>.")
         flash("The username and/or password is incorrect.")
         return redirect(url_for(LOGIN_ROUTE_REDIRECT))
     return render_template('login.html')
 
 
+@routes.route('/authorize/<provider>')
+def oauth2_authorize(provider):
+    if not current_user.is_anonymous:
+        return redirect(HOME_ROUTE_REDIRECT)
+
+    provider_data = config.OAUTH2_PROVIDERS.get(provider)
+    if provider_data is None:
+        abort(404)
+
+    # generate a random string for the state parameter
+    session['oauth2_state'] = secrets.token_urlsafe(16)
+
+    # create a query string with all the OAuth2 parameters
+    qs = urlencode({
+        'client_id': provider_data['client_id'],
+        'redirect_uri': url_for('routes.oauth2_callback', provider=provider, _external=True),
+        'response_type': 'code',
+        'scope': ' '.join(provider_data['scopes']),
+        'state': session['oauth2_state']
+    })
+
+    # redirect the user to the OAuth2 provider authorization URL
+    return redirect(provider_data['authorize_url'] + '?' + qs)
+
+
+@routes.route('/callback/<provider>')
+def oauth2_callback(provider):
+    if not current_user.is_anonymous:
+        return redirect(HOME_ROUTE_REDIRECT)
+
+    provider_data = config.OAUTH2_PROVIDERS.get(provider)
+    if provider_data is None:
+        abort(404)
+
+    if 'error' in request.args:
+        MessageController.log.error(f"Error via sso login request: {request.args.items}")
+        for k, v in request.args.items():
+            if k.startswith('error'):
+                flash(f"{k}: {v}")
+        return redirect(HOME_ROUTE_REDIRECT)
+
+    if request.args['state'] != session.get('oauth2_state'):
+        abort(401)
+
+    if 'code' not in request.args:
+        abort(401)
+
+    response = requests.post(provider_data['token_url'], data={
+        'client_id': provider_data['client_id'],
+        'client_secret': provider_data['client_secret'],
+        'code': request.args['code'],
+        'grant_type': 'authorization_code',
+        'redirect_uri': url_for('routes.oauth2_callback', provider=provider, _external=True),
+    }, headers={'Accept': 'application/json'})
+
+    if response.status_code != 200:
+        abort(401)
+    oauth2_token = response.json().get('access_token')
+    if not oauth2_token:
+        abort(401)
+
+    # use the access token to get the user's email address
+    response = requests.get(provider_data['userinfo']['url'], headers={
+        'Authorization': 'Bearer ' + oauth2_token,
+        'Accept': 'application/json',
+    })
+    if response.status_code != 200:
+        abort(401)
+    email = provider_data['userinfo']['email'](response.json())
+
+    # find or create the user in the database
+    user = db.session.scalar(db.select(UserModel).where(UserModel.email == email))
+    if user is None:
+        name = provider_data['userinfo']['name'](response.json()).split()
+        user = UserModel(username=email.split('@')[0],
+                         password="",
+                         first_name=(name[0] if len(name) > 0 else None),
+                         last_name=(name[1] if len(name) > 1 else None),
+                         email=email,
+                         sso=provider.capitalize())
+        db.session.add(user)
+        db.session.commit()
+        MessageController.log.info(f"New user created via {provider.capitalize()}: {user}")
+
+    login_user(user)
+    MessageController.log.info(f"User logged in: {user}")
+    flash(f"Successfully logged in via {provider.capitalize()}")
+    return redirect(url_for(HOME_ROUTE_REDIRECT))
+
+
 @routes.route('/logout')
 def logout():
-    if not current_user.is_authenticated:
-        return redirect(url_for(HOME_ROUTE_REDIRECT))
-    MessageController.log.info(f"User logout success: {current_user.username}")
-    logout_user()
-    flash("You have successfully logged out.")
-    return render_template('login.html')
+    if current_user.is_authenticated:
+        MessageController.log.info(f"User logged out: {current_user.username}")
+        logout_user()
+        flash("You have successfully logged out.")
+    return redirect(url_for(HOME_ROUTE_REDIRECT))

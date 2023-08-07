@@ -1,7 +1,7 @@
 from myApp import db, bcrypt
 from flask_login import UserMixin
 from sqlalchemy.sql import func
-from sqlalchemy import Column, String, Integer, DateTime
+from sqlalchemy import Column, String, Integer, DateTime, Boolean
 
 
 class UserModel(db.Model, UserMixin):
@@ -19,10 +19,15 @@ class UserModel(db.Model, UserMixin):
     last_modified_datetime = Column(DateTime(timezone=False), server_default=func.now())
     creation_userid = Column(String(25), nullable=False, server_default='system')
     last_modified_userid = Column(String(25), server_default='system')
+    sso = Column(String(25), unique=False)
 
-    def __init__(self, username, password):
-        self.username = username
-        self.password = password
+    def __init__(self, *args, **kwargs):
+        self.username = kwargs.get("username")
+        self.password = kwargs.get("password")
+        self.sso = kwargs.get("sso") if kwargs.get("sso") else None
+        self.first_name = kwargs.get("first_name") if kwargs.get("first_name") else None
+        self.last_name = kwargs.get("last_name") if kwargs.get("last_name") else None
+        self.email = kwargs.get("email") if kwargs.get("email") else None
 
     def __repr__(self):
         return f"<User {self.id}>:" \
@@ -33,7 +38,8 @@ class UserModel(db.Model, UserMixin):
                f"   creation_date={self.creation_datetime}" \
                f"   creation_user={self.creation_userid}" \
                f"   modified_date={self.last_modified_datetime}" \
-               f"   modified_user={self.last_modified_userid}"
+               f"   modified_user={self.last_modified_userid}" \
+               f"   sso={self.sso}"
 
     def set_empty_properties(self):
         if self.first_name is None:
@@ -70,6 +76,8 @@ class UserModel(db.Model, UserMixin):
     @staticmethod
     def validate_new_password(old_pwd_hash, new_pwd):
         if 7 < len(new_pwd) < 26:
+            if len(old_pwd_hash.strip()) == 0:
+                return True
             return not bcrypt.check_password_hash(pw_hash=old_pwd_hash, password=new_pwd)
         return False
 
