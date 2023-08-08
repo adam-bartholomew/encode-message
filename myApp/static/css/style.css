@@ -10,14 +10,14 @@
     text-align: center;
     }
 }
-.card {
+.card-about {
     border-radius: 4px;
     background: #fff;
     box-shadow: 0 6px 10px rgba(0,0,0,.08), 0 0 6px rgba(0,0,0,.05);
       transition: .1s transform cubic-bezier(.155,1.105,.295,1.12),.1s box-shadow,.1s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
   cursor: pointer;
 }
-.card:hover {
+.card-about:hover {
     transform: scale(1.02);
     box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
 }
@@ -106,7 +106,7 @@
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    float: right;
+    float: left;
 }
 .sso-link-img {
     display: inline-block;
