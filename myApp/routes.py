@@ -64,7 +64,7 @@ def home():
 @routes.route('/encode', methods=['GET', 'POST'])
 def encode():
     if request.method == 'POST' and request.form.get('encodeSubmit') == 'Submit':
-        msg = request.form.get('inputMessage')
+        msg = request.form.get('encodeInputMessage')
         offset = int(request.form.get('encodeOffset')) if request.form.get('encodeOffset').isnumeric() else 0
         if msg:
             MessageController.log.info(f"Submitting encode form with msg: {msg}, offset: {offset}")
@@ -86,7 +86,7 @@ def encode():
 def decode():
     if request.method == 'POST':
         if request.form.get('decodeSubmit') == 'Submit':
-            msg = request.form.get('inputMessage').replace("\r", "")
+            msg = request.form.get('decodeInputMessage').replace("\r", "")
             if msg:
                 MessageController.log.info(f"Submitting decode form with msg:\n{msg}")
                 decoded_msg = MessageController.decode(msg)
