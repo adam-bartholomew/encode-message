@@ -370,3 +370,4 @@ def decode_offset_date(offset_date: str) -> Union[int, str]:
 if __name__ == '__main__':
     log.info("Calling __main__")
     words_api_counter = 0
+    load_data_structs()

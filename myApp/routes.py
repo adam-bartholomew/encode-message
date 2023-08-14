@@ -53,13 +53,13 @@ def favicon():
 
 @routes.route('/')
 def index():
-    MessageController.load_data_structs()
+    #MessageController.load_data_structs()
     return render_template('home.html')
 
 
 @routes.route('/home')
 def home():
-    MessageController.load_data_structs()
+    #MessageController.load_data_structs()
     return render_template('home.html')
 
 
