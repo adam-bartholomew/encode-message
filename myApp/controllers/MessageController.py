@@ -9,6 +9,8 @@ from typing import Union
 import logging
 import random
 import time
+from myApp.datasets.syllable_dict import syllable_dict
+from myApp.datasets.word_dict import word_dict
 # https://api.datamuse.com/words?sl=i%27ll
 # https://wordsapiv1.p.rapidapi.com/words/aberration/syllables | This costs money after 2500 requests
 # https://github.com/gmarmstrong/python-datamuse/
@@ -22,32 +24,9 @@ log_filename = "./logs/encode-message_" + datetime.now().strftime("%Y%m%d") + ".
 logging.basicConfig(filename=log_filename, format="%(asctime)s.%(msecs)03d |:| %(levelname)s |:| %(message)s", level=logging.INFO, datefmt="%m/%d/%Y %H:%M:%S")
 log = logging.getLogger()
 
-syllable_dict = {}
-word_dict = {}
+# Load the codex
 with open('./myApp/codex.txt') as codex:
     codex_list = [line.strip() for line in codex]
-
-
-# Create a dictionary from the syllable dataset
-def load_data_structs(filename="./myApp/datasets/phoneticDictionary_cleaned_20230515.csv"):
-    """ Load the data dict from an external file.
-
-    :param (str) filename: The data file containing the syllable/word set.
-    :return:
-    """
-    if len(syllable_dict) > 0 and len(word_dict) > 0:
-        return
-    log.info("Creating syllable dictionary.")
-    df = pd.read_csv(filename)
-    for index, row in df.iterrows():
-        w_syl = int(row['syl'])
-        d_word = row['word']
-        if w_syl not in syllable_dict:
-            syllable_dict[w_syl] = []
-        syllable_dict[w_syl].append(d_word)
-
-        if d_word not in word_dict:
-            word_dict[d_word] = w_syl
 
 
 # Retrieves the word from the Datamuse API to get the number of syllables.
@@ -232,11 +211,11 @@ def get_words_for_syllables(total_syllables: int) -> str:
     words = []
 
     while total_syllables > 0:
-        available_syllables = [syl for syl in syllable_dict if syl <= total_syllables]
+        available_syllables = [int(syl) for syl in syllable_dict if int(syl) <= total_syllables]
         if not available_syllables:
             break
         chosen_syl = random.choice(available_syllables)
-        chosen_word = random.choice(syllable_dict[chosen_syl])
+        chosen_word = random.choice(syllable_dict[str(chosen_syl)])
         words.append(chosen_word)
         total_syllables -= chosen_syl
 
@@ -257,7 +236,7 @@ def get_syllables_for_sentence(sentence: str) -> Union[int, None]:
 
     for word in sentence.lower().split(' '):
         if word in word_dict.keys():
-            syllables += word_dict[word]
+            syllables += int(word_dict[word])
         else:
             return None
 
@@ -370,4 +349,3 @@ def decode_offset_date(offset_date: str) -> Union[int, str]:
 if __name__ == '__main__':
     log.info("Calling __main__")
     words_api_counter = 0
-    load_data_structs()
