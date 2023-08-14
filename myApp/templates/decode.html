@@ -6,7 +6,7 @@
 
 <form id="decodeForm" method="post" class="form-general">
     <div class="mb-3">
-        <textarea id="inputMessage" name="inputMessage" placeholder="Please enter your encoded message here." class="form-control" Title="This should contain a date on the first line with text following on each subsequent line.">{{ request.form['inputMessage'] }}</textarea>
+        <textarea id="decodeInputMessage" name="decodeInputMessage" placeholder="Please enter your encoded message here." class="form-control" Title="This should contain a date on the first line with text following on each subsequent line.">{{ request.form['inputMessage'] }}</textarea>
     </div>
     <div class="mb-3">
         <button name="decodeSubmit" id="decodeSubmit" value="Submit" type="submit" class="btn btn-outline-primary bold-outline-btn" form="decodeForm" Title="Submit message for decoding" onClick="loading()">Submit</button>
@@ -38,7 +38,7 @@
 <!-- page-specific javascript -->
 <script>
     // Clear input after submitting
-    document.getElementById('inputMessage').value = "";
+    document.getElementById('decodeInputMessage').value = "";
 
     // Disable copy when textarea is empty
     if(document.getElementById('decodedMessage').value != ""){

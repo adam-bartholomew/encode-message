@@ -11,3 +11,5 @@ myApp/credentials.txt
 ## Ignore log files
 /logs
 .vercel
+
+## Ignore uneeded dataset files

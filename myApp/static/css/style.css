@@ -141,6 +141,15 @@ a {
 #create-an-account {
     text-decoration: none;
 }
+#encodedMessage {
+    height: 28rem;
+}
+#decodedMessage {
+    height: 28rem;
+}
+#decodeInputMessage {
+    height: 8.25rem;
+}
 @media (min-width: 768px) {
     .navbar-brand.abs {
         position: absolute;

@@ -6,7 +6,7 @@
 
 <form id="encodeForm" method="post" class="form-general">
     <div class="mb-3">
-        <input id="inputMessage" type="text" maxlength="500" name="inputMessage" placeholder="Please enter the message to encode here." class="form-control" value="{{ request.form['inputMessage'] }}"/>
+        <input id="encodeInputMessage" type="text" maxlength="500" name="encodeInputMessage" placeholder="Please enter the message to encode here." class="form-control" value="{{ request.form['inputMessage'] }}"/>
         <br/>
         <label for="encodeOffset" title="Different offsets result in different messages" class="form-label">Select the encoding offset value:</label>
         <input type="number" id="encodeOffset" name="encodeOffset" class="form-control" max="25" min="0" placeholder="0" form="encodeForm" title="Select a number between 0 and 25 | Default is 0">
@@ -34,14 +34,14 @@
                 </button>
             </div>
         </div>
-        <textarea id="encodedMessage" name="encodedMessage" rows="20" cols="140" readonly="readonly" placeholder="The encoded message gets displayed here." class="form-control">{{ encoded_message }}</textarea>
+        <textarea id="encodedMessage" name="encodedMessage" readonly="readonly" placeholder="The encoded message gets displayed here." class="form-control">{{ encoded_message }}</textarea>
     </div>
 </form>
 <script src="{{ url_for('static', filename='js/encodeMessage.js') }}"></script>
 <!-- page-specific javascript -->
 <script>
     // Done here way so the input is cleared after submitting
-    document.getElementById('inputMessage').value = "";
+    document.getElementById('encodeInputMessage').value = "";
 
     // Disable copy when textarea is empty
     if(document.getElementById('encodedMessage').value != ""){
