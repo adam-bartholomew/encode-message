@@ -24,14 +24,19 @@ log = logging.getLogger()
 
 syllable_dict = {}
 word_dict = {}
+with open('./myApp/codex.txt') as codex:
+    codex_list = [line.strip() for line in codex]
 
 
 # Create a dictionary from the syllable dataset
-def load_data_dicts(filename="./myApp/datasets/phoneticDictionary_cleaned_20230515.csv"):
+def load_data_structs(filename="./myApp/datasets/phoneticDictionary_cleaned_20230515.csv"):
     """ Load the data dict from an external file.
 
+    :param (str) filename: The data file containing the syllable/word set.
     :return:
     """
+    if len(syllable_dict) > 0 and len(word_dict) > 0:
+        return
     log.info("Creating syllable dictionary.")
     df = pd.read_csv(filename)
     for index, row in df.iterrows():
@@ -43,11 +48,6 @@ def load_data_dicts(filename="./myApp/datasets/phoneticDictionary_cleaned_202305
 
         if d_word not in word_dict:
             word_dict[d_word] = w_syl
-
-
-# Get the codex
-with open('./myApp/codex.txt') as codex:
-    codex_list = [line.strip() for line in codex]
 
 
 # Retrieves the word from the Datamuse API to get the number of syllables.
@@ -370,3 +370,5 @@ def decode_offset_date(offset_date: str) -> Union[int, str]:
 if __name__ == '__main__':
     log.info("Calling __main__")
     words_api_counter = 0
+    load_data_structs()
+    encode("adam", 9)
