@@ -22,20 +22,28 @@ log_filename = "./logs/encode-message_" + datetime.now().strftime("%Y%m%d") + ".
 logging.basicConfig(filename=log_filename, format="%(asctime)s.%(msecs)03d |:| %(levelname)s |:| %(message)s", level=logging.INFO, datefmt="%m/%d/%Y %H:%M:%S")
 log = logging.getLogger()
 
-# Create a dictionary from the syllable dataset
-log.info("Creating syllable dictionary.")
-df = pd.read_csv('./myApp/datasets/phoneticDictionary_cleaned_20230515.csv')
 syllable_dict = {}
 word_dict = {}
-for index, row in df.iterrows():
-    w_syl = int(row['syl'])
-    d_word = row['word']
-    if w_syl not in syllable_dict:
-        syllable_dict[w_syl] = []
-    syllable_dict[w_syl].append(d_word)
 
-    if d_word not in word_dict:
-        word_dict[d_word] = w_syl
+
+# Create a dictionary from the syllable dataset
+def load_data_dicts(filename="./myApp/datasets/phoneticDictionary_cleaned_20230515.csv"):
+    """ Load the data dict from an external file.
+
+    :return:
+    """
+    log.info("Creating syllable dictionary.")
+    df = pd.read_csv(filename)
+    for index, row in df.iterrows():
+        w_syl = int(row['syl'])
+        d_word = row['word']
+        if w_syl not in syllable_dict:
+            syllable_dict[w_syl] = []
+        syllable_dict[w_syl].append(d_word)
+
+        if d_word not in word_dict:
+            word_dict[d_word] = w_syl
+
 
 # Get the codex
 with open('./myApp/codex.txt') as codex:
@@ -151,7 +159,7 @@ def decode(input_message: str) -> tuple:
             decoded_parts.append(get_decoded_sentence(sentence, decode_offset))
 
     decoded_message = ''.join(decoded_parts)
-    log.info(f"Returning decoded message in {(time.time()-start) * 10**3}ms:\n{decoded_message}")
+    log.info(f"Returning decoded message in {(time.time()-start) * 10**3} ms:\n{decoded_message}")
     return 1, decoded_message
 
 
@@ -209,7 +217,7 @@ def encode(input_message: str, encode_offset: int) -> tuple:
         lines.append(line)
 
     encoded_message += "\n" + "\n".join(lines)
-    log.info(f"Returning encoded message {(time.time()-start) * 10**3}ms:\n{encoded_message}")
+    log.info(f"Returning encoded message in {(time.time()-start) * 10**3} ms:\n{encoded_message}")
     return 1, encoded_message
 
 

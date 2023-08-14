@@ -25,6 +25,8 @@ def create_app():
 
     with app.app_context():
         db.create_all()
+        from myApp.controllers.MessageController import load_data_dicts
+        load_data_dicts()
 
     from myApp.routes import routes
     app.register_blueprint(routes)
