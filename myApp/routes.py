@@ -24,7 +24,7 @@ def load_user(username):
 @routes.app_errorhandler(401)
 def unauthorized(error):
     MessageController.log.error(f"{error} - {current_user}")
-    flash("You do not have permission to view this page.")
+    flash("You do not have permission to view this page.", 'danger')
     return render_template('401.html')
 
 
@@ -32,7 +32,7 @@ def unauthorized(error):
 def not_found(error):
     if current_user.is_authenticated:
         MessageController.log.error(error)
-        flash("The requested page does not exist.")
+        flash("The requested page does not exist.", 'danger')
         return render_template('404.html')
     else:
         return unauthorized("Current user is not authenticated.")
@@ -70,12 +70,12 @@ def encode():
             MessageController.log.info(f"Submitting encode form with msg: {msg}, offset: {offset}")
             encoded_msg = MessageController.encode(msg, offset)
             if encoded_msg[0] != 1:
-                flash(encoded_msg[1])
+                flash(encoded_msg[1], 'danger')
             else:
                 encode_resp = f"Offset: {offset}\nInput Message: {msg}\nEncoded Message:\n{config.RETURN_SPACER}\n{encoded_msg[1]}"
                 return render_template('encode.html', encoded_message=encode_resp)
         else:
-            flash("Please enter a message to encode.")
+            flash("Please enter a message to encode.", 'danger')
     if request.method == 'POST' and request.form.get('encodeClear') == 'Clear':
         MessageController.log.info("Clearing encode form.")
         return redirect(url_for('routes.encode'))
@@ -91,12 +91,12 @@ def decode():
                 MessageController.log.info(f"Submitting decode form with msg:\n{msg}")
                 decoded_msg = MessageController.decode(msg)
                 if decoded_msg[0] != 1:
-                    flash(decoded_msg[1])
+                    flash(decoded_msg[1], 'danger')
                 else:
                     decode_resp = f"Encoded Message:\n{config.RETURN_SPACER}\n{msg}\n{config.RETURN_SPACER}\nDecoded Message:\n{config.RETURN_SPACER}\n{decoded_msg[1]}"
                     return render_template('decode.html', decoded_message=decode_resp)
             else:
-                flash("Please enter a message to decode.")
+                flash("Please enter a message to decode.", 'danger')
         if request.form.get('decodeClear') == 'Clear':
             MessageController.log.info("Clearing decode form.")
             return redirect(url_for('routes.decode'))
@@ -117,7 +117,7 @@ def profile(user_id):
     has_changes = False
 
     if current_user.username != user.username:
-        flash("You do not have permission to visit this page.")
+        flash("You do not have permission to visit this page.", 'danger')
         return render_template('401.html')
 
     if request.method == 'POST':
@@ -150,7 +150,7 @@ def profile(user_id):
             db.session.commit()
             user = UserModel.query.filter_by(username=user.username).first_or_404()
             user.set_empty_properties()
-            flash("Profile Updated")
+            flash("Profile Updated", 'success')
             redirect('routes.profile')
         else:
             MessageController.log.info(f"Info not changed {user}")
@@ -169,7 +169,7 @@ def register():
         db.session.commit()
         MessageController.log.info(f"New user created: {new_user}")
         login_user(new_user)
-        flash("Successfully logged in")
+        flash("Successfully logged in", 'success')
         return redirect(url_for(HOME_ROUTE_REDIRECT))
     return render_template('sign_up.html')
 
@@ -192,7 +192,7 @@ def login():
             except ValueError:
                 MessageController.log.error(f"User <{form_name}> tried logging in with the wrong salt.")
         MessageController.log.info(f"User login failure: <{form_name}>.")
-        flash("The username and/or password is incorrect.")
+        flash("The username and/or password is incorrect.", 'danger')
         return redirect(url_for(LOGIN_ROUTE_REDIRECT))
     return render_template('login.html')
 
@@ -235,7 +235,7 @@ def oauth2_callback(provider):
         MessageController.log.error(f"Error via sso login request: {request.args.items}")
         for k, v in request.args.items():
             if k.startswith('error'):
-                flash(f"{k}: {v}")
+                flash(f"{k}: {v}", 'danger')
         return redirect(HOME_ROUTE_REDIRECT)
 
     if request.args['state'] != session.get('oauth2_state'):
@@ -283,7 +283,7 @@ def oauth2_callback(provider):
 
     login_user(user)
     MessageController.log.info(f"User logged in: {user}")
-    flash(f"Successfully logged in via {provider.capitalize()}")
+    flash(f"Successfully logged in via {provider.capitalize()}", 'success')
     return redirect(url_for(HOME_ROUTE_REDIRECT))
 
 
@@ -292,5 +292,5 @@ def logout():
     if current_user.is_authenticated:
         MessageController.log.info(f"User logged out: {current_user.username}")
         logout_user()
-        flash("You have successfully logged out.")
+        flash("You have successfully logged out.", 'success')
     return redirect(url_for(HOME_ROUTE_REDIRECT))

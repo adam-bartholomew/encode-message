@@ -114,8 +114,8 @@
             </div>
         </nav>
         <div class="container main-body">
-            {% for message in get_flashed_messages() %}
-            <div class="alert alert-danger">{{ message }}</div>
+            {% for category, message in get_flashed_messages(with_categories=true) %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
             {% endfor %}
             <div id="loading" class="overlay">
                 <div class="loader"></div>
