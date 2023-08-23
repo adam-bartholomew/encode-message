@@ -9,7 +9,7 @@
         <textarea id="decodeInputMessage" name="decodeInputMessage" placeholder="Please enter your encoded message here." class="form-control" Title="This should contain a date on the first line with text following on each subsequent line.">{{ request.form['inputMessage'] }}</textarea>
     </div>
     <div class="mb-3">
-        <button name="decodeSubmit" id="decodeSubmit" value="Submit" type="submit" class="btn btn-outline-primary bold-outline-btn" form="decodeForm" Title="Submit message for decoding" onClick="loading()">Submit</button>
+        <button name="decodeSubmit" id="decodeSubmit" value="Submit" type="submit" class="btn btn-outline-primary bold-outline-btn" form="decodeForm" Title="Submit message for decoding" onClick="loadingMessage()">Submit</button>
         <button name="decodeClear" id="decodeClear" value="Clear" type="submit" class="btn btn-outline-danger bold-outline-btn" form="decodeForm" onClick="clearDecodeForm()" Title="Clear all page fields">Clear</button>
     </div>
     <hr class="mt-1 mb-1"/>
@@ -34,7 +34,6 @@
         <textarea id="decodedMessage" name="decodedMessage" rows="20" cols="140" readonly="readonly" placeholder="The decoded message gets displayed here." class="form-control">{{ decoded_message }}</textarea>
     </div>
 </form>
-<script src="{{ url_for('static', filename='js/encodeMessage.js') }}"></script>
 <!-- page-specific javascript -->
 <script>
     // Clear input after submitting

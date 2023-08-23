@@ -12,7 +12,7 @@
         <input type="number" id="encodeOffset" name="encodeOffset" class="form-control" max="25" min="0" placeholder="0" form="encodeForm" title="Select a number between 0 and 25 | Default is 0">
     </div>
     <div class="mb-3">
-        <button name="encodeSubmit" id="encodeSubmit" value="Submit" type="submit" class="btn btn-outline-primary bold-outline-btn" form="encodeForm" Title="Submit message for encoding" onClick="loading()">Submit</button>
+        <button name="encodeSubmit" id="encodeSubmit" value="Submit" type="submit" class="btn btn-outline-primary bold-outline-btn" form="encodeForm" Title="Submit message for encoding" onClick="loadingMessage()">Submit</button>
         <button name="encodeClear" id="encodeClear" value="Clear" type="submit" class="btn btn-outline-danger bold-outline-btn" form="encodeForm" onClick="clearEncodeForm()" Title="Clear all page fields">Clear</button>
     </div>
     <hr class="mt-1 mb-1"/>
@@ -37,7 +37,6 @@
         <textarea id="encodedMessage" name="encodedMessage" readonly="readonly" placeholder="The encoded message gets displayed here." class="form-control">{{ encoded_message }}</textarea>
     </div>
 </form>
-<script src="{{ url_for('static', filename='js/encodeMessage.js') }}"></script>
 <!-- page-specific javascript -->
 <script>
     // Done here way so the input is cleared after submitting

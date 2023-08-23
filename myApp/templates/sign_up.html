@@ -5,12 +5,16 @@
 <h1>{% block title %}Register{% endblock %}</h1>
 <form id="signUpForm" action="#" method="post" class="form-general">
     <div class="mb-3">
-        <input type="text" name="username" required="required" Title="Username is case sensitive" placeholder="Username" maxlength="25" class="form-control form-input"/>
-        <input type="password" name="password" required="required" Title="Password must be 8 - 25 characters in length" placeholder="Password" minlength="8" maxlength="25" class="form-control form-input"/>
+        <input id="registerUsername" type="text" name="username" required="required" Title="Username is case sensitive" placeholder="Username" maxlength="25" class="form-control form-input"/>
+        <input id="registerPassword" type="password" name="password" required="required" Title="Password must be 8 - 25 characters in length" placeholder="Password" minlength="8" maxlength="25" class="form-control form-input"/>
     </div>
     <hr class="mt-3 mb-3"/>
-    <div class="mb-3">
-        <button name="registerSubmit" class="btn btn-primary bold-btn" Value="Sign Up" type="submit" form="signUpForm" title="Register an account">Sign Up</button>
+    <div class="mb-3 text-center">
+        <button name="registerSubmit" class="btn btn-primary bold-btn login-reg-submit-btn" Value="Sign Up" type="submit" form="signUpForm" onclick="validateRegister()" title="Register an account">Sign Up</button>
+    </div>
+    <div>
+        <span>Already have an account?</span>
+			<a id="login-link" href="{{ url_for('routes.login') }}">Login</a>
     </div>
 </form>
 {% endblock %}

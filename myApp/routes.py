@@ -163,14 +163,18 @@ def register():
     if current_user.is_authenticated:
         return redirect(url_for(HOME_ROUTE_REDIRECT))
     if request.method == 'POST':
-        new_user = UserModel(username=request.form.get('username'),
-                             password=UserModel.hash_password(request.form.get('password')))
-        db.session.add(new_user)
-        db.session.commit()
-        MessageController.log.info(f"New user created: {new_user}")
-        login_user(new_user)
-        flash("Successfully logged in", 'success')
-        return redirect(url_for(HOME_ROUTE_REDIRECT))
+        user = UserModel.query.filter_by(username=request.form.get('username')).first()
+        if not user:
+            new_user = UserModel(username=request.form.get('username'),
+                                 password=UserModel.hash_password(request.form.get('password')))
+            db.session.add(new_user)
+            db.session.commit()
+            MessageController.log.info(f"New user created: {new_user}")
+            login_user(new_user)
+            flash("Successfully logged in", 'success')
+            return redirect(url_for(HOME_ROUTE_REDIRECT))
+        else:
+            flash(f"Username {user.username} is unavailable. Please choose a new one.", "warning")
     return render_template('sign_up.html')
 
 
