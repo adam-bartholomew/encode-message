@@ -66,13 +66,13 @@ function loadingGeneral() {
 }
 
 function loadingMessage() {
-    if(document.URL.includes("encode")){
+    if(document.URL.endsWith("/encode")){
         if(document.getElementById('encodeInputMessage').value != ""){
             document.getElementById('loading').style.display = "block";
         }
     }
 
-    if(document.URL.includes("decode")){
+    if(document.URL.endsWith("/decode")){
         if(document.getElementById('decodeInputMessage').value != ""){
             document.getElementById('loading').style.display = "block";
         }
