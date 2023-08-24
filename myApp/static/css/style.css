@@ -87,9 +87,14 @@ a {
     background-color: white;
 }
 .div-collapse {
-    position: relative;
-    left: 50%;
+    margin: auto;
     top: 5%;
+    width: 50%;
+}
+.collapse-btn {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 .sso-link {
     display: flex;
@@ -107,6 +112,7 @@ a {
 }
 .sso-link:hover {
     background-color: rgb(238,238,238);
+    border-color: rgb(200,200,200);
 }
 .sso-link-img {
     display: inline-block;
@@ -133,6 +139,14 @@ a {
 .login-reg-submit-btn {
     width: 100%;
     font-weight: bold;
+}
+.login-reg-submit-btn:hover {
+    box-shadow: 0 1px 1px rgba(0,0,0,0.14), 0 2px 0px -1px rgba(0,0,0,0.2), 0 1px 3px 0 rgba(0,0,0,0.12);
+        transition: .1s transform cubic-bezier(.155,1.105,.295,1.12),.1s box-shadow,.1s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
+}
+.collapsable-msg {
+    padding-left: 2%;
+    padding-right: 2%;
 }
 #login-title {
     text-align:center;
