@@ -284,7 +284,14 @@ def oauth2_callback(provider):
         db.session.add(user)
         db.session.commit()
         MessageController.log.info(f"New user created via {provider.capitalize()}: {user}")
-
+    else:
+        if provider.capitalize() not in user.sso:
+            user.sso = user.sso + ', ' + provider.capitalize()
+            user.last_modified_datetime = datetime.now()
+            user.last_modified_userid = user.username
+            db.session.commit()
+            user = UserModel.query.filter_by(username=user.username).first_or_404()
+            user.set_empty_properties()
     login_user(user)
     MessageController.log.info(f"User logged in: {user}")
     flash(f"Successfully logged in via {provider.capitalize()}", 'success')

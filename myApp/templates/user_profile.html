@@ -14,6 +14,9 @@
             <p>Last Modified: {{ user.get_formatted_date(user.last_modified_datetime) }}</p>
             <p>Last Modified By: {{ user.last_modified_userid }}</p>
         </div>
+        <div class="col-md-4">
+            <p>Linked Accounts: {{ user.sso }}</p>
+        </div>
     </div>
     <form id="updateProfileForm" method="post" class="form-general">
         <div class="row">
