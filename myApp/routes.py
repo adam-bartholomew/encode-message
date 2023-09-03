@@ -108,6 +108,16 @@ def about():
     return render_template('about.html')
 
 
+'''
+@routes.route('/saves/<int:user_id>')
+@login_required
+def saves(user_id):
+    user = UserModel.query.filter_by(id=user_id).first_or_404()
+
+    return render_template('user_saves.html', user=user)
+'''
+
+
 @routes.route('/profile/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def profile(user_id):
@@ -209,18 +219,22 @@ def oauth2_authorize(provider):
     provider_data = config.OAUTH2_PROVIDERS.get(provider)
     if provider_data is None:
         abort(404)
+    print(f"twitter provider_data: {provider_data}")
 
     # generate a random string for the state parameter
     session['oauth2_state'] = secrets.token_urlsafe(16)
+    print(f"oauth2_state: {session['oauth2_state']}")
 
     # create a query string with all the OAuth2 parameters
     qs = urlencode({
         'client_id': provider_data['client_id'],
         'redirect_uri': url_for('routes.oauth2_callback', provider=provider, _external=True),
-        'response_type': 'code',
+        'response_type': provider_data['response_type'],
         'scope': ' '.join(provider_data['scopes']),
         'state': session['oauth2_state']
     })
+    print(f"query string: {qs}")
+    print(provider_data['authorize_url'] + '?' + qs)
 
     # redirect the user to the OAuth2 provider authorization URL
     return redirect(provider_data['authorize_url'] + '?' + qs)
@@ -265,6 +279,7 @@ def oauth2_callback(provider):
     # use the access token to get the user's email address
     response = requests.get(provider_data['userinfo']['url'], headers={
         'Authorization': 'Bearer ' + oauth2_token,
+        'Client-Id': provider_data['client_id'],
         'Accept': 'application/json',
     })
     if response.status_code != 200:
