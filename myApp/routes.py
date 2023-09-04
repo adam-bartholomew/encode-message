@@ -219,13 +219,11 @@ def oauth2_authorize(provider):
     provider_data = config.OAUTH2_PROVIDERS.get(provider)
     if provider_data is None:
         abort(404)
-    print(f"twitter provider_data: {provider_data}")
 
-    # generate a random string for the state parameter
+    # generate a random string for the query's state parameter
     session['oauth2_state'] = secrets.token_urlsafe(16)
-    print(f"oauth2_state: {session['oauth2_state']}")
 
-    # create a query string with all the OAuth2 parameters
+    # create a query string of the parameters for the OAuth2 provider URL.
     qs = urlencode({
         'client_id': provider_data['client_id'],
         'redirect_uri': url_for('routes.oauth2_callback', provider=provider, _external=True),
@@ -233,10 +231,8 @@ def oauth2_authorize(provider):
         'scope': ' '.join(provider_data['scopes']),
         'state': session['oauth2_state']
     })
-    print(f"query string: {qs}")
-    print(provider_data['authorize_url'] + '?' + qs)
 
-    # redirect the user to the OAuth2 provider authorization URL
+    # redirect the user to the OAuth2 provider authorization URL.
     return redirect(provider_data['authorize_url'] + '?' + qs)
 
 
@@ -253,9 +249,10 @@ def oauth2_callback(provider):
         MessageController.log.error(f"Error via sso login request: {request.args.items}")
         for k, v in request.args.items():
             if k.startswith('error'):
-                flash(f"{k}: {v}", 'danger')
+                flash(f"Error during login attempt: {k} - {v}", 'danger')
         return redirect(HOME_ROUTE_REDIRECT)
 
+    # Ensure the state that was returned by the URL is the same one we sent.
     if request.args['state'] != session.get('oauth2_state'):
         abort(401)
 
@@ -272,21 +269,28 @@ def oauth2_callback(provider):
 
     if response.status_code != 200:
         abort(401)
+
+    # get the OAuth2 token.
     oauth2_token = response.json().get('access_token')
     if not oauth2_token:
         abort(401)
 
-    # use the access token to get the user's email address
+    # use the OAuth2 token to get the user info
     response = requests.get(provider_data['userinfo']['url'], headers={
         'Authorization': 'Bearer ' + oauth2_token,
         'Client-Id': provider_data['client_id'],
         'Accept': 'application/json',
     })
+
     if response.status_code != 200:
         abort(401)
+
+    if not provider_data['userinfo']['email']:
+        abort(401)
+
     email = provider_data['userinfo']['email'](response.json())
 
-    # find or create the user in the database
+    # find or create the requested user.
     user = db.session.scalar(db.select(UserModel).where(UserModel.email == email))
     if user is None:
         name = provider_data['userinfo']['name'](response.json()).split()
@@ -307,6 +311,8 @@ def oauth2_callback(provider):
             db.session.commit()
             user = UserModel.query.filter_by(username=user.username).first_or_404()
             user.set_empty_properties()
+
+    # login the user.
     login_user(user)
     MessageController.log.info(f"User logged in: {user}")
     flash(f"Successfully logged in via {provider.capitalize()}", 'success')

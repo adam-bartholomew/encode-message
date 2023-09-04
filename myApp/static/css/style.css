@@ -113,6 +113,26 @@ a {
 .sso-link:hover {
     background-color: rgb(238,238,238);
     border-color: rgb(200,200,200);
+    font-weight: bold;
+    border: 2px solid;
+}
+#google-sso {
+    border-color: rgb(255,0,0);
+}
+#google-sso:hover {
+    background-color: rgb(253,203,202);
+}
+#github-sso {
+    border-color: rgb(43,49,55);
+}
+#github-sso:hover {
+    background-color: rgb(238,238,238);
+}
+#twitch-sso {
+    border-color: rgb(145, 70, 255)
+}
+#twitch-sso:hover {
+    background-color: rgb(214, 182, 255)
 }
 .sso-link-img {
     display: inline-block;

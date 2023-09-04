@@ -38,21 +38,6 @@ OAUTH2_PROVIDERS = {
         },
         'scopes': ['user'],
     },
-    'twitter': {
-        'client_secret': os.environ.get('TWITTER_CLIENT_SECRET'),
-        'client_id': os.environ.get('TWITTER_CLIENT_ID'),
-        'response_type': 'code',
-        'redirect_uri': 'https://localhost:5000/home',
-        'authorize_url': 'https://api.twitter.com/oauth/authenticate',
-        'token_url': 'https://api.twitter.com/oauth/request_token',
-        'userinfo': {
-            'url': '',
-            'email': '',
-            'name': '',
-            'profile_pic': '',
-        },
-        'scopes': ["users.read"]
-    },
     'twitch': {
         'client_secret': os.environ.get('TWITCH_CLIENT_SECRET'),
         'client_id': os.environ.get('TWITCH_CLIENT_ID'),
