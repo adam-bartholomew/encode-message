@@ -116,8 +116,8 @@ def decode(input_message: str) -> tuple:
     log.info("DECODING...")
 
     # Check for any non-ascii characters.
-    if any(not c.isascii() for c in input_message):
-        error_message = "Only English is supported at this time. Your message contained non-ASCII characters."
+    if any(not c.isascii() or c.isdecimal() for c in input_message):
+        error_message = "Only English is supported at this time. Your message contained unsupported characters."
         log.error(error_message)
         return 0, error_message
 

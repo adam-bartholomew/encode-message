@@ -67,8 +67,10 @@ function loadingGeneral() {
 
 function loadingMessage() {
     if(document.URL.endsWith("/encode")){
-        if(document.getElementById('encodeInputMessage').value != ""){
-            document.getElementById('loading').style.display = "block";
+        if(document.getElementById('encodeInputMessage').value != "" && !isNaN(parseInt(document.getElementById('encodeOffset').value))){
+            if(0 <= parseInt(document.getElementById('encodeOffset').value) && parseInt(document.getElementById('encodeOffset').value) <= 25){
+                document.getElementById('loading').style.display = "block";
+            }
         }
     }
 
