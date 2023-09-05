@@ -88,8 +88,7 @@
                                     <li class="nav-item">
                                         <a class="{{ row_class }}" href="{{ href|e }}" title="{{ hover|e }}">{{ caption|e }}</a>
                                     </li>
-                                {% endif %}
-                                {% if id == 'profile' %}
+                                {% else %}
                                     <li class="nav-item">
                                         <a class="{{ row_class }}" href="{{ url_for('routes.' + href|e, user_id=current_user.id) }}" title="{{ hover|e }}">{{ caption|e }}</a>
                                     </li>

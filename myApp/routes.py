@@ -108,6 +108,16 @@ def about():
     return render_template('about.html')
 
 
+'''
+@routes.route('/saves/<int:user_id>')
+@login_required
+def saves(user_id):
+    user = UserModel.query.filter_by(id=user_id).first_or_404()
+
+    return render_template('user_saves.html', user=user)
+'''
+
+
 @routes.route('/profile/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def profile(user_id):
@@ -210,19 +220,19 @@ def oauth2_authorize(provider):
     if provider_data is None:
         abort(404)
 
-    # generate a random string for the state parameter
+    # generate a random string for the query's state parameter
     session['oauth2_state'] = secrets.token_urlsafe(16)
 
-    # create a query string with all the OAuth2 parameters
+    # create a query string of the parameters for the OAuth2 provider URL.
     qs = urlencode({
         'client_id': provider_data['client_id'],
         'redirect_uri': url_for('routes.oauth2_callback', provider=provider, _external=True),
-        'response_type': 'code',
+        'response_type': provider_data['response_type'],
         'scope': ' '.join(provider_data['scopes']),
         'state': session['oauth2_state']
     })
 
-    # redirect the user to the OAuth2 provider authorization URL
+    # redirect the user to the OAuth2 provider authorization URL.
     return redirect(provider_data['authorize_url'] + '?' + qs)
 
 
@@ -239,9 +249,10 @@ def oauth2_callback(provider):
         MessageController.log.error(f"Error via sso login request: {request.args.items}")
         for k, v in request.args.items():
             if k.startswith('error'):
-                flash(f"{k}: {v}", 'danger')
+                flash(f"Error during login attempt: {k} - {v}", 'danger')
         return redirect(HOME_ROUTE_REDIRECT)
 
+    # Ensure the state that was returned by the URL is the same one we sent.
     if request.args['state'] != session.get('oauth2_state'):
         abort(401)
 
@@ -258,20 +269,28 @@ def oauth2_callback(provider):
 
     if response.status_code != 200:
         abort(401)
+
+    # get the OAuth2 token.
     oauth2_token = response.json().get('access_token')
     if not oauth2_token:
         abort(401)
 
-    # use the access token to get the user's email address
+    # use the OAuth2 token to get the user info
     response = requests.get(provider_data['userinfo']['url'], headers={
         'Authorization': 'Bearer ' + oauth2_token,
+        'Client-Id': provider_data['client_id'],
         'Accept': 'application/json',
     })
+
     if response.status_code != 200:
         abort(401)
+
+    if not provider_data['userinfo']['email']:
+        abort(401)
+
     email = provider_data['userinfo']['email'](response.json())
 
-    # find or create the user in the database
+    # find or create the requested user.
     user = db.session.scalar(db.select(UserModel).where(UserModel.email == email))
     if user is None:
         name = provider_data['userinfo']['name'](response.json()).split()
@@ -284,7 +303,16 @@ def oauth2_callback(provider):
         db.session.add(user)
         db.session.commit()
         MessageController.log.info(f"New user created via {provider.capitalize()}: {user}")
+    else:
+        if provider.capitalize() not in user.sso:
+            user.sso = user.sso + ',' + provider.capitalize()
+            user.last_modified_datetime = datetime.now()
+            user.last_modified_userid = user.username
+            db.session.commit()
+            user = UserModel.query.filter_by(username=user.username).first_or_404()
+            user.set_empty_properties()
 
+    # login the user.
     login_user(user)
     MessageController.log.info(f"User logged in: {user}")
     flash(f"Successfully logged in via {provider.capitalize()}", 'success')

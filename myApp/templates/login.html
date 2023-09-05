@@ -2,7 +2,7 @@
 {% set active_page = "login" %}
 
 {% block content %}
-<h1 id="login-title">{% block title %} Login {% endblock %}</h1>
+<h1 id="login-title">{% block title %}Login{% endblock %}</h1>
 <div id="login-container">
 	<div class="row">
 		<div id="login-left" class="col-lg-6">
@@ -21,10 +21,19 @@
 			<a id="create-an-account-link" href="{{ url_for('routes.register') }}">Create an account</a>
 		</div>
 		<div class="col-lg-6">
-			<a onclick="loadingGeneral()" href="{{ url_for('routes.oauth2_authorize', provider='google') }}" class="sso-link form-input" Title="Login with Google">
-					<img id="google" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/2048px-Google_%22G%22_Logo.svg.png" aria-label="Google" aria-hidden="true" alt="Google" class="sso-link-img">
+			<a id="google-sso" onclick="loadingGeneral()" href="{{ url_for('routes.oauth2_authorize', provider='google') }}" class="sso-link form-input" Title="Login with Google">
+				<img id="google" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/2048px-Google_%22G%22_Logo.svg.png" aria-label="Google Login" aria-hidden="true" alt="Google Login" class="sso-link-img">
 					Login with Google
 			</a>
+			<a id="github-sso" onclick="loadingGeneral()" href="{{ url_for('routes.oauth2_authorize', provider='github') }}" class="sso-link form-input" Title="Login with GitHub">
+				<img id="github" src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" aria-label="Github Login" aria-hidden="true" alt="Github Login" class="sso-link-img">
+					Login with GitHub
+			</a>
+			<a id="twitch-sso" onclick="loadingGeneral()" href="{{ url_for('routes.oauth2_authorize', provider='twitch') }}" class="sso-link form-input" Title="Login with Twitch">
+				<img id="twitch" src="https://upload.wikimedia.org/wikipedia/commons/d/d3/Twitch_Glitch_Logo_Purple.svg" aria-label="Twitter Login" aria-hidden="true" alt="Twitch Login" class="sso-link-img">
+					Login with Twitch
+			</a>
+
 		</div>
 	</div>
 </div>
