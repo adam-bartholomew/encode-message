@@ -305,7 +305,7 @@ def oauth2_callback(provider):
         MessageController.log.info(f"New user created via {provider.capitalize()}: {user}")
     else:
         if provider.capitalize() not in user.sso:
-            user.sso = user.sso + ', ' + provider.capitalize()
+            user.sso = user.sso + ',' + provider.capitalize()
             user.last_modified_datetime = datetime.now()
             user.last_modified_userid = user.username
             db.session.commit()

@@ -141,6 +141,11 @@ a {
     margin-right: 10%;
     margin-left: 5%;
 }
+.sso-img {
+    display: inline-block;
+    width: 21px;
+    height: 21px;
+}
 .bold-btn {
     font-weight: bold;
 }
