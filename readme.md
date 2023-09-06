@@ -45,7 +45,7 @@ __vercel.json__ - Vercel config properties for hosting.
 - Take a message that has been encoded using this same program and decode it into its original meaning.
 
 ## Running:
-Make sure that the environment variable(s) are set on your machine or in the projects **activate.bat** file if using a virtual environment. You will need 1 for the flask key and 1 or more for a connection to a database.
+Make sure that the environment variable(s) are set on your machine or in the projects **activate.bat** file if using a virtual environment. You will need 1 for the flask key and 1 or more for a connection to a database. 
 
     ...
     @set FLASK_APP_KEY="secret-flask-key"
