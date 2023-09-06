@@ -1,10 +1,10 @@
 from myApp import db, bcrypt
 from flask_login import UserMixin
+from sqlalchemy import Column, String, Integer, DateTime
 from sqlalchemy.sql import func
-from sqlalchemy import Column, String, Integer, DateTime, Boolean
 
 
-class UserModel(db.Model, UserMixin):
+class User(db.Model, UserMixin):
     """Define the structure of the "User" object used in the flask app.
     """
     __tablename__ = 'users'
@@ -85,5 +85,5 @@ class UserModel(db.Model, UserMixin):
     @staticmethod
     def validate_new_username(old_username, new_username):
         if old_username != new_username:
-            return UserModel.query.filter_by(username=new_username).first() is None
+            return User.query.filter_by(username=new_username).first() is None
         return False

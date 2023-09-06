@@ -5,9 +5,7 @@ from datetime import datetime
 from flask import render_template, request, url_for, flash, redirect, Blueprint, session, abort
 from flask_login import login_user, logout_user, current_user, login_required
 
-from myApp import db, login_manager
-from myApp.models.UserModel import UserModel
-from myApp.controllers import MessageController
+from myApp import db, login_manager, User, SavedMessage, encode as encode_message, decode as decode_message, log as msg_log, utils
 import config
 
 routes = Blueprint('routes', __name__)
@@ -18,12 +16,12 @@ LOGIN_ROUTE_REDIRECT = 'routes.login'
 # Creates a user loader callback that returns the user object given an id
 @login_manager.user_loader
 def load_user(username):
-    return UserModel.query.get(username)
+    return User.query.get(username)
 
 
 @routes.app_errorhandler(401)
 def unauthorized(error):
-    MessageController.log.error(f"{error} - {current_user}")
+    msg_log.log.error(f"{error} - {current_user}")
     flash("You do not have permission to view this page.", 'danger')
     return render_template('401.html')
 
@@ -31,7 +29,7 @@ def unauthorized(error):
 @routes.app_errorhandler(404)
 def not_found(error):
     if current_user.is_authenticated:
-        MessageController.log.error(error)
+        msg_log.error(error)
         flash("The requested page does not exist.", 'danger')
         return render_template('404.html')
     else:
@@ -67,8 +65,8 @@ def encode():
         msg = request.form.get('encodeInputMessage')
         offset = int(request.form.get('encodeOffset')) if request.form.get('encodeOffset').isnumeric() else 0
         if msg:
-            MessageController.log.info(f"Submitting encode form with msg: {msg}, offset: {offset}")
-            encoded_msg = MessageController.encode(msg, offset)
+            msg_log.info(f"Submitting encode form with msg: {msg}, offset: {offset}")
+            encoded_msg = encode_message(msg, offset)
             if encoded_msg[0] != 1:
                 flash(encoded_msg[1], 'danger')
             else:
@@ -77,7 +75,12 @@ def encode():
         else:
             flash("Please enter a message to encode.", 'danger')
     if request.method == 'POST' and request.form.get('encodeClear') == 'Clear':
-        MessageController.log.info("Clearing encode form.")
+        msg_log.info("Clearing encode form.")
+        return redirect(url_for('routes.encode'))
+    if request.method == 'POST' and request.form.get('saveButton') == 'Save':
+        message = request.form.get('encodedMessage').split(config.RETURN_SPACER)[1].lstrip("\r\n").replace("\r", "")
+        msg_log.info(f"Saving encoded message: {message}")
+        utils.save_message(current_user, message)
         return redirect(url_for('routes.encode'))
     return render_template('encode.html', encoded_message="")
 
@@ -88,8 +91,8 @@ def decode():
         if request.form.get('decodeSubmit') == 'Submit':
             msg = request.form.get('decodeInputMessage').replace("\r", "")
             if msg:
-                MessageController.log.info(f"Submitting decode form with msg:\n{msg}")
-                decoded_msg = MessageController.decode(msg)
+                msg_log.info(f"Submitting decode form with msg:\n{msg}")
+                decoded_msg = decode_message(msg)
                 if decoded_msg[0] != 1:
                     flash(decoded_msg[1], 'danger')
                 else:
@@ -98,7 +101,7 @@ def decode():
             else:
                 flash("Please enter a message to decode.", 'danger')
         if request.form.get('decodeClear') == 'Clear':
-            MessageController.log.info("Clearing decode form.")
+            msg_log.info("Clearing decode form.")
             return redirect(url_for('routes.decode'))
     return render_template('decode.html', decoded_message="")
 
@@ -108,21 +111,19 @@ def about():
     return render_template('about.html')
 
 
-'''
 @routes.route('/saves/<int:user_id>')
 @login_required
 def saves(user_id):
-    user = UserModel.query.filter_by(id=user_id).first_or_404()
+    user = User.query.filter_by(id=user_id).first_or_404()
 
     return render_template('user_saves.html', user=user)
-'''
 
 
 @routes.route('/profile/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def profile(user_id):
-    user = UserModel.query.filter_by(id=user_id).first_or_404()
-    MessageController.log.info(f"Getting Info for {user}")
+    user = User.query.filter_by(id=user_id).first_or_404()
+    msg_log.info(f"Getting Info for {user}")
     user.set_empty_properties()
     has_changes = False
 
@@ -156,14 +157,14 @@ def profile(user_id):
             user.last_modified_datetime = datetime.now()
             user.last_modified_userid = form_username
             user.clear_empty_properties()
-            MessageController.log.info(f"Saving {user}")
+            msg_log.info(f"Saving {user}")
             db.session.commit()
-            user = UserModel.query.filter_by(username=user.username).first_or_404()
+            user = User.query.filter_by(username=user.username).first_or_404()
             user.set_empty_properties()
             flash("Profile Updated", 'success')
             redirect('routes.profile')
         else:
-            MessageController.log.info(f"Info not changed {user}")
+            msg_log.info(f"Info not changed {user}")
 
     return render_template('user_profile.html', user=user)
 
@@ -173,13 +174,13 @@ def register():
     if current_user.is_authenticated:
         return redirect(url_for(HOME_ROUTE_REDIRECT))
     if request.method == 'POST':
-        user = UserModel.query.filter_by(username=request.form.get('username')).first()
+        user = User.query.filter_by(username=request.form.get('username')).first()
         if not user:
-            new_user = UserModel(username=request.form.get('username'),
-                                 password=UserModel.hash_password(request.form.get('password')))
+            new_user = User(username=request.form.get('username'),
+                            password=User.hash_password(request.form.get('password')))
             db.session.add(new_user)
             db.session.commit()
-            MessageController.log.info(f"New user created: {new_user}")
+            msg_log.info(f"New user created: {new_user}")
             login_user(new_user)
             flash("Successfully logged in", 'success')
             return redirect(url_for(HOME_ROUTE_REDIRECT))
@@ -195,17 +196,17 @@ def login():
     # If a post request was made, find the user by filtering for the username
     if request.method == 'POST':
         form_name = request.form.get('username')
-        user = UserModel.query.filter_by(username=form_name).first()
+        user = User.query.filter_by(username=form_name).first()
         # Check if the password entered is the same as the user's password
         if user is not None:
             try:
                 user.check_password(user.password, request.form.get('password'))
                 login_user(user)
-                MessageController.log.info(f"Login success {user}.")
+                msg_log.info(f"Login success {user}.")
                 return redirect(url_for(HOME_ROUTE_REDIRECT))
             except ValueError:
-                MessageController.log.error(f"User <{form_name}> tried logging in with the wrong salt.")
-        MessageController.log.info(f"User login failure: <{form_name}>.")
+                msg_log.error(f"User <{form_name}> tried logging in with the wrong salt.")
+        msg_log.info(f"User login failure: <{form_name}>.")
         flash("The username and/or password is incorrect.", 'danger')
         return redirect(url_for(LOGIN_ROUTE_REDIRECT))
     return render_template('login.html')
@@ -246,7 +247,7 @@ def oauth2_callback(provider):
         abort(404)
 
     if 'error' in request.args:
-        MessageController.log.error(f"Error via sso login request: {request.args.items}")
+        msg_log.error(f"Error via sso login request: {request.args.items}")
         for k, v in request.args.items():
             if k.startswith('error'):
                 flash(f"Error during login attempt: {k} - {v}", 'danger')
@@ -291,10 +292,10 @@ def oauth2_callback(provider):
     email = provider_data['userinfo']['email'](response.json())
 
     # find or create the requested user.
-    user = db.session.scalar(db.select(UserModel).where(UserModel.email == email))
+    user = db.session.scalar(db.select(User).where(User.email == email))
     if user is None:
         name = provider_data['userinfo']['name'](response.json()).split()
-        user = UserModel(username=email.split('@')[0],
+        user = User(username=email.split('@')[0],
                          password="",
                          first_name=(name[0] if len(name) > 0 else None),
                          last_name=(name[1] if len(name) > 1 else None),
@@ -302,19 +303,19 @@ def oauth2_callback(provider):
                          sso=provider.capitalize())
         db.session.add(user)
         db.session.commit()
-        MessageController.log.info(f"New user created via {provider.capitalize()}: {user}")
+        msg_log.info(f"New user created via {provider.capitalize()}: {user}")
     else:
         if provider.capitalize() not in user.sso:
             user.sso = user.sso + ',' + provider.capitalize()
             user.last_modified_datetime = datetime.now()
             user.last_modified_userid = user.username
             db.session.commit()
-            user = UserModel.query.filter_by(username=user.username).first_or_404()
+            user = User.query.filter_by(username=user.username).first_or_404()
             user.set_empty_properties()
 
     # login the user.
     login_user(user)
-    MessageController.log.info(f"User logged in: {user}")
+    msg_log.info(f"User logged in: {user}")
     flash(f"Successfully logged in via {provider.capitalize()}", 'success')
     return redirect(url_for(HOME_ROUTE_REDIRECT))
 
@@ -322,7 +323,7 @@ def oauth2_callback(provider):
 @routes.route('/logout')
 def logout():
     if current_user.is_authenticated:
-        MessageController.log.info(f"User logged out: {current_user.username}")
+        msg_log.info(f"User logged out: {current_user.username}")
         logout_user()
         flash("You have successfully logged out.", 'success')
     return redirect(url_for(HOME_ROUTE_REDIRECT))
