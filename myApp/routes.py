@@ -5,7 +5,8 @@ from datetime import datetime
 from flask import render_template, request, url_for, flash, redirect, Blueprint, session, abort
 from flask_login import login_user, logout_user, current_user, login_required
 
-from myApp import db, login_manager, User, SavedMessage, encode as encode_message, decode as decode_message, log as msg_log, utils
+from myApp import db, login_manager, User, SavedMessage, encode as encode_message, decode as decode_message, \
+    log as msg_log, utils
 import config
 
 routes = Blueprint('routes', __name__)
@@ -64,16 +65,13 @@ def encode():
     if request.method == 'POST' and request.form.get('encodeSubmit') == 'Submit':
         msg = request.form.get('encodeInputMessage')
         offset = int(request.form.get('encodeOffset')) if request.form.get('encodeOffset').isnumeric() else 0
-        if msg:
-            msg_log.info(f"Submitting encode form with msg: {msg}, offset: {offset}")
-            encoded_msg = encode_message(msg, offset)
-            if encoded_msg[0] != 1:
-                flash(encoded_msg[1], 'danger')
-            else:
-                encode_resp = f"Offset: {offset}\nInput Message: {msg}\nEncoded Message:\n{config.RETURN_SPACER}\n{encoded_msg[1]}"
-                return render_template('encode.html', encoded_message=encode_resp)
+        msg_log.info(f"Submitting encode form with msg: {msg}, offset: {offset}")
+        encoded_msg = encode_message(msg, offset)
+        if encoded_msg[0] != 1:
+            flash(encoded_msg[1], 'danger')
         else:
-            flash("Please enter a message to encode.", 'danger')
+            encode_resp = f"Offset: {offset}\nInput Message: {msg}\nEncoded Message:\n{config.RETURN_SPACER}\n{encoded_msg[1]}"
+            return render_template('encode.html', encoded_message=encode_resp)
     if request.method == 'POST' and request.form.get('encodeClear') == 'Clear':
         msg_log.info("Clearing encode form.")
         return redirect(url_for('routes.encode'))
@@ -296,11 +294,11 @@ def oauth2_callback(provider):
     if user is None:
         name = provider_data['userinfo']['name'](response.json()).split()
         user = User(username=email.split('@')[0],
-                         password="",
-                         first_name=(name[0] if len(name) > 0 else None),
-                         last_name=(name[1] if len(name) > 1 else None),
-                         email=email,
-                         sso=provider.capitalize())
+                    password="",
+                    first_name=(name[0] if len(name) > 0 else None),
+                    last_name=(name[1] if len(name) > 1 else None),
+                    email=email,
+                    sso=provider.capitalize())
         db.session.add(user)
         db.session.commit()
         msg_log.info(f"New user created via {provider.capitalize()}: {user}")

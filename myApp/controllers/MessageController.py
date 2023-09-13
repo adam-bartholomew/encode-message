@@ -90,7 +90,7 @@ def format_sentence(sentence: str, option: int) -> str:
     log.info(f"format_api_sentence - {option}: 1 = Decode, 2 = Encode")
 
     if option == 1:  # DECODE
-        decode_punctuation = string.punctuation.replace("'", "").replace("-", "")  # don't remove ' and - from the sentence.
+        decode_punctuation = string.punctuation.replace("'", "").replace("-", "").replace(".", "")  # don't remove . and ' and - from the sentence.
         new_sentence = sentence.translate(str.maketrans('', '', decode_punctuation))  # remove any punctuation defined in decode_punctuation.
         for word in new_sentence.split(" "):
             if word.isnumeric():  # change numeric values into the english words.
@@ -115,45 +115,58 @@ def decode(input_message: str) -> tuple:
     start = time.time()
     log.info("DECODING...")
 
-    # Check for any non-ascii characters.
-    if any(not c.isascii() or c.isdecimal() for c in input_message):
-        error_message = "Only English is supported at this time. Your message contained unsupported characters."
+    # Ensure input_message is not empty
+    if not input_message:
+        error_message = "Please enter a message to decode."
         log.error(error_message)
         return 0, error_message
 
-    input_message_list = [s for s in input_message.split("\n") if s.strip()]  # Create a list of the sentences provided.
-    log.info(input_message_list)
+    # Create a list of the sentences entered.
+    input_message_list = [s for s in input_message.split("\n") if s.strip()]
+    log.info(f"Raw input list: {input_message_list}")
 
-    decode_offset = decode_offset_date(input_message_list.pop(0))
-    if isinstance(decode_offset, str):
-        return 0, f"Message could not be decoded. {decode_offset}"
+    decode_offset_value = decode_offset_date(input_message_list.pop(0)) if input_message_list else "The message must begin with a date following this format: Monday, January 1, 1990"
+
+    if isinstance(decode_offset_value, str):
+        return 0, f"Message could not be decoded. {decode_offset_value}"
+
+    input_message_list = [format_sentence(s, 1) for s in input_message_list]
+    log.info(f"Formatted sentence list: {input_message_list}")
+
+    for sentence in input_message_list:
+        if any(not c.isascii() or c.isnumeric() for c in sentence) or not any(c.isalpha() for c in sentence):
+            error_message = "Only English is supported at this time. Your message contained unsupported characters."
+            log.error(error_message)
+            return 0, error_message
 
     decoded_parts = []
 
     for sentence in input_message_list:
         if sentence.endswith("."):
             sentence = sentence.rstrip(".")
-            decoded_parts.append(get_decoded_sentence(sentence, decode_offset) + " ")
+            decoded_parts.append(get_decoded_sentence(sentence, decode_offset_value) + " ")
         else:
-            decoded_parts.append(get_decoded_sentence(sentence, decode_offset))
+            decoded_parts.append(get_decoded_sentence(sentence, decode_offset_value))
 
     decoded_message = ''.join(decoded_parts)
     log.info(f"Returning decoded message in {(time.time()-start) * 10**3} ms:\n{decoded_message}")
     return 1, decoded_message
 
 
-def get_decoded_sentence(sentence: str, decode_offset: int) -> str:
+def get_decoded_sentence(sentence: str, decode_offset_value: int) -> str:
     """ Decode a single sentence.
 
     :param (str) sentence: The sentence to decode.
-    :param (str) decode_offset: The offset to use.
+    :param (str) decode_offset_value: The offset to use.
     :return (str): The decoded sentence.
     """
     try:
         syllables = get_syllables_for_sentence(sentence)
-        corrected_num = (syllables - 1 - decode_offset) % 26
+        corrected_num = (syllables - 1 - decode_offset_value) % 26
         return codex_list[corrected_num]
     except IndexError:
+        return ""
+    except TypeError:
         return ""
 
 
@@ -170,7 +183,9 @@ def encode(input_message: str, encode_offset: int) -> tuple:
 
     # Ensure input_message is not empty
     if not input_message:
-        input_message = "test message"
+        error_message = "Please enter a message to encode."
+        log.error(error_message)
+        return 0, error_message
 
     encoded_message = build_offset_date(encode_offset)
 
