@@ -66,16 +66,13 @@ def encode():
     if request.method == 'POST' and request.form.get('encodeSubmit') == 'Submit':
         msg = request.form.get('encodeInputMessage')
         offset = int(request.form.get('encodeOffset')) if request.form.get('encodeOffset').isnumeric() else 0
-        if msg:
-            MessageController.log.info(f"Submitting encode form with msg: {msg}, offset: {offset}")
-            encoded_msg = MessageController.encode(msg, offset)
-            if encoded_msg[0] != 1:
-                flash(encoded_msg[1], 'danger')
-            else:
-                encode_resp = f"Offset: {offset}\nInput Message: {msg}\nEncoded Message:\n{config.RETURN_SPACER}\n{encoded_msg[1]}"
-                return render_template('encode.html', encoded_message=encode_resp)
+        MessageController.log.info(f"Submitting encode form with msg: {msg}, offset: {offset}")
+        encoded_msg = MessageController.encode(msg, offset)
+        if encoded_msg[0] != 1:
+            flash(encoded_msg[1], 'danger')
         else:
-            flash("Please enter a message to encode.", 'danger')
+            encode_resp = f"Offset: {offset}\nInput Message: {msg}\nEncoded Message:\n{config.RETURN_SPACER}\n{encoded_msg[1]}"
+            return render_template('encode.html', encoded_message=encode_resp)
     if request.method == 'POST' and request.form.get('encodeClear') == 'Clear':
         MessageController.log.info("Clearing encode form.")
         return redirect(url_for('routes.encode'))
