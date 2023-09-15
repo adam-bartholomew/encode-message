@@ -14,12 +14,12 @@ class SavedMessage(db.Model, UserMixin):
     saved_userid = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
     saved_datetime = Column(DateTime(timezone=False), nullable=False, server_default=func.now())
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.encoded_text = kwargs.get("encoded_text")
         self.saved_userid = kwargs.get("saved_userid")
         self.saved_datetime = kwargs.get("saved_datetime")
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<Saved Message {self.id}>:" \
                f"   encoded_text={self.encoded_text}" \
                f"   saved_userid={self.saved_userid}" \

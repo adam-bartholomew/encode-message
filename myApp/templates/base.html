@@ -7,7 +7,7 @@
 ] -%}
 {% set nav_bar_right_auth = [
     ('profile', 'profile', 'Profile', 'User Profile'),
-    ('saves', 'saves', 'Saved Messages', 'Your saved messages'),
+    ('saved_messages', 'saved_messages', 'Saved Messages', 'Your saved messages'),
     ('/logout', 'logout', 'Logout', 'Logout')
 ] -%}
 {% set nav_bar_right_anon = [
@@ -24,7 +24,7 @@
     ('profile', 'bi-person-badge'),
     ('404', 'bi-patch-question'),
     ('401', 'bi-patch-question'),
-    ('saves', 'bi-star')
+    ('saved_messages', 'bi-star')
 ] -%}
 {% set active_page = active_page|default('index') -%}
 <html lang="en">
@@ -90,9 +90,13 @@
                                     <li class="nav-item">
                                         <a class="{{ row_class }}" href="{{ href|e }}" title="{{ hover|e }}">{{ caption|e }}</a>
                                     </li>
-                                {% else %}
+                                {% elif id == 'profile' %}
                                     <li class="nav-item">
                                         <a class="{{ row_class }}" href="{{ url_for('routes.' + href|e, user_id=current_user.id) }}" title="{{ hover|e }}">{{ caption|e }}</a>
+                                    </li>
+                                {% else %}
+                                    <li class="nav-item">
+                                        <a class="{{ row_class }}" href="{{ url_for('routes.' + href|e, username=current_user.username) }}" title="{{ hover|e }}">{{ caption|e }}</a>
                                     </li>
                                 {% endif %}
                             {% endfor %}

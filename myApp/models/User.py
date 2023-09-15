@@ -21,7 +21,7 @@ class User(db.Model, UserMixin):
     last_modified_userid = Column(String(25), server_default='system')
     sso = Column(String(25), unique=False)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.username = kwargs.get("username")
         self.password = kwargs.get("password")
         self.sso = kwargs.get("sso") if kwargs.get("sso") else None
@@ -29,7 +29,7 @@ class User(db.Model, UserMixin):
         self.last_name = kwargs.get("last_name") if kwargs.get("last_name") else None
         self.email = kwargs.get("email") if kwargs.get("email") else None
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<User {self.id}>:" \
                f"   username={self.username}" \
                f"   first_name={self.first_name}" \
@@ -41,7 +41,7 @@ class User(db.Model, UserMixin):
                f"   modified_user={self.last_modified_userid}" \
                f"   sso={self.sso}"
 
-    def set_empty_properties(self):
+    def set_empty_properties(self) -> None:
         if self.first_name is None:
             self.first_name = ""
         if self.last_name is None:
@@ -49,7 +49,7 @@ class User(db.Model, UserMixin):
         if self.email is None:
             self.email = ""
 
-    def clear_empty_properties(self):
+    def clear_empty_properties(self) -> None:
         if len(self.first_name.strip()) == 0:
             self.first_name = None
         if len(self.last_name.strip()) == 0:
@@ -58,23 +58,23 @@ class User(db.Model, UserMixin):
             self.email = None
 
     @staticmethod
-    def get_formatted_date(date):
+    def get_formatted_date(date) -> str:
         if date is None:
             return ""
         return date.strftime("%B %d, %Y %I:%M:%S %p")
 
     @staticmethod
-    def hash_password(password):
+    def hash_password(password: str) -> str:
         pw_hash = bcrypt.generate_password_hash(password=password).decode('utf-8')
         return pw_hash
 
     @staticmethod
-    def check_password(pw_hash, password):
+    def check_password(pw_hash: str, password: str) -> bool:
         return bcrypt.check_password_hash(pw_hash=pw_hash, password=password)
 
     # Verifies the length of the new password and checks that it is not the same as the old one.
     @staticmethod
-    def validate_new_password(old_pwd_hash, new_pwd):
+    def validate_new_password(old_pwd_hash: str, new_pwd: str) -> bool:
         if 7 < len(new_pwd) < 26:
             if len(old_pwd_hash.strip()) == 0:
                 return True
@@ -83,7 +83,7 @@ class User(db.Model, UserMixin):
 
     # Makes sure the new username is not in use already.
     @staticmethod
-    def validate_new_username(old_username, new_username):
+    def validate_new_username(old_username: str, new_username: str) -> bool:
         if old_username != new_username:
             return User.query.filter_by(username=new_username).first() is None
         return False

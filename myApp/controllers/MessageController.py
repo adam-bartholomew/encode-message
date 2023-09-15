@@ -259,7 +259,7 @@ def get_syllables_for_sentence(sentence: str) -> Union[int, None]:
 
 
 # noinspection PyTypeChecker
-def clean_data_file():
+def clean_data_file() -> None:
     """Cleans the data in datasets/phoneticDictionary.csv and puts it into new_clean.csv
 
     This will remove words that start with an apostrophe, contain a period, or are contained in the list twice.

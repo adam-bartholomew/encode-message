@@ -1,90 +1,95 @@
 import secrets
-from urllib.parse import urlencode
 import requests
+from urllib.parse import urlencode
 from datetime import datetime
-from flask import render_template, request, url_for, flash, redirect, Blueprint, session, abort
+from typing import Union, Any
+from flask import render_template, request, url_for, flash, redirect, Blueprint, session, abort, Response
 from flask_login import login_user, logout_user, current_user, login_required
 
 from myApp import db, login_manager, User, SavedMessage, encode as encode_message, decode as decode_message, \
     log as msg_log, utils
-import config
+from config import OAUTH2_PROVIDERS, RETURN_SPACER, AVAILABLE_PAGES
 
+# Define route constants
 routes = Blueprint('routes', __name__)
-HOME_ROUTE_REDIRECT = 'routes.home'
-LOGIN_ROUTE_REDIRECT = 'routes.login'
 
 
 # Creates a user loader callback that returns the user object given an id
 @login_manager.user_loader
-def load_user(username):
+def load_user(username: Any) -> Any:
     return User.query.get(username)
 
 
 @routes.app_errorhandler(401)
-def unauthorized(error):
-    msg_log.log.error(f"{error} - {current_user}")
+def unauthorized(error: Any) -> str:
+    msg_log.error(f"{error} - {current_user}")
     flash("You do not have permission to view this page.", 'danger')
-    return render_template('401.html')
+    return render_template(AVAILABLE_PAGES['unauthorized']['direct'])
 
 
 @routes.app_errorhandler(404)
-def not_found(error):
+def not_found(error: Any) -> str:
     if current_user.is_authenticated:
         msg_log.error(error)
         flash("The requested page does not exist.", 'danger')
-        return render_template('404.html')
+        return render_template(AVAILABLE_PAGES['not_found']['direct'])
     else:
         return unauthorized("Current user is not authenticated.")
 
 
 # cache definition @app.after_request def add_header(response): Add headers to both force latest IE rendering engine or Chrome Frame, and also to cache the rendered page for 10 minutes.
 @routes.after_request
-def add_header(response):
+def add_header(response) -> Response:
     response.headers["X-UA-Compatible"] = "IE=Edge,chrome=1"
     response.headers["Cache-Control"] = "public, max-age=0"
     return response
 
 
 @routes.route('/favicon.ico')
-def favicon():
+def favicon() -> Response:
     return redirect(url_for('static', filename='image/favicon.ico'), code=302)
 
 
 @routes.route('/')
-def index():
-    return render_template('home.html')
+def index() -> str:
+    return render_template(AVAILABLE_PAGES['home']['direct'])
 
 
 @routes.route('/home')
-def home():
-    return render_template('home.html')
+def home() -> str:
+    return render_template(AVAILABLE_PAGES['home']['direct'])
 
 
 @routes.route('/encode', methods=['GET', 'POST'])
-def encode():
-    if request.method == 'POST' and request.form.get('encodeSubmit') == 'Submit':
-        msg = request.form.get('encodeInputMessage')
+def encode() -> Union[str, Response]:
+    if request.method == 'POST':
+        input_message = request.form.get('encodeInputMessage')
+        encoded_message = request.form.get('encodedMessage')
         offset = int(request.form.get('encodeOffset')) if request.form.get('encodeOffset').isnumeric() else 0
-        msg_log.info(f"Submitting encode form with msg: {msg}, offset: {offset}")
-        encoded_msg = encode_message(msg, offset)
-        if encoded_msg[0] != 1:
-            flash(encoded_msg[1], 'danger')
+        if request.form.get('encodeSubmit') == 'Submit':
+            msg_log.info(f"Submitting encode form with msg: {input_message}, offset: {offset}")
+            encoded_msg = encode_message(input_message, offset)
+            if encoded_msg[0] != 1:
+                flash(encoded_msg[1], 'danger')
+            else:
+                encoded_message = f"Offset: {offset}\nInput Message: {input_message}\nEncoded Message:\n{RETURN_SPACER}\n{encoded_msg[1]}"
+                return render_template(AVAILABLE_PAGES['encode']['direct'], encoded_message=encoded_message)
+        elif request.form.get('encodeClear') == 'Clear':
+            msg_log.info("Clearing encode form.")
+            return redirect(url_for(AVAILABLE_PAGES['encode']['redirect']))
+        elif request.form.get('saveButton') == 'Save':
+            message = encoded_message.split(RETURN_SPACER)[1].lstrip("\r\n").replace("\r", "")
+            msg_log.info(f"Saving encoded message:\n{message}")
+            utils.save_message(current_user, message)
+            flash("Message Saved", 'success')
+            return render_template(AVAILABLE_PAGES['encode']['direct'], encoded_message=encoded_message)
         else:
-            encode_resp = f"Offset: {offset}\nInput Message: {msg}\nEncoded Message:\n{config.RETURN_SPACER}\n{encoded_msg[1]}"
-            return render_template('encode.html', encoded_message=encode_resp)
-    if request.method == 'POST' and request.form.get('encodeClear') == 'Clear':
-        msg_log.info("Clearing encode form.")
-        return redirect(url_for('routes.encode'))
-    if request.method == 'POST' and request.form.get('saveButton') == 'Save':
-        message = request.form.get('encodedMessage').split(config.RETURN_SPACER)[1].lstrip("\r\n").replace("\r", "")
-        msg_log.info(f"Saving encoded message: {message}")
-        utils.save_message(current_user, message)
-        return redirect(url_for('routes.encode'))
-    return render_template('encode.html', encoded_message="")
+            flash("Request was sent and nothing happened", 'warning')
+    return render_template(AVAILABLE_PAGES['encode']['direct'], encoded_message="")
 
 
 @routes.route('/decode', methods=['GET', 'POST'])
-def decode():
+def decode() -> Union[str, Response]:
     if request.method == 'POST':
         if request.form.get('decodeSubmit') == 'Submit':
             msg = request.form.get('decodeInputMessage').replace("\r", "")
@@ -94,32 +99,32 @@ def decode():
                 if decoded_msg[0] != 1:
                     flash(decoded_msg[1], 'danger')
                 else:
-                    decode_resp = f"Encoded Message:\n{config.RETURN_SPACER}\n{msg}\n{config.RETURN_SPACER}\nDecoded Message:\n{config.RETURN_SPACER}\n{decoded_msg[1]}"
-                    return render_template('decode.html', decoded_message=decode_resp)
+                    decode_resp = f"Encoded Message:\n{RETURN_SPACER}\n{msg}\n{RETURN_SPACER}\nDecoded Message:\n{RETURN_SPACER}\n{decoded_msg[1]}"
+                    return render_template(AVAILABLE_PAGES['decode']['direct'], decoded_message=decode_resp)
             else:
                 flash("Please enter a message to decode.", 'danger')
         if request.form.get('decodeClear') == 'Clear':
             msg_log.info("Clearing decode form.")
-            return redirect(url_for('routes.decode'))
-    return render_template('decode.html', decoded_message="")
+            return redirect(url_for(AVAILABLE_PAGES['decode']['redirect']))
+    return render_template(AVAILABLE_PAGES['decode']['direct'], decoded_message="")
 
 
 @routes.route('/about')
-def about():
-    return render_template('about.html')
+def about() -> str:
+    return render_template(AVAILABLE_PAGES['about']['direct'])
 
 
-@routes.route('/saves/<int:user_id>')
+@routes.route('/saved_messages/<string:username>')
 @login_required
-def saves(user_id):
-    user = User.query.filter_by(id=user_id).first_or_404()
+def saved_messages(username: str) -> str:
+    user = User.query.filter_by(username=username).first_or_404()
 
-    return render_template('user_saves.html', user=user)
+    return render_template(AVAILABLE_PAGES['saved_messages']['direct'], user=user)
 
 
 @routes.route('/profile/<int:user_id>', methods=['GET', 'POST'])
 @login_required
-def profile(user_id):
+def profile(user_id: int) -> str:
     user = User.query.filter_by(id=user_id).first_or_404()
     msg_log.info(f"Getting Info for {user}")
     user.set_empty_properties()
@@ -127,7 +132,7 @@ def profile(user_id):
 
     if current_user.username != user.username:
         flash("You do not have permission to visit this page.", 'danger')
-        return render_template('401.html')
+        return render_template(AVAILABLE_PAGES['unauthorized']['direct'])
 
     if request.method == 'POST':
         form_username = request.form.get('profile_username')
@@ -160,17 +165,17 @@ def profile(user_id):
             user = User.query.filter_by(username=user.username).first_or_404()
             user.set_empty_properties()
             flash("Profile Updated", 'success')
-            redirect('routes.profile')
+            redirect(AVAILABLE_PAGES['profile']['redirect'])
         else:
             msg_log.info(f"Info not changed {user}")
 
-    return render_template('user_profile.html', user=user)
+    return render_template(AVAILABLE_PAGES['profile']['direct'], user=user)
 
 
 @routes.route('/register', methods=['GET', 'POST'])
-def register():
+def register() -> Union[str, Response]:
     if current_user.is_authenticated:
-        return redirect(url_for(HOME_ROUTE_REDIRECT))
+        return redirect(url_for(AVAILABLE_PAGES['home']['redirect']))
     if request.method == 'POST':
         user = User.query.filter_by(username=request.form.get('username')).first()
         if not user:
@@ -181,16 +186,16 @@ def register():
             msg_log.info(f"New user created: {new_user}")
             login_user(new_user)
             flash("Successfully logged in", 'success')
-            return redirect(url_for(HOME_ROUTE_REDIRECT))
+            return redirect(url_for(AVAILABLE_PAGES['home']['redirect']))
         else:
             flash(f"Username {user.username} is unavailable. Please choose a new one.", "warning")
-    return render_template('sign_up.html')
+    return render_template(AVAILABLE_PAGES['register']['direct'])
 
 
 @routes.route('/login', methods=['GET', 'POST'])
-def login():
+def login() -> Union[str, Response]:
     if current_user.is_authenticated:
-        return redirect(url_for(HOME_ROUTE_REDIRECT))
+        return redirect(url_for(AVAILABLE_PAGES['home']['redirect']))
     # If a post request was made, find the user by filtering for the username
     if request.method == 'POST':
         form_name = request.form.get('username')
@@ -201,21 +206,21 @@ def login():
                 user.check_password(user.password, request.form.get('password'))
                 login_user(user)
                 msg_log.info(f"Login success {user}.")
-                return redirect(url_for(HOME_ROUTE_REDIRECT))
+                return redirect(url_for(AVAILABLE_PAGES['home']['redirect']))
             except ValueError:
                 msg_log.error(f"User <{form_name}> tried logging in with the wrong salt.")
         msg_log.info(f"User login failure: <{form_name}>.")
         flash("The username and/or password is incorrect.", 'danger')
-        return redirect(url_for(LOGIN_ROUTE_REDIRECT))
-    return render_template('login.html')
+        return redirect(url_for(AVAILABLE_PAGES['login']['redirect']))
+    return render_template(AVAILABLE_PAGES['login']['direct'])
 
 
 @routes.route('/authorize/<provider>')
-def oauth2_authorize(provider):
+def oauth2_authorize(provider: str) -> Response:
     if not current_user.is_anonymous:
-        return redirect(HOME_ROUTE_REDIRECT)
+        return redirect(AVAILABLE_PAGES['home']['redirect'])
 
-    provider_data = config.OAUTH2_PROVIDERS.get(provider)
+    provider_data = OAUTH2_PROVIDERS.get(provider)
     if provider_data is None:
         abort(404)
 
@@ -236,11 +241,11 @@ def oauth2_authorize(provider):
 
 
 @routes.route('/callback/<provider>')
-def oauth2_callback(provider):
+def oauth2_callback(provider: str) -> Response:
     if not current_user.is_anonymous:
-        return redirect(HOME_ROUTE_REDIRECT)
+        return redirect(AVAILABLE_PAGES['home']['redirect'])
 
-    provider_data = config.OAUTH2_PROVIDERS.get(provider)
+    provider_data = OAUTH2_PROVIDERS.get(provider)
     if provider_data is None:
         abort(404)
 
@@ -249,7 +254,7 @@ def oauth2_callback(provider):
         for k, v in request.args.items():
             if k.startswith('error'):
                 flash(f"Error during login attempt: {k} - {v}", 'danger')
-        return redirect(HOME_ROUTE_REDIRECT)
+        return redirect(AVAILABLE_PAGES['home']['redirect'])
 
     # Ensure the state that was returned by the URL is the same one we sent.
     if request.args['state'] != session.get('oauth2_state'):
@@ -315,13 +320,13 @@ def oauth2_callback(provider):
     login_user(user)
     msg_log.info(f"User logged in: {user}")
     flash(f"Successfully logged in via {provider.capitalize()}", 'success')
-    return redirect(url_for(HOME_ROUTE_REDIRECT))
+    return redirect(url_for(AVAILABLE_PAGES['home']['redirect']))
 
 
 @routes.route('/logout')
-def logout():
+def logout() -> Response:
     if current_user.is_authenticated:
         msg_log.info(f"User logged out: {current_user.username}")
         logout_user()
         flash("You have successfully logged out.", 'success')
-    return redirect(url_for(HOME_ROUTE_REDIRECT))
+    return redirect(url_for(AVAILABLE_PAGES['home']['redirect']))

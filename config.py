@@ -54,3 +54,53 @@ OAUTH2_PROVIDERS = {
         'scopes': ['openid', 'user:read:email']
     }
 }
+AVAILABLE_PAGES = {
+    'index': {
+        'direct': '/',
+        'redirect': 'routes.index'
+    },
+    'home': {
+        'direct': 'home.html',
+        'redirect': 'routes.home'
+    },
+    'login': {
+        'direct': 'login.html',
+        'redirect': 'routes.login'
+    },
+    'register': {
+        'direct': 'sign_up.html',
+        'redirect': 'routes.register'
+    },
+    'encode': {
+        'direct': 'encode.html',
+        'redirect': 'routes.encode'
+    },
+    'decode': {
+        'direct': 'decode.html',
+        'redirect': 'routes.decode'
+    },
+    'about': {
+        'direct': 'about.html',
+        'redirect': 'routes.about'
+    },
+    'logout': {
+        'direct': 'logout.html',
+        'redirect': 'routes.logout'
+    },
+    'profile': {
+        'direct': 'user_profile.html',
+        'redirect': 'routes.profile'
+    },
+    'saved_messages': {
+        'direct': 'saved_messages.html',
+        'redirect': 'routes.saved_messages'
+    },
+    'unauthorized': {
+        'direct': '401.html',
+        'redirect': 'routes.401'
+    },
+    'not_found': {
+        'direct': '404.html',
+        'redirect': 'routes.404'
+    }
+}
