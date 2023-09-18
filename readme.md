@@ -16,19 +16,19 @@ __myApp\\\_\_init\_\_.py__ - Creates and initializes the application and modules
 
 __myApp\controllers\MessageController.py__ - Controls how messages are encoded and decoded.
 
-__myApp\models\UserModel.py__ - Defines the class for a User.
+__myApp\models\\__ - All classes used by the application go here.
 
 __myApp\routes.py__ - The Flask application route controller.
 
 __myApp\static__ - Follows Flask standards for static web resources.
 
-__myApp\templates__ - Follows Flask standards for web templates.
+__myApp\templates__ - Follows Flask standards, the html page templates are here.
 
-__myApp\datasets__ - Contains the word datasets.
+__myApp\datasets__ - Contains the word and syllable datasets.
 
-__myApp\codex.txt__ - Where the syllable count <--> letter translation scheme is kept.
+__myApp\codex.txt__ - The syllable and letter translation scheme.
 
-__myApp\credentials.txt__ - Please keep this file locally only, but any api keys need by a controller can be put in this file:
+__myApp\credentials.txt__ - Please keep this file locally only, but any api keys needed by a controller can be put in this file:
 
     words api headers:
     "X-RapidAPI-Key": "your-api-key",

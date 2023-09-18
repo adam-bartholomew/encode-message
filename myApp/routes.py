@@ -80,8 +80,8 @@ def encode() -> Union[str, Response]:
         elif request.form.get('saveButton') == 'Save':
             message = encoded_message.split(RETURN_SPACER)[1].lstrip("\r\n").replace("\r", "")
             msg_log.info(f"Saving encoded message:\n{message}")
-            utils.save_message(current_user, message)
-            flash("Message Saved", 'success')
+            msg, cat = utils.save_message(current_user, message)
+            flash(msg, cat)
             return render_template(AVAILABLE_PAGES['encode']['direct'], encoded_message=encoded_message)
         else:
             flash("Request was sent and nothing happened", 'warning')
@@ -118,8 +118,9 @@ def about() -> str:
 @login_required
 def saved_messages(username: str) -> str:
     user = User.query.filter_by(username=username).first_or_404()
-
-    return render_template(AVAILABLE_PAGES['saved_messages']['direct'], user=user)
+    messages_list = utils.get_user_saved_messages(user)
+    print(f"messages_list: {messages_list}")
+    return render_template(AVAILABLE_PAGES['saved_messages']['direct'], user=user, saved_messages=messages_list)
 
 
 @routes.route('/profile/<int:user_id>', methods=['GET', 'POST'])

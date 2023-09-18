@@ -20,8 +20,12 @@ class SavedMessage(db.Model, UserMixin):
         self.saved_datetime = kwargs.get("saved_datetime")
 
     def __repr__(self) -> str:
-        return f"<Saved Message {self.id}>:" \
-               f"   encoded_text={self.encoded_text}" \
-               f"   saved_userid={self.saved_userid}" \
-               f"   saved_datetime={self.saved_datetime}"
+        return f"<Saved Message {self.id}>:(" \
+               f"encoded_text=\"{self.encoded_text}\"" \
+               f", saved_userid=\"{self.saved_userid}\"" \
+               f", saved_datetime=\"{self.saved_datetime}\")"
 
+    def get_as_dict(self) -> dict:
+        message_dict = dict(id=self.id, encoded_text=self.encoded_text, saved_userid=self.saved_userid,
+                            saved_datetime=self.saved_datetime)
+        return message_dict

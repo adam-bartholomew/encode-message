@@ -30,16 +30,16 @@ class User(db.Model, UserMixin):
         self.email = kwargs.get("email") if kwargs.get("email") else None
 
     def __repr__(self) -> str:
-        return f"<User {self.id}>:" \
-               f"   username={self.username}" \
-               f"   first_name={self.first_name}" \
-               f"   last_name={self.last_name}" \
-               f"   email={self.email}" \
-               f"   creation_date={self.creation_datetime}" \
-               f"   creation_user={self.creation_userid}" \
-               f"   modified_date={self.last_modified_datetime}" \
-               f"   modified_user={self.last_modified_userid}" \
-               f"   sso={self.sso}"
+        return f"<User {self.id}>:(" \
+               f"username=\"{self.username}\"" \
+               f", first_name=\"{self.first_name}\"" \
+               f", last_name=\"{self.last_name}\"" \
+               f", email=\"{self.email}\"" \
+               f", creation_date=\"{self.creation_datetime}\"" \
+               f", creation_user=\"{self.creation_userid}\"" \
+               f", modified_date=\"{self.last_modified_datetime}\"" \
+               f", modified_user=\"{self.last_modified_userid}\"" \
+               f", sso=\"{self.sso})\""
 
     def set_empty_properties(self) -> None:
         if self.first_name is None:

@@ -12,8 +12,14 @@ function clearDecodeForm() {
 
 function copyToClipboard(elementId) {
     let text = document.getElementById(elementId)
-    text.select()
-    navigator.clipboard.writeText(text.value)
+    if(text.tagName == "TEXTAREA") {
+        text.select()
+    }
+    navigator.clipboard.writeText(text.innerHTML)
+}
+
+function deleteSavedMessage(elementId) {
+    console.log('delete');
 }
 
 function validateLogin() {
