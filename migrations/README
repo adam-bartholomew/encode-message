@@ -1,1 +1,4 @@
 Single-database configuration for Flask.
+
+Unfortunately I didn't start using flask_migrate until I had been using models and making adjustments to them and the database by hand. Therefore, I included the Postgres SQL statements that create the needed tables (users, saved_messages) in ../db/
+From this point on I will use flask_migrate when adding or modifying models.
