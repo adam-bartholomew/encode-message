@@ -6,8 +6,7 @@ from typing import Union, Any
 from flask import render_template, request, url_for, flash, redirect, Blueprint, session, abort, Response
 from flask_login import login_user, logout_user, current_user, login_required
 
-from myApp import db, login_manager, User, SavedMessage, encode as encode_message, decode as decode_message, \
-    log as msg_log, utils
+from myApp import db, login_manager, User, SavedMessage, encode as encode_message, decode as decode_message, log, utils
 from config import OAUTH2_PROVIDERS, RETURN_SPACER, AVAILABLE_PAGES
 
 # Define route constants
@@ -22,7 +21,7 @@ def load_user(username: Any) -> Any:
 
 @routes.app_errorhandler(401)
 def unauthorized(error: Any) -> str:
-    msg_log.error(f"{error} - {current_user}")
+    log.error(f"{error} - {current_user}")
     flash("You do not have permission to view this page.", 'danger')
     return render_template(AVAILABLE_PAGES['unauthorized']['direct'])
 
@@ -30,7 +29,7 @@ def unauthorized(error: Any) -> str:
 @routes.app_errorhandler(404)
 def not_found(error: Any) -> str:
     if current_user.is_authenticated:
-        msg_log.error(error)
+        log.error(error)
         flash("The requested page does not exist.", 'danger')
         return render_template(AVAILABLE_PAGES['not_found']['direct'])
     else:
@@ -67,7 +66,7 @@ def encode() -> Union[str, Response]:
         encoded_message = request.form.get('encodedMessage')
         offset = int(request.form.get('encodeOffset')) if request.form.get('encodeOffset').isnumeric() else 0
         if request.form.get('encodeSubmit') == 'Submit':
-            msg_log.info(f"Submitting encode form with msg: {input_message}, offset: {offset}")
+            log.info(f"Submitting encode form with msg: {input_message}, offset: {offset}")
             encoded_msg = encode_message(input_message, offset)
             if encoded_msg[0] != 1:
                 flash(encoded_msg[1], 'danger')
@@ -75,13 +74,13 @@ def encode() -> Union[str, Response]:
                 encoded_message = f"Offset: {offset}\nInput Message: {input_message}\nEncoded Message:\n{RETURN_SPACER}\n{encoded_msg[1]}"
                 return render_template(AVAILABLE_PAGES['encode']['direct'], encoded_message=encoded_message)
         elif request.form.get('encodeClear') == 'Clear':
-            msg_log.info("Clearing encode form.")
+            log.info("Clearing encode form.")
             return redirect(url_for(AVAILABLE_PAGES['encode']['redirect']))
         elif request.form.get('saveButton') == 'Save':
             message = encoded_message.split(RETURN_SPACER)[1].lstrip("\r\n").replace("\r", "")
-            msg_log.info(f"Saving encoded message:\n{message}")
-            msg, cat = utils.save_message(current_user, message)
-            flash(msg, cat)
+            log.info(f"Saving encoded message:\n{message}")
+            message, category = utils.save_message(current_user, message)
+            flash(message, category)
             return render_template(AVAILABLE_PAGES['encode']['direct'], encoded_message=encoded_message)
         else:
             flash("Request was sent and nothing happened", 'warning')
@@ -94,7 +93,7 @@ def decode() -> Union[str, Response]:
         if request.form.get('decodeSubmit') == 'Submit':
             msg = request.form.get('decodeInputMessage').replace("\r", "")
             if msg:
-                msg_log.info(f"Submitting decode form with msg:\n{msg}")
+                log.info(f"Submitting decode form with msg:\n{msg}")
                 decoded_msg = decode_message(msg)
                 if decoded_msg[0] != 1:
                     flash(decoded_msg[1], 'danger')
@@ -104,7 +103,7 @@ def decode() -> Union[str, Response]:
             else:
                 flash("Please enter a message to decode.", 'danger')
         if request.form.get('decodeClear') == 'Clear':
-            msg_log.info("Clearing decode form.")
+            log.info("Clearing decode form.")
             return redirect(url_for(AVAILABLE_PAGES['decode']['redirect']))
     return render_template(AVAILABLE_PAGES['decode']['direct'], decoded_message="")
 
@@ -119,14 +118,25 @@ def about() -> str:
 def saved_messages(username: str) -> str:
     user = User.query.filter_by(username=username).first_or_404()
     messages_list = utils.get_user_saved_messages(user)
+    log.info(f"{user.username} saved messages: {messages_list}")
     return render_template(AVAILABLE_PAGES['saved_messages']['direct'], user=user, saved_messages=messages_list)
+
+
+@routes.route('/delete_saved_message/<int:message_id>', methods=['POST'])
+@login_required
+def delete_saved_message(message_id: int):
+    if request.method == 'POST':
+        log.info(f"Requesting to delete saved message {message_id} for {current_user.username}")
+        message, category = utils.delete_saved_message(message_id)
+        flash(message, category)
+    return redirect(url_for(AVAILABLE_PAGES['saved_messages']['redirect'], username=current_user.username))
 
 
 @routes.route('/profile/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def profile(user_id: int) -> str:
     user = User.query.filter_by(id=user_id).first_or_404()
-    msg_log.info(f"Getting info for {user}")
+    log.info(f"Getting info for {user}")
     user.set_empty_properties()
     has_changes = False
 
@@ -160,14 +170,14 @@ def profile(user_id: int) -> str:
             user.last_modified_datetime = datetime.now()
             user.last_modified_userid = form_username
             user.clear_empty_properties()
-            msg_log.info(f"Saving {user}")
+            log.info(f"Saving {user}")
             db.session.commit()
             user = User.query.filter_by(username=user.username).first_or_404()
             user.set_empty_properties()
             flash("Profile Updated", 'success')
             redirect(AVAILABLE_PAGES['profile']['redirect'])
         else:
-            msg_log.info(f"Info not changed {user}")
+            log.info(f"Info not changed {user}")
 
     return render_template(AVAILABLE_PAGES['profile']['direct'], user=user)
 
@@ -183,7 +193,7 @@ def register() -> Union[str, Response]:
                             password=User.hash_password(request.form.get('password')))
             db.session.add(new_user)
             db.session.commit()
-            msg_log.info(f"New user created: {new_user}")
+            log.info(f"New user created: {new_user}")
             login_user(new_user)
             flash("Successfully logged in", 'success')
             return redirect(url_for(AVAILABLE_PAGES['home']['redirect']))
@@ -205,11 +215,11 @@ def login() -> Union[str, Response]:
             try:
                 user.check_password(user.password, request.form.get('password'))
                 login_user(user)
-                msg_log.info(f"Login success {user}.")
+                log.info(f"Login success {user}.")
                 return redirect(url_for(AVAILABLE_PAGES['home']['redirect']))
             except ValueError:
-                msg_log.error(f"User <{form_name}> tried logging in with the wrong salt.")
-        msg_log.info(f"User login failure: <{form_name}>.")
+                log.error(f"User <{form_name}> tried logging in with the wrong salt.")
+        log.info(f"User login failure: <{form_name}>.")
         flash("The username and/or password is incorrect.", 'danger')
         return redirect(url_for(AVAILABLE_PAGES['login']['redirect']))
     return render_template(AVAILABLE_PAGES['login']['direct'])
@@ -250,7 +260,7 @@ def oauth2_callback(provider: str) -> Response:
         abort(404)
 
     if 'error' in request.args:
-        msg_log.error(f"Error via sso login request: {request.args.items}")
+        log.error(f"Error via sso login request: {request.args.items}")
         for k, v in request.args.items():
             if k.startswith('error'):
                 flash(f"Error during login attempt: {k} - {v}", 'danger')
@@ -306,7 +316,7 @@ def oauth2_callback(provider: str) -> Response:
                     sso=provider.capitalize())
         db.session.add(user)
         db.session.commit()
-        msg_log.info(f"New user created via {provider.capitalize()}: {user}")
+        log.info(f"New user created via {provider.capitalize()}: {user}")
     else:
         if provider.capitalize() not in user.sso:
             user.sso = user.sso + ',' + provider.capitalize()
@@ -318,7 +328,7 @@ def oauth2_callback(provider: str) -> Response:
 
     # login the user.
     login_user(user)
-    msg_log.info(f"User logged in: {user}")
+    log.info(f"User logged in: {user}")
     flash(f"Successfully logged in via {provider.capitalize()}", 'success')
     return redirect(url_for(AVAILABLE_PAGES['home']['redirect']))
 
@@ -326,7 +336,7 @@ def oauth2_callback(provider: str) -> Response:
 @routes.route('/logout')
 def logout() -> Response:
     if current_user.is_authenticated:
-        msg_log.info(f"User logged out: {current_user.username}")
+        log.info(f"User logged out: {current_user.username}")
         logout_user()
         flash("You have successfully logged out.", 'success')
     return redirect(url_for(AVAILABLE_PAGES['home']['redirect']))

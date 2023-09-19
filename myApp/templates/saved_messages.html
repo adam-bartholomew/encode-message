@@ -8,17 +8,17 @@
     <table id="savedMessageTable" class="saved-msg-tbl">
         <caption>All encoded messages saved by {{ user.username }}</caption>
         <tr class="saved-msg-tr">
-            <th class="saved-msg-td-th">Number</th>
-            <th class="saved-msg-td-th">Encoded Message</th>
-            <th class="saved-msg-td-th">Saved Datetime</th>
-            <th class="saved-msg-td-th">Actions</th>
+            <th class="saved-msg-td-th" Title="Counter for {{ user.username }}'s saved messages">Number</th>
+            <th class="saved-msg-td-th" Title="Encoded Message Text">Encoded Message</th>
+            <th class="saved-msg-td-th" Title="Date & Time the message was saved">Saved Datetime</th>
+            <th class="saved-msg-td-th" Title="Available actions to take on this message">Actions</th>
         </tr>
         {% for savedMessage in saved_messages %}
             <tr class="saved-msg-tr">
                 <td class="saved-msg-td-th">{{ loop.index }}</td>
                 <td id="savedText{{ loop.index }}" class="saved-msg-td-th">{{ savedMessage['encoded_text'] }}</td>
                 <td class="saved-msg-td-th">{{ user.get_formatted_date(savedMessage['saved_datetime']) }}</td>
-                <td class="saved-msg-td-th"><button id="copyButton{{ loop.index }}" aria-label="Copy encoded message to clipboard" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy encoded message to clipboard" class="btn btn-warning btn-sm saved-action-btn" type="button" onclick="copyToClipboard('savedText{{ loop.index }}');"><i class="bi bi-clipboard" aria-hidden="true"></i></button><button id="removeSavedButton{{ loop.index }}" aria-label="Remove Saved Message" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove Saved Message" class="btn btn-danger btn-sm saved-action-btn" type="button" onclick="deleteSavedMessage('savedText{{ loop.index }}')"><i class="bi bi-trash" aria-hidden="true"></i></button></td>
+                <td class="saved-msg-td-th"><form id="deleteSavedMsg{{ loop.index }}" name="deleteSavedMsg{{ loop.index }}" action="{{ url_for('routes.delete_saved_message', message_id=savedMessage['id']) }}" method="post" class="form-general"><button id="copyButton{{ loop.index }}" aria-label="Copy encoded message to clipboard" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy encoded message to clipboard" class="btn btn-warning btn-sm saved-action-btn" type="button" onclick="copyToClipboard('savedText{{ loop.index }}');"><i class="bi bi-clipboard" aria-hidden="true"></i></button><button aria-label="Delete Saved Message" class="btn btn-danger btn-sm saved-action-btn" data-bs-placement="top" data-bs-toggle="tooltip" form="deleteSavedMsg{{ loop.index }}" id="removeSavedButton{{ loop.index }}" title="Delete Saved Message" type="submit" value="Delete"><i class="bi bi-trash" aria-hidden="true"></i></button></form></td>
             </tr>
         {% endfor %}
     </table>

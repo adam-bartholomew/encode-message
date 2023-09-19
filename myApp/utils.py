@@ -1,8 +1,5 @@
-# Utility methods for the routes file
-from datetime import datetime
-from typing import Union
-
-from myApp import db, User, SavedMessage, log as log
+# Utility methods for the application.
+from myApp import db, User, SavedMessage, log
 
 
 def save_message(user: User, message: str) -> tuple:
@@ -27,5 +24,15 @@ def get_user_saved_messages(user: User) -> list:
     master_list = []
     for msg in user_saved_messages:
         master_list.append(msg.get_as_dict())
-    log.info(f"Saved messages: {master_list}")
     return master_list
+
+
+def delete_saved_message(saved_message_id: int) -> tuple:
+    saved_message = SavedMessage.query.filter_by(id=saved_message_id).first()
+    if saved_message:
+        db.session.delete(saved_message)
+        db.session.commit()
+        log.info(f"Deleted: {saved_message}")
+        return "Saved message deleted", "success"
+    return "Message was not be deleted", "warning"
+
