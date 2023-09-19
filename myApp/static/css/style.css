@@ -1,6 +1,31 @@
 a {
     text-decoration: none;
 }
+.saved-msg-td-th {
+    border: 1px solid #BBBBBB;
+    text-align: left;
+    padding: 8px;
+    white-space: pre;
+}
+.saved-msg-tr:nth-child(even) {
+    background: #DDDDDD;
+    border: 1px solid #FF0000;
+}
+.saved-msg-tbl {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+.saved-action-btn:hover {
+    /*white-space: pre;*/
+    /*width: 50%;*/
+    /*height: 10px;*/
+    transform: scale(1.01);
+    box-shadow: 0 2px 2px rgba(0,0,0,.12), 0 2px 2px rgba(0,0,0,.06);
+}
+.saved-action-btn {
+    margin-right: 0.5em;
+}
 .card-about {
     border-radius: 4px;
     background: #fff;
@@ -30,26 +55,25 @@ a {
     padding-right: 10px;
     padding-left: 10px;
 }
-.msg-button {
-    box-shadow: 1px 1px rgba(0,0,0,.08), 0 0 1px rgba(0,0,0,.05);
-        transition: .1s transform cubic-bezier(.155,1.105,.295,1.12),.1s box-shadow,.1s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
-}
-.disabled-link {
+.disabled-link-send {
     pointer-events: none;
     color: rgba(108,196,143);
     border: 1px solid;
     border-color: rgba(108,196,143);
-    margin-right: 10%;
+    margin-right: 0.5rem;
     display: inline-block;
 }
-.active-link {
+.active-link-send {
     color: green;
-    margin-right: 10%;
+    margin-right: 0.5rem;
     display: inline-block;
 }
 .msg-btn:hover {
     transform: scale(1.01);
     box-shadow: 0 2px 2px rgba(0,0,0,.12), 0 2px 2px rgba(0,0,0,.06);
+}
+.form-button {
+    margin-right: 0.5rem;
 }
 .loader {
     position: absolute;

@@ -32,5 +32,7 @@ def create_app():
     return app
 
 
-from myApp.models.UserModel import UserModel  # ignore PEP 8: E402
-from myApp import routes  # ignore PEP 8: E402
+from myApp.models.User import User  # ignore PEP 8: E402
+from myApp.models.SavedMessage import SavedMessage  # ignore PEP 8: E402
+from myApp.controllers.MessageController import encode, decode, log  # ignore PEP 8: E402
+from myApp import routes, utils  # ignore PEP 8: E402

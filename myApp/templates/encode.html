@@ -12,8 +12,8 @@
         <input type="number" id="encodeOffset" name="encodeOffset" class="form-control" max="25" min="0" placeholder="0" form="encodeForm" title="Select a number between 0 and 25 | Default is 0">
     </div>
     <div class="mb-3">
-        <button name="encodeSubmit" id="encodeSubmit" value="Submit" type="submit" class="btn btn-outline-primary bold-outline-btn" form="encodeForm" Title="Submit message for encoding" onClick="loadingMessage()">Submit</button>
-        <button name="encodeClear" id="encodeClear" value="Clear" type="submit" class="btn btn-outline-danger bold-outline-btn" form="encodeForm" onClick="clearEncodeForm()" Title="Clear all page fields">Clear</button>
+        <button name="encodeSubmit" id="encodeSubmit" value="Submit" type="submit" class="btn btn-outline-primary bold-outline-btn form-button" form="encodeForm" Title="Submit message for encoding" onClick="loadingMessage()">Submit</button>
+        <button name="encodeClear" id="encodeClear" value="Clear" type="submit" class="btn btn-outline-danger bold-outline-btn form-button" form="encodeForm" onClick="clearEncodeForm()" Title="Clear all page fields">Clear</button>
     </div>
     <hr class="mt-1 mb-1"/>
     <div class="mb-3">
@@ -21,11 +21,14 @@
             <div class="d-flex ms-auto">
                 {% if current_user.is_authenticated %}
                     {% if encoded_message|length < 1 %}
-                        {% set link_class = "btn btn-outline-success btn-sm msg-btn disabled-link" %}
+                        {% set link_class = "btn btn-outline-success btn-sm msg-btn disabled-link-send" %}
                     {% else %}
-                        {% set link_class = "btn btn-outline-success btn-sm msg-btn active-link" %}
+                        {% set link_class = "btn btn-outline-success btn-sm msg-btn active-link-send" %}
                     {% endif %}
-                    <a id="emailLink" class="{{ link_class }}" Title="Send Email" role="button" href="mailto:{{ current_user.email }}?subject=Your encoded message.&body={{ encoded_message.replace('\n', '%0D%0A') }}" target="_blank" rel="noopener noreferrer">
+                    <button name="saveButton" id="saveButton" value="Save" class="btn btn-outline-info btn-sm msg-btn form-button" type="submit" onclick="console.log('clicked!')" form="encodeForm" aria-label="Save Message" data-bs-toggle="tooltip" data-bs-placement="top" title="Save Message">
+                        <i class="bi bi-heart" aria-hidden="true"></i>
+                    </button>
+                    <a id="emailLink" class="{{ link_class }}" Title="Send as Email" role="button" href="mailto:{{ current_user.email }}?subject=Your encoded message.&body={{ encoded_message.replace('\n', '%0D%0A') }}" target="_blank" rel="noopener noreferrer">
                         <i class="bi bi-send" aria-hidden="true"></i>
                     </a>
                 {% endif %}
@@ -45,8 +48,10 @@
     // Disable copy when textarea is empty
     if(document.getElementById('encodedMessage').value != ""){
         document.getElementById('copyButton').disabled = false;
+        document.getElementById('saveButton').disabled = false;
     }else{
         document.getElementById('copyButton').disabled = true;
+        document.getElementById('saveButton').disabled = true;
     }
 </script>
 {% endblock %}
