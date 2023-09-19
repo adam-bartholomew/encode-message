@@ -119,7 +119,6 @@ def about() -> str:
 def saved_messages(username: str) -> str:
     user = User.query.filter_by(username=username).first_or_404()
     messages_list = utils.get_user_saved_messages(user)
-    print(f"messages_list: {messages_list}")
     return render_template(AVAILABLE_PAGES['saved_messages']['direct'], user=user, saved_messages=messages_list)
 
 
@@ -127,7 +126,7 @@ def saved_messages(username: str) -> str:
 @login_required
 def profile(user_id: int) -> str:
     user = User.query.filter_by(id=user_id).first_or_404()
-    msg_log.info(f"Getting Info for {user}")
+    msg_log.info(f"Getting info for {user}")
     user.set_empty_properties()
     has_changes = False
 

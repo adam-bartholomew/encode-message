@@ -1,6 +1,6 @@
 from myApp import db, bcrypt
 from flask_login import UserMixin
-from sqlalchemy import Column, String, Integer, DateTime
+from sqlalchemy import Column, String, Integer, DateTime, Text
 from sqlalchemy.sql import func
 
 
@@ -10,16 +10,16 @@ class User(db.Model, UserMixin):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
-    username = Column(String(25), unique=True, nullable=False)
-    password = Column(String(120), nullable=False)
-    first_name = Column(String(100))
-    last_name = Column(String(100))
-    email = Column(String(80), unique=True)
-    creation_datetime = Column(DateTime(timezone=False), nullable=False, server_default=func.now())
-    last_modified_datetime = Column(DateTime(timezone=False), server_default=func.now())
-    creation_userid = Column(String(25), nullable=False, server_default='system')
-    last_modified_userid = Column(String(25), server_default='system')
-    sso = Column(String(25), unique=False)
+    username = Column(Text, unique=True, nullable=False)
+    password = Column(Text, nullable=False)
+    first_name = Column(Text)
+    last_name = Column(Text)
+    email = Column(Text, unique=True)
+    creation_datetime = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
+    last_modified_datetime = Column(DateTime(timezone=True), server_default=func.now())
+    creation_userid = Column(Text, nullable=False, server_default='system')
+    last_modified_userid = Column(Text, server_default='system')
+    sso = Column(Text, unique=False)
 
     def __init__(self, *args, **kwargs) -> None:
         self.username = kwargs.get("username")
@@ -84,6 +84,6 @@ class User(db.Model, UserMixin):
     # Makes sure the new username is not in use already.
     @staticmethod
     def validate_new_username(old_username: str, new_username: str) -> bool:
-        if old_username != new_username:
+        if old_username != new_username and len(new_username) <= 30:
             return User.query.filter_by(username=new_username).first() is None
         return False

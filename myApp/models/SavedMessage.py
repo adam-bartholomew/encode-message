@@ -12,7 +12,7 @@ class SavedMessage(db.Model, UserMixin):
     id = Column(Integer, primary_key=True)
     encoded_text = Column(Text, nullable=False)
     saved_userid = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
-    saved_datetime = Column(DateTime(timezone=False), nullable=False, server_default=func.now())
+    saved_datetime = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
 
     def __init__(self, *args, **kwargs) -> None:
         self.encoded_text = kwargs.get("encoded_text")
