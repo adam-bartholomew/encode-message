@@ -60,3 +60,6 @@ Prior to starting up please execute the following 2 commands:
 To run the app in development:
 
     flask --app wsgi run --debug
+
+### Other notes:
+- Timestamps are stored in the database in UTC and are displayed as US/Eastern time.

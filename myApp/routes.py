@@ -118,7 +118,7 @@ def about() -> str:
 def saved_messages(username: str) -> str:
     user = User.query.filter_by(username=username).first_or_404()
     messages_list = utils.get_user_saved_messages(user)
-    log.info(f"{user.username} saved messages: {messages_list}")
+    log.info(f"User {user.username}'s saved messages: {messages_list}")
     return render_template(AVAILABLE_PAGES['saved_messages']['direct'], user=user, saved_messages=messages_list)
 
 
@@ -126,7 +126,7 @@ def saved_messages(username: str) -> str:
 @login_required
 def delete_saved_message(message_id: int):
     if request.method == 'POST':
-        log.info(f"Requesting to delete saved message {message_id} for {current_user.username}")
+        log.info(f"Requesting to delete saved message id {message_id} for {current_user.username}")
         message, category = utils.delete_saved_message(message_id)
         flash(message, category)
     return redirect(url_for(AVAILABLE_PAGES['saved_messages']['redirect'], username=current_user.username))

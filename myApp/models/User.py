@@ -2,6 +2,7 @@ from myApp import db, bcrypt
 from flask_login import UserMixin
 from sqlalchemy import Column, String, Integer, DateTime, Text
 from sqlalchemy.sql import func
+from pytz import timezone
 
 
 class User(db.Model, UserMixin):
@@ -61,7 +62,7 @@ class User(db.Model, UserMixin):
     def get_formatted_date(date) -> str:
         if date is None:
             return ""
-        return date.strftime("%B %d, %Y %I:%M:%S %p")
+        return f"{date.astimezone(timezone('US/Eastern')).strftime('%B %d, %Y %H:%M:%S %Z')}"
 
     @staticmethod
     def hash_password(password: str) -> str:

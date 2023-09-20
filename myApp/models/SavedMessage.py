@@ -2,6 +2,7 @@ from myApp import db
 from flask_login import UserMixin
 from sqlalchemy import Column, Integer, DateTime, Text, ForeignKey
 from sqlalchemy.sql import func
+from pytz import timezone
 
 
 class SavedMessage(db.Model, UserMixin):
@@ -23,9 +24,15 @@ class SavedMessage(db.Model, UserMixin):
         return f"<Saved Message {self.id}>:(" \
                f"encoded_text=\"{self.encoded_text}\"" \
                f", saved_userid=\"{self.saved_userid}\"" \
-               f", saved_datetime=\"{self.saved_datetime}\")"
+               f", saved_datetime=\"{self.get_formatted_date(self.saved_datetime)}\")"
 
     def get_as_dict(self) -> dict:
         message_dict = dict(id=self.id, encoded_text=self.encoded_text, saved_userid=self.saved_userid,
                             saved_datetime=self.saved_datetime)
         return message_dict
+
+    @staticmethod
+    def get_formatted_date(date) -> str:
+        if date is None:
+            return ""
+        return f"{date.astimezone(timezone('US/Eastern')).strftime('%B %d, %Y %H:%M:%S %Z')}"
