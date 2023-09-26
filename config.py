@@ -23,6 +23,11 @@ OAUTH2_PROVIDERS = {
             'profile_pic': lambda json: json['picture'],
         },
         'scopes': ['https://www.googleapis.com/auth/userinfo.email'],
+        'revoke_info': {
+            'revoke_url': 'https://oauth2.googleapis.com/revoke',
+            'http_method': 'POST',
+            'params': ['token'],
+        },
     },
     'github': {
         'client_id': os.environ.get('GITHUB_CLIENT_ID'),
@@ -38,6 +43,11 @@ OAUTH2_PROVIDERS = {
             'profile_pic': lambda json: json['avatar_url'],
         },
         'scopes': ['user'],
+        'revoke_info': {
+            'revoke_url': f"https://api.github.com/applications/{os.environ.get('GITHUB_CLIENT_ID')}/token",
+            'http_method': 'DELETE',
+            'params': ['access_token']
+        },
     },
     'twitch': {
         'client_secret': os.environ.get('TWITCH_CLIENT_SECRET'),
@@ -52,7 +62,12 @@ OAUTH2_PROVIDERS = {
             'name': lambda json: json['data'][0]['display_name'],
             'profile_pic': lambda json: json['data'][0]['profile_image_url'],
         },
-        'scopes': ['openid', 'user:read:email']
+        'scopes': ['openid', 'user:read:email'],
+        'revoke_info': {
+            'revoke_url': 'https://id.twitch.tv/oauth2/revoke',
+            'http_method': 'POST',
+            'params': ['client_id', 'token']
+        },
     }
 }
 AVAILABLE_PAGES = {

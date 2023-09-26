@@ -1,5 +1,6 @@
 import secrets
 import requests
+import webbrowser
 from urllib.parse import urlencode
 from datetime import datetime
 from typing import Union, Any
@@ -136,7 +137,7 @@ def delete_saved_message(message_id: int):
 @login_required
 def profile(user_id: int) -> str:
     user = User.query.filter_by(id=user_id).first_or_404()
-    log.info(f"Getting info for {user}")
+    log.info(f"Getting info for {user.username}")
     user.set_empty_properties()
     has_changes = False
 
@@ -170,14 +171,14 @@ def profile(user_id: int) -> str:
             user.last_modified_datetime = datetime.now()
             user.last_modified_userid = form_username
             user.clear_empty_properties()
-            log.info(f"Saving {user}")
+            log.info(f"Saving {user.username}")
             db.session.commit()
             user = User.query.filter_by(username=user.username).first_or_404()
             user.set_empty_properties()
             flash("Profile Updated", 'success')
             redirect(AVAILABLE_PAGES['profile']['redirect'])
         else:
-            log.info(f"Info not changed {user}")
+            log.info(f"Info not changed {user.username}")
 
     return render_template(AVAILABLE_PAGES['profile']['direct'], user=user)
 
@@ -193,7 +194,7 @@ def register() -> Union[str, Response]:
                             password=User.hash_password(request.form.get('password')))
             db.session.add(new_user)
             db.session.commit()
-            log.info(f"New user created: {new_user}")
+            log.info(f"New user created: {new_user.username}")
             login_user(new_user)
             flash("Successfully logged in", 'success')
             return redirect(url_for(AVAILABLE_PAGES['home']['redirect']))
@@ -215,7 +216,7 @@ def login() -> Union[str, Response]:
             try:
                 user.check_password(user.password, request.form.get('password'))
                 login_user(user)
-                log.info(f"Login success {user}.")
+                log.info(f"Login success {user.username}.")
                 return redirect(url_for(AVAILABLE_PAGES['home']['redirect']))
             except ValueError:
                 log.error(f"User <{form_name}> tried logging in with the wrong salt.")
@@ -302,6 +303,8 @@ def oauth2_callback(provider: str) -> Response:
     if not provider_data['userinfo']['email']:
         abort(401)
 
+    session['oauth2_token'] = oauth2_token
+    session['current_oauth_provider'] = provider
     email = provider_data['userinfo']['email'](response.json())
 
     # find or create the requested user.
@@ -316,7 +319,7 @@ def oauth2_callback(provider: str) -> Response:
                     sso=provider.capitalize())
         db.session.add(user)
         db.session.commit()
-        log.info(f"New user created via {provider.capitalize()}: {user}")
+        log.info(f"New user created via {provider.capitalize()}: {user.username}")
     else:
         if provider.capitalize() not in user.sso:
             user.sso = user.sso + ',' + provider.capitalize()
@@ -328,9 +331,67 @@ def oauth2_callback(provider: str) -> Response:
 
     # login the user.
     login_user(user)
-    log.info(f"User logged in: {user}")
+    log.info(f"User logged in: {user.username}")
     flash(f"Successfully logged in via {provider.capitalize()}", 'success')
     return redirect(url_for(AVAILABLE_PAGES['home']['redirect']))
+
+
+@routes.route('/revoke/<provider>')
+def oauth2_revoke(provider: str) -> Union[str, Response]:
+    if current_user.is_anonymous:
+        return redirect(url_for(AVAILABLE_PAGES['home']['redirect']))
+
+    provider_data = OAUTH2_PROVIDERS.get(provider)
+
+    if provider == 'github':
+        user = User.query.filter_by(id=current_user.id).first_or_404()
+        user.last_modified_datetime = datetime.now()
+        user.last_modified_userid = current_user.username
+        user.sso = user.sso.replace(provider.capitalize(), '').replace(',,', ',').strip(',')
+        user.clear_empty_properties()
+        log.info(f"Saving User {user.username}")
+        db.session.commit()
+
+        log.info(f"Revoked {provider.capitalize()} access from User {user.username}")
+        flash(f"Successfully removed the {provider.capitalize()} account connection.", 'success')
+        webbrowser.open_new_tab(f"https://github.com/settings/connections/applications/{provider_data['client_id']}")
+        return redirect(url_for(AVAILABLE_PAGES['profile']['redirect'], user_id=user.id))
+    if provider_data is None or 'revoke_info' not in provider_data.keys():
+        abort(404)
+
+    # Get the current user model
+    user = User.query.filter_by(id=current_user.id).first_or_404()
+
+    if user:
+        # Build the HTTP request
+        req_params = {}
+        for param in provider_data['revoke_info']['params']:
+            if "token" in param:
+                req_params[param] = session['oauth2_token']
+            if param == "client_id":
+                req_params[param] = provider_data['client_id']
+        response = requests.post(provider_data['revoke_info']['revoke_url'],
+                                params=req_params,
+                                headers={'content-type': 'application/x-www-form-urlencoded'})
+
+        # Error response code
+        if response.status_code != 200:
+            log.error(f"Response status code of {response.status_code} returned from oauth_revoke request for {user.username} and {provider}")
+            abort(401)
+
+        # Update user profile
+        user.last_modified_datetime = datetime.now()
+        user.last_modified_userid = current_user.username
+        user.sso = user.sso.replace(provider.capitalize(), '').replace(',,', ',').strip(',')
+        user.clear_empty_properties()
+        log.info(f"Saving User {user.username}")
+        db.session.commit()
+
+        log.info(f"Revoked {provider.capitalize()} access from User {user.username}")
+        flash(f"Successfully removed the {provider.capitalize()} account connection.", 'success')
+        return redirect(url_for(AVAILABLE_PAGES['profile']['redirect'], user_id=current_user.id))
+    else:
+        abort(404)
 
 
 @routes.route('/logout')

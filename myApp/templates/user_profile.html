@@ -20,10 +20,12 @@
         </div>
         {% if user.sso %}
             <div class="col-md-4">
-                <p>Connected Accounts:
+                <p><span Title="Click a specific icon to revoke access.">Connected Accounts:</span>
                 {% for provider, img in sso_providers %}
-                    {% if provider.capitalize() in user.sso.split(',') %}
-                        <img id="{{ provider }}-conn" src="{{ img }}" aria-label="{{ provider }} Image" aria-hidden="true" alt="{{ provider }} Image" class="sso-img">
+                    {% if provider.capitalize() in user.sso.split(',') and session.current_oauth_provider == provider %}
+                        <a href="{{ url_for('routes.oauth2_revoke', provider=provider) }}"><img id="revoke-{{ provider }}-conn" src="{{ img }}" aria-label="{{ provider }} Image" aria-hidden="true" Title="Remove {{ provider.capitalize() }} connection." alt="{{ provider }} Image" class="sso-img"></a>
+                    {% elif provider.capitalize() in user.sso.split(',') %}
+                        <img id="{{ provider }}-conn" src="{{ img }}" aria-label="{{ provider }} Image" aria-hidden="true" Title="Login with {{ provider.capitalize() }} to remove connection." alt="{{ provider }} Image" class="sso-img">
                     {% endif %}
                 {% endfor %}
                 </p>
