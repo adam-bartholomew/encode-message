@@ -176,11 +176,11 @@ def profile(user_id: int) -> str:
             user = User.query.filter_by(username=user.username).first_or_404()
             user.set_empty_properties()
             flash("Profile Updated", 'success')
-            redirect(AVAILABLE_PAGES['profile']['redirect'])
+            redirect(url_for(AVAILABLE_PAGES['profile']['redirect'], oauth2_providers=OAUTH2_PROVIDERS))
         else:
             log.info(f"Info not changed {user.username}")
 
-    return render_template(AVAILABLE_PAGES['profile']['direct'], user=user)
+    return render_template(AVAILABLE_PAGES['profile']['direct'], user=user, oauth2_providers=OAUTH2_PROVIDERS)
 
 
 @routes.route('/register', methods=['GET', 'POST'])
@@ -381,9 +381,9 @@ def oauth2_revoke(provider: str) -> Union[str, Response]:
         log.info(f"Revoked {provider.capitalize()} access from User {user.username}")
         if provider == "github":
             flash(f"Please see the opened tab to revoke the {provider.capitalize()} account connection.", 'info')
-            return render_template(AVAILABLE_PAGES['profile']['direct'], user=user)
+            return render_template(AVAILABLE_PAGES['profile']['direct'], user=user, oauth2_providers=OAUTH2_PROVIDERS)
         flash(f"Please view your {provider.capitalize()} account connections page to verify the connection is removed.", 'info')
-        return redirect(url_for(AVAILABLE_PAGES['profile']['redirect'], user_id=current_user.id))
+        return redirect(url_for(AVAILABLE_PAGES['profile']['redirect'], user_id=current_user.id, oauth2_providers=OAUTH2_PROVIDERS))
     else:
         abort(404)
 

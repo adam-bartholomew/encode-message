@@ -25,7 +25,7 @@
                     {% if provider.capitalize() in user.sso.split(',') and session.current_oauth_provider == provider %}
                         {% if provider == 'github' %}
                             <input type="hidden" id="provider_url" value="{{ url_for('routes.oauth2_revoke', provider=provider) }}">
-                            <a href="https://github.com/settings/connections/applications/b2cbacd4a40947958121" target="_blank" onclick="disconnectGithub()"><img id="revoke-{{ provider }}-conn" src="{{ img }}" aria-label="{{ provider }} Image" aria-hidden="true" Title="Remove {{ provider.capitalize() }} connection - Directs you to an external page." alt="{{ provider }} Image" class="sso-img"></a>
+                            <a href="https://github.com/settings/connections/applications/{{ oauth2_providers['github']['client_id'] }}" target="_blank" onclick="disconnectGithub()"><img id="revoke-{{ provider }}-conn" src="{{ img }}" aria-label="{{ provider }} Image" aria-hidden="true" Title="Remove {{ provider.capitalize() }} connection - Directs you to an external page." alt="{{ provider }} Image" class="sso-img"></a>
                         {% else %}
                             <a href="{{ url_for('routes.oauth2_revoke', provider=provider) }}"><img id="revoke-{{ provider }}-conn" src="{{ img }}" aria-label="{{ provider }} Image" aria-hidden="true" Title="Remove {{ provider.capitalize() }} connection." alt="{{ provider }} Image" class="sso-img"></a>
                         {% endif %}
