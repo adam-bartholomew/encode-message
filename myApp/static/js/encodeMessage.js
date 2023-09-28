@@ -86,3 +86,20 @@ function loadingMessage() {
         }
     }
 }
+
+function disconnectGithub() {
+    let url = document.querySelector("#provider_url").value;
+    console.log(url);
+    $.ajax({
+        url: url,
+        method: "GET",
+        error: function(xhr, status, error){
+            console.log('error');
+            alert("Server Error");
+        },
+        success: function(){
+            console.log('success');
+            window.location.replace(url);
+        }
+    })
+}

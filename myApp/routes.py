@@ -343,19 +343,6 @@ def oauth2_revoke(provider: str) -> Union[str, Response]:
 
     provider_data = OAUTH2_PROVIDERS.get(provider)
 
-    if provider == 'github':
-        user = User.query.filter_by(id=current_user.id).first_or_404()
-        user.last_modified_datetime = datetime.now()
-        user.last_modified_userid = current_user.username
-        user.sso = user.sso.replace(provider.capitalize(), '').replace(',,', ',').strip(',')
-        user.clear_empty_properties()
-        log.info(f"Saving User {user.username}")
-        db.session.commit()
-
-        log.info(f"Revoked {provider.capitalize()} access from User {user.username}")
-        flash(f"Successfully removed the {provider.capitalize()} account connection.", 'success')
-        webbrowser.open_new_tab(f"https://github.com/settings/connections/applications/{provider_data['client_id']}")
-        return redirect(url_for(AVAILABLE_PAGES['profile']['redirect'], user_id=user.id))
     if provider_data is None or 'revoke_info' not in provider_data.keys():
         abort(404)
 
@@ -363,21 +350,22 @@ def oauth2_revoke(provider: str) -> Union[str, Response]:
     user = User.query.filter_by(id=current_user.id).first_or_404()
 
     if user:
-        # Build the HTTP request
-        req_params = {}
-        for param in provider_data['revoke_info']['params']:
-            if "token" in param:
-                req_params[param] = session['oauth2_token']
-            if param == "client_id":
-                req_params[param] = provider_data['client_id']
-        response = requests.post(provider_data['revoke_info']['revoke_url'],
-                                params=req_params,
-                                headers={'content-type': 'application/x-www-form-urlencoded'})
+        if provider != 'github':
+            # Build the HTTP request
+            req_params = {}
+            for param in provider_data['revoke_info']['params']:
+                if "token" in param:
+                    req_params[param] = session['oauth2_token']
+                if param == "client_id":
+                    req_params[param] = provider_data['client_id']
+            response = requests.post(provider_data['revoke_info']['revoke_url'],
+                                    params=req_params,
+                                    headers={'content-type': 'application/x-www-form-urlencoded'})
 
-        # Error response code
-        if response.status_code != 200:
-            log.error(f"Response status code of {response.status_code} returned from oauth_revoke request for {user.username} and {provider}")
-            abort(401)
+            # Error response code
+            if response.status_code != 200:
+                log.error(f"Response status code of {response.status_code} returned from oauth_revoke request for {user.username} and {provider}")
+                abort(401)
 
         # Update user profile
         user.last_modified_datetime = datetime.now()
@@ -387,8 +375,14 @@ def oauth2_revoke(provider: str) -> Union[str, Response]:
         log.info(f"Saving User {user.username}")
         db.session.commit()
 
+        session['oauth2_token'] = None
+        session['oauth2_state'] = None
+        session['current_oauth_provider'] = None
         log.info(f"Revoked {provider.capitalize()} access from User {user.username}")
-        flash(f"Successfully removed the {provider.capitalize()} account connection.", 'success')
+        if provider == "github":
+            flash(f"Please see the opened tab to revoke the {provider.capitalize()} account connection.", 'info')
+            return render_template(AVAILABLE_PAGES['profile']['direct'], user=user)
+        flash(f"Please view your {provider.capitalize()} account connections page to verify the connection is removed.", 'info')
         return redirect(url_for(AVAILABLE_PAGES['profile']['redirect'], user_id=current_user.id))
     else:
         abort(404)
