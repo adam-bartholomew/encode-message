@@ -350,7 +350,7 @@ def oauth2_revoke(provider: str) -> Union[str, Response]:
     user = User.query.filter_by(id=current_user.id).first_or_404()
 
     if user:
-        if provider != 'github':
+        if provider == 'google':
             # Build the HTTP request
             req_params = {}
             for param in provider_data['revoke_info']['params']:
@@ -379,10 +379,10 @@ def oauth2_revoke(provider: str) -> Union[str, Response]:
         session['oauth2_state'] = None
         session['current_oauth_provider'] = None
         log.info(f"Revoked {provider.capitalize()} access from User {user.username}")
-        if provider == "github":
-            flash(f"Please see the opened tab to revoke the {provider.capitalize()} account connection.", 'info')
+        if provider in ["github", "twitch"]:
+            flash(f"Please see the opened tab to revoke the {provider.capitalize()} account connection, then logout.", 'info')
             return render_template(AVAILABLE_PAGES['profile']['direct'], user=user, oauth2_providers=OAUTH2_PROVIDERS)
-        flash(f"Please view your {provider.capitalize()} account connections page to verify the connection is removed.", 'info')
+        flash(f"Please review your {provider.capitalize()} account connections page to verify the connection is removed.", 'info')
         return redirect(url_for(AVAILABLE_PAGES['profile']['redirect'], user_id=current_user.id, oauth2_providers=OAUTH2_PROVIDERS))
     else:
         abort(404)

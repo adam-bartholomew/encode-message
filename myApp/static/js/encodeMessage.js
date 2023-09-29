@@ -87,18 +87,17 @@ function loadingMessage() {
     }
 }
 
-function disconnectGithub() {
+function disconnectOAuth2() {
     let url = document.querySelector("#provider_url").value;
-    console.log(url);
     $.ajax({
         url: url,
         method: "GET",
         error: function(xhr, status, error){
-            console.log('error');
+            console.log('disconnectOAuth2 - error');
             alert("Server Error");
         },
         success: function(){
-            console.log('success');
+            console.log('disconnectOAuth2 - success');
             window.location.replace(url);
         }
     })

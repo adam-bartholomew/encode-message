@@ -23,10 +23,12 @@
                 <p><span Title="Click a specific icon to revoke access.">Connected Accounts:</span>
                 {% for provider, img in sso_providers %}
                     {% if provider.capitalize() in user.sso.split(',') and session.current_oauth_provider == provider %}
+                        <input type="hidden" id="provider_url" value="{{ url_for('routes.oauth2_revoke', provider=provider) }}">
                         {% if provider == 'github' %}
-                            <input type="hidden" id="provider_url" value="{{ url_for('routes.oauth2_revoke', provider=provider) }}">
-                            <a href="https://github.com/settings/connections/applications/{{ oauth2_providers['github']['client_id'] }}" target="_blank" onclick="disconnectGithub()"><img id="revoke-{{ provider }}-conn" src="{{ img }}" aria-label="{{ provider }} Image" aria-hidden="true" Title="Remove {{ provider.capitalize() }} connection - Directs you to an external page." alt="{{ provider }} Image" class="sso-img"></a>
-                        {% else %}
+                            <a href="https://github.com/settings/connections/applications/{{ oauth2_providers['github']['client_id'] }}" target="_blank" onclick="disconnectOAuth2()"><img id="revoke-{{ provider }}-conn" src="{{ img }}" aria-label="{{ provider }} Image" aria-hidden="true" Title="Remove {{ provider.capitalize() }} connection - Opens your GitHub account connections page." alt="{{ provider }} Image" class="sso-img"></a>
+                        {% elif provider == 'twitch' %}
+                            <a href="https://www.twitch.tv/settings/connections" target="_blank" onclick="disconnectOAuth2()"><img id="revoke-{{ provider }}-conn" src="{{ img }}" aria-label="{{ provider }} Image" aria-hidden="true" Title="Remove {{ provider.capitalize() }} connection - Go to your Twitch account > Settings > Connections > Other Connections and disconnect &quot;encode-message&quot;." alt="{{ provider }} Image" class="sso-img"></a>
+                        {% elif provider == 'google' %}
                             <a href="{{ url_for('routes.oauth2_revoke', provider=provider) }}"><img id="revoke-{{ provider }}-conn" src="{{ img }}" aria-label="{{ provider }} Image" aria-hidden="true" Title="Remove {{ provider.capitalize() }} connection." alt="{{ provider }} Image" class="sso-img"></a>
                         {% endif %}
                     {% elif provider.capitalize() in user.sso.split(',') %}
@@ -37,6 +39,7 @@
             </div>
         {% endif %}
     </div>
+
     <form id="updateProfileForm" method="post" class="form-general">
         <div class="row">
             <div class="col-sm-6">
