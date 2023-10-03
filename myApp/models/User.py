@@ -58,6 +58,24 @@ class User(db.Model, UserMixin):
         if len(self.email.strip()) == 0:
             self.email = None
 
+    def add_to_sso(self, value: str) -> bool:
+        value = value.strip().capitalize()
+        if len(value) > 0 and value not in self.sso:
+            self.sso = f"{self.sso},{value}"
+            self.last_modified_userid = self.username
+            self.last_modified_datetime = func.now()
+            return True
+        return False
+
+    def remove_from_sso(self, value: str) -> bool:
+        value = value.strip().capitalize()
+        if len(value) > 0:
+            self.sso = self.sso.replace(value, '').replace(',,', ',').strip(',')
+            self.last_modified_userid = self.username
+            self.last_modified_datetime = func.now()
+            return True
+        return False
+
     @staticmethod
     def get_formatted_date(date) -> str:
         if date is None:

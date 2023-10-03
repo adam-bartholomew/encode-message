@@ -1,6 +1,5 @@
 import secrets
 import requests
-import webbrowser
 from urllib.parse import urlencode
 from datetime import datetime
 from typing import Union, Any
@@ -146,11 +145,11 @@ def profile(user_id: int) -> str:
         return render_template(AVAILABLE_PAGES['unauthorized']['direct'])
 
     if request.method == 'POST':
-        form_username = request.form.get('profile_username')
-        form_first_name = request.form.get('profile_firstname')
-        form_last_name = request.form.get('profile_lastname')
-        form_email = request.form.get('profile_email')
-        form_password = request.form.get('profile_password')
+        form_username = request.form.get('profile_username').strip()
+        form_first_name = request.form.get('profile_firstname').strip()
+        form_last_name = request.form.get('profile_lastname').strip()
+        form_email = request.form.get('profile_email').strip()
+        form_password = request.form.get('profile_password').strip()
         if user.validate_new_username(user.username, form_username):
             has_changes = True
             user.username = form_username
@@ -176,7 +175,7 @@ def profile(user_id: int) -> str:
             user = User.query.filter_by(username=user.username).first_or_404()
             user.set_empty_properties()
             flash("Profile Updated", 'success')
-            redirect(url_for(AVAILABLE_PAGES['profile']['redirect'], oauth2_providers=OAUTH2_PROVIDERS))
+            redirect(url_for(AVAILABLE_PAGES['profile']['redirect'], user_id=user.id, oauth2_providers=OAUTH2_PROVIDERS))
         else:
             log.info(f"Info not changed {user.username}")
 
@@ -322,9 +321,7 @@ def oauth2_callback(provider: str) -> Response:
         log.info(f"New user created via {provider.capitalize()}: {user.username}")
     else:
         if provider.capitalize() not in user.sso:
-            user.sso = user.sso + ',' + provider.capitalize()
-            user.last_modified_datetime = datetime.now()
-            user.last_modified_userid = user.username
+            user.add_to_sso(provider)
             db.session.commit()
             user = User.query.filter_by(username=user.username).first_or_404()
             user.set_empty_properties()
@@ -368,9 +365,7 @@ def oauth2_revoke(provider: str) -> Union[str, Response]:
                 abort(401)
 
         # Update user profile
-        user.last_modified_datetime = datetime.now()
-        user.last_modified_userid = current_user.username
-        user.sso = user.sso.replace(provider.capitalize(), '').replace(',,', ',').strip(',')
+        user.remove_from_sso(provider)
         user.clear_empty_properties()
         log.info(f"Saving User {user.username}")
         db.session.commit()
