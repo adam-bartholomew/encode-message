@@ -1,6 +1,6 @@
 from myApp import db, bcrypt
 from flask_login import UserMixin
-from sqlalchemy import Column, String, Integer, DateTime, Text
+from sqlalchemy import Column, Boolean, Integer, DateTime, Text
 from sqlalchemy.sql import func
 from pytz import timezone
 
@@ -21,6 +21,7 @@ class User(db.Model, UserMixin):
     creation_userid = Column(Text, nullable=False, server_default='system')
     last_modified_userid = Column(Text, server_default='system')
     sso = Column(Text, unique=False)
+    admin = Column(Boolean, server_default='f', nullable=False)
 
     def __init__(self, *args, **kwargs) -> None:
         self.username = kwargs.get("username")
@@ -40,7 +41,8 @@ class User(db.Model, UserMixin):
                f", creation_user=\"{self.creation_userid}\"" \
                f", modified_date=\"{self.last_modified_datetime}\"" \
                f", modified_user=\"{self.last_modified_userid}\"" \
-               f", sso=\"{self.sso})\""
+               f", sso=\"{self.sso}\"" \
+               f", admin=\"{self.admin}\")"
 
     def set_empty_properties(self) -> None:
         if self.first_name is None:
