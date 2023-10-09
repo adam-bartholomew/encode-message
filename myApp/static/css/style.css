@@ -4,7 +4,6 @@ a {
 .message-text {
     white-space: break-spaces;
 }
-
 .saved-msg-tbl {
     font-family: arial, sans-serif;
     border-collapse: collapse;
@@ -13,6 +12,14 @@ a {
 .saved-action-btn:hover {
     transform: scale(1.01);
     box-shadow: 0 2px 2px rgba(0,0,0,.12), 0 2px 2px rgba(0,0,0,.06);
+}
+.pagination-links-div {
+    float: right;
+}
+.pagination-info {
+    margin-top: 0.25em;
+    margin-bottom: 0.1em;
+    text-align: center;
 }
 .card-about {
     border-radius: 4px;

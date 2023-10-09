@@ -7,7 +7,7 @@ from flask import render_template, request, url_for, flash, redirect, Blueprint,
 from flask_login import login_user, logout_user, current_user, login_required
 
 from myApp import db, login_manager, User, SavedMessage, encode as encode_message, decode as decode_message, log, utils
-from config import OAUTH2_PROVIDERS, RETURN_SPACER, AVAILABLE_PAGES
+from config import OAUTH2_PROVIDERS, RETURN_SPACER, AVAILABLE_PAGES, ROWS_PER_PAGE
 
 # Define route constants
 routes = Blueprint('routes', __name__)
@@ -117,9 +117,10 @@ def about() -> str:
 @login_required
 def saved_messages(username: str) -> str:
     user = User.query.filter_by(username=username).first_or_404()
-    messages_list = utils.get_user_saved_messages(user)
-    log.info(f"User {user.username}'s saved messages: {messages_list}")
-    return render_template(AVAILABLE_PAGES['saved_messages']['direct'], user=user, saved_messages=messages_list)
+    page = request.args.get('page', 1, type=int)
+    saves = SavedMessage.query.filter_by(saved_userid=user.id).paginate(page=page, per_page=ROWS_PER_PAGE, error_out=False)
+    log.info(f"User {user.username}'s saved messages.")
+    return render_template(AVAILABLE_PAGES['saved_messages']['direct'], user=user, rows_per_page=ROWS_PER_PAGE, saved_messages=saves)
 
 
 @routes.route('/delete_saved_message/<int:message_id>', methods=['POST'])

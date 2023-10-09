@@ -4,8 +4,43 @@
 {% block content %}
 
 <h1 style="text-align:center;">{% block title %}Saved Messages{% endblock %}</h1>
-{% if saved_messages %}
-    <table id="savedMessageTable" class="table table-responsive table-light table-striped table-hover">
+{% if saved_messages.pages > 0 %}
+    <!-- Pagination Links-->
+    <div class="pagination-links-div">
+        <div class="text-right">
+            <a href="{{ url_for('routes.saved_messages', username=current_user.username, page=saved_messages.prev_num) }}"
+               class="btn btn-sm btn-outline-secondary {% if not saved_messages.has_prev %}disabled{% endif %}"
+                Title="Previous Page">
+                &laquo;
+            </a>
+            <!-- Loop through the number of pages to display a link for each page-->
+            {% for page_num in saved_messages.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
+                {% if page_num %}
+                    <!-- Check for the active page and set the link to "Active"-->
+                    {% if saved_messages.page == page_num %}
+                        <a href="{{ url_for('routes.saved_messages', username=current_user.username, page=page_num) }}" Title="Current Page" class="btn btn-sm btn-secondary">
+                            {{ page_num }}
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('routes.saved_messages', username=current_user.username, page=page_num) }}" Title="Page {{ page_num }}" class="btn btn-sm btn-outline-secondary">
+                            {{ page_num }}
+                        </a>
+                    {% endif %}
+                {% else %}
+                    ...
+                {% endif %}
+            {% endfor %}
+            <a href="{{ url_for('routes.saved_messages', username=current_user.username, page=saved_messages.next_num) }}"
+               class="btn btn-sm btn-outline-secondary {% if not saved_messages.has_next %}disabled{% endif %}"
+                Title="Next Page">
+                &raquo;
+            </a>
+        </div>
+        <p class="text-right pagination-info">
+           Showing page {{ saved_messages.page }} of {{ saved_messages.pages }}
+        </p>
+    </div>
+    <table id="savedMessageTable" class="table table-responsive table-light table-striped table-hover caption-top">
         <caption>All encoded messages saved by {{ user.username }}</caption>
         <thead class="table-primary">
             <tr>
@@ -16,22 +51,22 @@
             </tr>
         </thead>
         <tbody>
-        {% for savedMessage in saved_messages %}
+        {% for savedMessage in saved_messages.items %}
             <tr>
-                <th scope="row">{{ loop.index }}</th>
+                <th scope="row">{{ ((saved_messages.page - 1) * rows_per_page) + loop.index }}</th>
                 <td id="savedText{{ loop.index }}" class="message-text">{{ savedMessage['encoded_text'] }}</td>
                 <td>{{ user.get_formatted_date(savedMessage['saved_datetime']) }}</td>
                 <td>
                     <div class="container">
                         <div class="row">
                             <div class="col-6 col-md-3">
-                                <button id="copyButton{{ loop.index }}" aria-label="Copy encoded message to clipboard" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy encoded message to clipboard" class="btn btn-warning btn-sm saved-action-btn" type="button" onclick="copyToClipboard('savedText{{ loop.index }}');">
+                                <button id="copySavedMsgBtn_{{ ((saved_messages.page - 1) * rows_per_page) + loop.index }}" aria-label="Copy encoded message to clipboard" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy encoded message to clipboard" class="btn btn-warning btn-sm saved-action-btn" type="button" onclick="copyToClipboard('savedText{{ ((saved_messages.page - 1) * rows_per_page) + loop.index }}');">
                                     <i class="bi bi-clipboard" aria-hidden="true"></i>
                                 </button>
                             </div>
                             <div class="col-6 col-md-3">
-                                <form id="deleteSavedMsg{{ loop.index }}" name="deleteSavedMsg{{ loop.index }}" action="{{ url_for('routes.delete_saved_message', message_id=savedMessage['id']) }}" method="post" class="form-general">
-                                    <button aria-label="Delete Saved Message" class="btn btn-danger btn-sm saved-action-btn" data-bs-placement="top" data-bs-toggle="tooltip" form="deleteSavedMsg{{ loop.index }}" id="removeSavedButton{{ loop.index }}" title="Delete Saved Message" type="submit" value="Delete">
+                                <form id="deleteSavedMsg_{{ ((saved_messages.page - 1) * rows_per_page) + loop.index }}" name="deleteSavedMsg_{{ ((saved_messages.page - 1) * rows_per_page) + loop.index }}" action="{{ url_for('routes.delete_saved_message', message_id=savedMessage['id']) }}" method="post" class="form-general">
+                                    <button aria-label="Delete Saved Message" class="btn btn-danger btn-sm saved-action-btn" data-bs-placement="top" data-bs-toggle="tooltip" form="deleteSavedMsg_{{ ((saved_messages.page - 1) * rows_per_page) + loop.index }}" id="deleteSavedMsgBtn_{{ ((saved_messages.page - 1) * rows_per_page) + loop.index }}" title="Delete Saved Message" type="submit" value="Delete">
                                         <i class="bi bi-trash" aria-hidden="true"></i>
                                     </button>
                                 </form>
