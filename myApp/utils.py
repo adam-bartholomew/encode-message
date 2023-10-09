@@ -1,6 +1,5 @@
 # Utility methods for the application.
 from myApp import db, User, SavedMessage, log
-from config import ROWS_PER_PAGE
 
 
 def save_message(user: User, message: str) -> tuple:
@@ -18,16 +17,6 @@ def save_message(user: User, message: str) -> tuple:
             return "Message already saved.", "info"
     log.debug("Something else. User may not have been authenticated, which should not be the case")
     return "Something else.", "warning"
-
-
-'''
-def get_user_saved_messages(user: User) -> list:
-    user_saved_messages = SavedMessage.query.filter_by(saved_userid=user.id).all()
-    master_list = []
-    for msg in user_saved_messages:
-        master_list.append(msg.get_as_dict())
-    return master_list
-'''
 
 
 def delete_saved_message(saved_message_id: int) -> tuple:
