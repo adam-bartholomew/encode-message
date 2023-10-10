@@ -57,14 +57,12 @@
                 <td id="savedText{{ loop.index }}" class="message-text">{{ savedMessage['encoded_text'] }}</td>
                 <td>{{ user.get_formatted_date(savedMessage['saved_datetime']) }}</td>
                 <td>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-6 col-md-3">
+                    <div class="container-fluid saved-msg-actn-container">
+                        <div class="row saved-msg-actn-row">
+                            <div class="d-grid gap-2 d-md-flex saved-msg-actn-div" style="padding-left: 0;">
                                 <button id="copySavedMsgBtn_{{ ((saved_messages.page - 1) * rows_per_page) + loop.index }}" aria-label="Copy encoded message to clipboard" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy encoded message to clipboard" class="btn btn-warning btn-sm saved-action-btn" type="button" onclick="copyToClipboard('savedText{{ ((saved_messages.page - 1) * rows_per_page) + loop.index }}');">
                                     <i class="bi bi-clipboard" aria-hidden="true"></i>
                                 </button>
-                            </div>
-                            <div class="col-6 col-md-3">
                                 <form id="deleteSavedMsg_{{ ((saved_messages.page - 1) * rows_per_page) + loop.index }}" name="deleteSavedMsg_{{ ((saved_messages.page - 1) * rows_per_page) + loop.index }}" action="{{ url_for('routes.delete_saved_message', message_id=savedMessage['id']) }}" method="post" class="form-general">
                                     <button aria-label="Delete Saved Message" class="btn btn-danger btn-sm saved-action-btn" data-bs-placement="top" data-bs-toggle="tooltip" form="deleteSavedMsg_{{ ((saved_messages.page - 1) * rows_per_page) + loop.index }}" id="deleteSavedMsgBtn_{{ ((saved_messages.page - 1) * rows_per_page) + loop.index }}" title="Delete Saved Message" type="submit" value="Delete">
                                         <i class="bi bi-trash" aria-hidden="true"></i>

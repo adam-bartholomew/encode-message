@@ -13,8 +13,22 @@ a {
     transform: scale(1.01);
     box-shadow: 0 2px 2px rgba(0,0,0,.12), 0 2px 2px rgba(0,0,0,.06);
 }
+.saved-btn-div {
+    padding-left: 0;
+    padding-right: 0.5rem;
+}
+saved-msg-actn-container {
+    padding: 0;
+}
+.saved-msg-actn-row {
+    margin: auto;
+}
 .pagination-links-div {
     float: right;
+    margin-right: 0.5rem;
+    padding-right: 0.5rem;
+    margin-left: 0.5rem;
+    padding-left: 0.5rem;
 }
 .pagination-info {
     margin-top: 0.25em;
@@ -237,5 +251,13 @@ a {
 @media (max-width: 176px) {
     .bold-outline-btn {
         margin-bottom: 5px;
+    }
+}
+@media (max-width: 767px) {
+    .saved-btn-div {
+        margin-bottom: 0.5rem;
+    }
+    .saved-msg-actn-row {
+        display: block;
     }
 }
