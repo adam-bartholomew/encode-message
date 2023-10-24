@@ -4,7 +4,7 @@
 {% block content %}
 <div class="row">
     <div class="col-md-8 offset-md-2 div-title-center">
-        <h1>{% block title %}Welcome{% if current_user.is_authenticated %}, {{ current_user.first_name }}{% endif %}!{% endblock %}</h1>
+        <h1>{% block title %}Welcome{% if current_user.is_authenticated %}{{ ', ' + current_user.first_name if current_user.first_name is not none else ', ' + current_user.username }}{% endif %}!{% endblock %}</h1>
         <h5>Please use the links in the navigation bar at the top of the page to select a destination.</h5>
         <p>This application was built to encode and decode an English message around the number of syllables in a word. A more detailed design document can be found in the GitHub repository found on the <a href="{{ url_for('routes.about') }}">About</a> page.</p>
     </div>
