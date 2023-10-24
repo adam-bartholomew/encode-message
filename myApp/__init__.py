@@ -28,6 +28,7 @@ def create_app():
 
     from myApp.routes import routes
     app.register_blueprint(routes)
+    login_manager.login_view = "routes.login"
 
     return app
 
