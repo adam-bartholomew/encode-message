@@ -135,51 +135,31 @@ def delete_saved_message(message_id: int):
 
 @routes.route('/profile/<int:user_id>', methods=['GET', 'POST'])
 @login_required
-def profile(user_id: int) -> str:
+def profile(user_id: int) -> Union[str, Response]:
     user = User.query.filter_by(id=user_id).first_or_404()
     log.info(f"Getting info for {user.username}")
     user.set_empty_properties()
-    has_changes = False
 
-    if current_user.username != user.username:
-        flash("You do not have permission to visit this page.", 'danger')
-        return render_template(AVAILABLE_PAGES['unauthorized']['direct'])
+    if current_user.username != user.username or not current_user.is_authenticated:
+        abort(401)
 
-    if request.method == 'POST':
+    if request.method == 'POST' and request.form.get('updateProfile') == 'Update Profile':
         form_username = request.form.get('profile_username').strip()
         form_first_name = request.form.get('profile_firstname').strip()
         form_last_name = request.form.get('profile_lastname').strip()
         form_email = request.form.get('profile_email').strip()
         form_password = request.form.get('profile_password').strip()
-        if user.validate_new_username(user.username, form_username):
-            has_changes = True
-            user.username = form_username
-        if user.validate_new_password(user.password, form_password):
-            has_changes = True
-            user.password = user.hash_password(form_password)
-        if user.first_name != form_first_name:
-            has_changes = True
-            user.first_name = form_first_name
-        if user.last_name != form_last_name:
-            has_changes = True
-            user.last_name = form_last_name
-        if user.email != form_email:
-            has_changes = True
-            user.email = form_email
+        message, category = utils.update_profile(user, form_username, form_password, form_first_name, form_last_name, form_email)
+        if message is not None:
+            flash(message, category)
+            return redirect(url_for(AVAILABLE_PAGES['profile']['redirect'], user_id=user.id, oauth2_providers=OAUTH2_PROVIDERS))
 
-        if has_changes:
-            user.last_modified_datetime = datetime.now()
-            user.last_modified_userid = form_username
-            user.clear_empty_properties()
-            log.info(f"Saving {user.username}")
-            db.session.commit()
-            user = User.query.filter_by(username=user.username).first_or_404()
-            user.set_empty_properties()
-            flash("Profile Updated", 'success')
-            redirect(url_for(AVAILABLE_PAGES['profile']['redirect'], user_id=user.id, oauth2_providers=OAUTH2_PROVIDERS))
-        else:
-            log.info(f"Info not changed {user.username}")
-
+    if request.method == 'POST' and request.form.get('deleteAccount') == "Delete Account":
+        message, category = utils.delete_account(user_id)
+        if category == "success":
+            logout_user()
+        flash(message, category)
+        return redirect(url_for(AVAILABLE_PAGES['home']['redirect']))
     return render_template(AVAILABLE_PAGES['profile']['direct'], user=user, oauth2_providers=OAUTH2_PROVIDERS)
 
 

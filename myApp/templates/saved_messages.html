@@ -64,7 +64,7 @@
                                     <i class="bi bi-clipboard" aria-hidden="true"></i>
                                 </button>
                                 <form id="deleteSavedMsg_{{ ((saved_messages.page - 1) * rows_per_page) + loop.index }}" name="deleteSavedMsg_{{ ((saved_messages.page - 1) * rows_per_page) + loop.index }}" action="{{ url_for('routes.delete_saved_message', message_id=savedMessage['id']) }}" method="post" class="form-general">
-                                    <button aria-label="Delete Saved Message" class="btn btn-danger btn-sm saved-action-btn" data-bs-placement="top" data-bs-toggle="tooltip" form="deleteSavedMsg_{{ ((saved_messages.page - 1) * rows_per_page) + loop.index }}" id="deleteSavedMsgBtn_{{ ((saved_messages.page - 1) * rows_per_page) + loop.index }}" title="Delete Saved Message" type="submit" value="Delete">
+                                    <button aria-label="Delete Saved Message" class="btn btn-danger btn-sm saved-action-btn" data-bs-placement="top" data-bs-toggle="tooltip" form="deleteSavedMsg_{{ ((saved_messages.page - 1) * rows_per_page) + loop.index }}" id="deleteSavedMsgBtn_{{ ((saved_messages.page - 1) * rows_per_page) + loop.index }}" title="Delete Saved Message" type="submit" value="Delete" onClick="return confirm('Are you sure you want to delete message #{{ ((saved_messages.page - 1) * rows_per_page) + loop.index }}?');">
                                         <i class="bi bi-trash" aria-hidden="true"></i>
                                     </button>
                                 </form>
